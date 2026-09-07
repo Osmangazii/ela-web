@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## [2026-09-07 16:59] — Okul Kartı Hover: İç Zoom → Dışa Büyüme (Pop-out Lift)
+
+- **`src/app/who-we-are/page.tsx` güncellendi** (Members okul kartları): Görselin kendi kutusu içinde kırpılarak zoomlanması (`overflow-hidden` + `group-hover:scale-105`) yerine, görsel alanının kendisi dışa doğru fiziksel olarak büyüyor.
+  - Görsel kapsayıcı artık: `relative mb-4 aspect-16/10 w-full cursor-pointer rounded-2xl transition-all duration-300 ease-out hover:scale-105 hover:shadow-2xl hover:z-20` — `overflow-hidden` kaldırıldı; `hover:scale-105` dışa büyüme, `hover:shadow-2xl` derinlik gölgesi, `hover:z-20` komşu içeriklerin altında kalmamayı sağlıyor.
+  - `next/image` için artık iç `group-hover:scale-105` yok; görsel `object-cover rounded-2xl` (köşeler kapsayıcıyla uyumlu kırpılıyor, `fill` kapsayıcıyla birlikte ölçekleniyor).
+  - `transition-all duration-300 ease-out` ile büyüme/küçülme yumuşak.
+- **Doğrulama**: `npx eslint` ile sıfır hata/sıfır uyarı; editör tanılamaları temiz.
+
+## [2026-09-07 16:57] — Who We Are: Okullar Bölümü Borderless Minimal Kartlar
+
+- **`src/app/who-we-are/page.tsx` güncellendi**: Okullar (Members) bölümündeki kutulu/border’lı/ağır gölgeli kart yapısı (rounded-2xl beyaz zemin, kalın kenarlık, monogram, rozetler) tamamen kaldırıldı; görsel odaklı, arka planla bütünleşen minimalist editöryel düzene geçildi. `next/image` import edildi.
+  - **Izgara**: `max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12`.
+  - **Minimal kart**: `group flex flex-col bg-transparent cursor-pointer` — kutu/border/gölge yok.
+    - Görsel: `relative aspect-16/10 w-full overflow-hidden rounded-2xl bg-slate-100 mb-4`; fotoğraf `next/image fill object-cover group-hover:scale-105 transition-transform duration-300 ease-out`; görsel üzerinde sol-alt köşede yarı şeffaf şehir etiketi `bg-black/40 backdrop-blur-md text-white text-xs rounded-full`.
+    - Metin: üst meta şehir `text-xs font-bold uppercase tracking-wider text-brand-pink mb-1.5` (ör. ATHENS/ΑΘΉΝΑ); okul adı `text-lg font-bold text-slate-900 group-hover:text-brand-green leading-snug line-clamp-1`; açıklama `text-sm text-slate-600 leading-relaxed mt-1 line-clamp-2`.
+  - **Veri**: Kurucu/partner açıklamaları ve şehirler EN/EL korundu; her kart `SCHOOL_IMAGES` havuzundan (döngüsel) temsilî eğitim görseli kullanıyor. `initials` alanı ve eski badge/role/read-more render’ları artık kullanılmıyor (veri alanı olarak duruyor).
+- **Doğrulama**: `npx eslint` ile sıfır hata/sıfır uyarı; editör tanılamaları temiz.
+
 ## [2026-09-07 16:00] — Etkinlik Galerisi Okları: Saf Kalın Chevron
 
 - **`src/app/events/page.tsx` güncellendi** (`EventMedia` galeri önceki/sonraki butonları): Yuvarlak zeminli buton tasarımı (`bg-white/80 rounded-full shadow`, kenarlık/arka plan) tamamen kaldırıldı.

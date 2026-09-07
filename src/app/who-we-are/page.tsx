@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import { useLanguage, type Lang } from "@/components/language-context";
 
@@ -108,6 +109,15 @@ const CITY: Record<string, { en: string; el: string }> = {
   corfu: { en: "Corfu", el: "Κέρκυρα" },
   ioannina: { en: "Ioannina", el: "Ιωάννινα" },
 };
+
+const SCHOOL_IMAGES = [
+  "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?auto=format&fit=crop&w=800&q=80",
+];
 
 interface School {
   key: string;
@@ -237,66 +247,38 @@ export default function WhoWeAre() {
             </p>
           </header>
 
-          <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
             {SCHOOLS.map((school, i) => {
               const foundingIndex = school.founding
                 ? SCHOOLS.filter((s) => s.founding).findIndex((s) => s.key === school.key)
                 : -1;
+              const cityLabel = CITY[school.cityKey][lang];
               return (
-                <article
-                  key={school.key}
-                  className="group reveal-up flex flex-col rounded-2xl border border-brand-pink-light/60 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-brand-pink hover:shadow-xl"
-                  style={{ animationDelay: `${(i % 8) * 70}ms` }}
-                >
-                  <div className="mb-4 flex h-36 w-full items-center justify-center rounded-xl bg-slate-50/50 p-4">
-                    <div className="flex h-20 w-20 items-center justify-center rounded-xl border border-brand-pink-light bg-white text-4xl font-extrabold tracking-tight text-brand-green shadow-sm transition-transform duration-300 group-hover:scale-105">
-                      {school.initials}
-                    </div>
+                <article key={school.key} className="group flex cursor-pointer flex-col bg-transparent">
+                  <div className="relative mb-4 aspect-16/10 w-full cursor-pointer rounded-2xl transition-all duration-300 ease-out hover:scale-105 hover:shadow-2xl hover:z-20">
+                    <Image
+                      src={SCHOOL_IMAGES[i % SCHOOL_IMAGES.length]}
+                      alt={school.name}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="rounded-2xl object-cover"
+                    />
+                    <span className="absolute bottom-3 left-3 rounded-full bg-black/40 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-md">
+                      {cityLabel}
+                    </span>
                   </div>
 
-                  {school.founding && (
-                    <span className="text-center text-xs font-bold tracking-wider text-brand-pink uppercase">
-                      {t.foundingTag}
-                    </span>
-                  )}
-
-                  <h3 className="mt-1 text-center text-xl font-bold tracking-tight text-brand-green">
+                  <p className="mb-1.5 text-xs font-bold uppercase tracking-wider text-brand-pink">
+                    {cityLabel.toUpperCase()}
+                  </p>
+                  <h3 className="line-clamp-1 text-lg font-bold leading-snug text-slate-900 transition-colors group-hover:text-brand-green">
                     {school.name}
                   </h3>
-
-                  <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
-                    <span className="inline-block rounded-full bg-brand-pink-light/50 px-2.5 py-1 text-xs font-semibold text-brand-green">
-                      {t.role[school.category]}
-                    </span>
-                    <span className="inline-block rounded-full bg-brand-pink-light/50 px-2.5 py-1 text-xs font-semibold text-brand-green">
-                      {CITY[school.cityKey][lang]}
-                    </span>
-                  </div>
-
-                  <p className="mt-3 line-clamp-2 min-h-12 text-center text-sm leading-relaxed text-slate-600">
+                  <p className="mt-1 line-clamp-2 text-sm leading-relaxed font-normal text-slate-600">
                     {school.founding
                       ? t.founding[foundingIndex]?.blurb
                       : t.partner[school.category]}
                   </p>
-
-                  <div className="mt-auto pt-4">
-                    <a
-                      href="#"
-                      className="flex items-center justify-center gap-1 text-sm font-bold text-brand-pink transition-all hover:gap-2"
-                    >
-                      {t.readMore}
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                        className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
-                        aria-hidden
-                      >
-                        <path d="M5 12h14M13 6l6 6-6 6" />
-                      </svg>
-                    </a>
-                  </div>
                 </article>
               );
             })}
