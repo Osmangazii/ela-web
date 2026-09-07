@@ -1,5 +1,79 @@
 # CHANGELOG
 
+## [2026-09-07 16:00] — Etkinlik Galerisi Okları: Saf Kalın Chevron
+
+- **`src/app/events/page.tsx` güncellendi** (`EventMedia` galeri önceki/sonraki butonları): Yuvarlak zeminli buton tasarımı (`bg-white/80 rounded-full shadow`, kenarlık/arka plan) tamamen kaldırıldı.
+  - Butonlar artık `bg-transparent p-0` ve yalnız saf SVG chevron ikonlarından oluşuyor (kutu/border/yok).
+  - Oklar: kalın keskin açılı chevron, `strokeWidth="3.5"`, `strokeLinecap/Linejoin="round"`, boyut `h-8 w-8 sm:h-10 sm:w-10`, `drop-shadow-sm`; sol `<` (`points="15 18 9 12 15 6"`), sağ `>` (`points="9 18 15 12 9 6"`). Renk `text-slate-800`, hover’da mercan `hover:text-brand-pink transition-colors`.
+  - Konum: görselin sol/sağ kenarında dikeyde tam ortalı `absolute top-1/2 left-2/right-2 -translate-y-1/2`; alt rozet noktaları ve `index/total` sayacı korundu.
+- **Doğrulama**: `npx eslint` ile sıfır hata/sıfır uyarı; editör tanılamaları temiz.
+
+## [2026-09-07 15:58] — Events: Çoklu Görsel (images[]) Veri Modeli + Mini Galeri
+
+- **`src/app/events/page.tsx` yeniden düzenlendi**: İleride eklenecek Admin Paneli / dinamik içerik girişine zemin hazırlayacak şekilde veri modeli ve arayüz güncellendi.
+  - **Yeni veri modeli** `EventItem`: `id`, `title{en,el}`, `date{en,el}`, `location{en,el}`, `themeColor`, `images: string[]` (1..n), `col1{en,el}`, `col2{en,el}`. `EVENTS` dizisi bu arayüze göre yeniden yazıldı (5 etkinlik; biri tek görsel, gerisi 2 görsel).
+  - **`EventMedia` bileşeni**: Görsel sayısına göre otomatik uyum — tek görselse sade vitrin; birden fazlaysa kaydırılabilir mini galeri (prev/next ok butonları, `index/total` sayaç rozeti sağ üstte, altta rozet noktaları). `next/image` ile çapraz-fade geçiş (`opacity`), `useState` ile aktif görsel.
+  - **Zig-zag ritmi korundu**: Açık zeminli başlık/görsel alanı `index % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'` ile değişiyor; sol tarafta başlık/tarih/konum, sağda görsel/galeri.
+  - **Sınır hatları**: Renkli bloğun üst girişindeki açılı SVG dalga korundu; alt çıkıştaki ters `rotate-180` SVG kaldırıldı — blok altı düz `pb-16 md:pb-20` ile kapanıyor.
+  - **Bağlam rozeti**: Renkli gövdenin sol üstünde `Highlights & Impact • {title}` / `Στιγμιότυπα & Αντίκτυπος • {title}` (`bg-white/10 text-white/90 border-white/20 rounded-full uppercase tracking-widest`); altında iki sütunlu `col1`/`col2` metni.
+- **Doğrulama**: `npx eslint` ile sıfır hata/sıfır uyarı; editör tanılamaları temiz (kullanılmayan `Lang` import’u temizlendi).
+> Not: `EventItem` yapısı admin panelinden gelecek veriyle birebir eşleşecek şekilde hazırlandı; tema rengi ve görsel listesi dinamik olarak SVG fill/arka plana ve galeriye bağlanıyor.
+
+## [2026-09-07 15:51] — Events: Etkinlik Sınırları & Düz Alt Çıkış + Bağlam Rozeti
+
+- **`src/app/events/page.tsx` güncellendi** (`EventStory`): Çift taraflı açılı SVG belirsizliği giderildi.
+  - **Giriş açılı kaldı**: Üstten renkli bloğa giren SVG dalga (`-mb-px`, fill=themeColor) korundu.
+  - **Alt çıkış düzleştirildi**: Renkli bloğun altındaki ters/`rotate-180` çıkış SVG’si tamamen kaldırıldı; `isLast` koşulu ve ilgili prop da silindi. Her renkli blok altı `pb-16 md:pb-20` ile düz bir taban olarak bitiyor; altından doğrudan sonraki etkinliğin açık zemini başlıyor. Son etkinlik düz tabanla koyu Footer’a bağlanıyor.
+  - **Bağlam rozeti**: Renkli gövdenin en üstüne, iki sütunlu metnin hemen üzerine küçük bir aidiyet rozeti eklendi (`max-w-5xl mx-auto mb-6` içinde `text-xs uppercase tracking-widest font-bold px-3 py-1 rounded-full bg-white/10 text-white/90 border border-white/20`): EN `Highlights & Impact • {title}` / EL `Στιγμιότυπα & Αντίκτυπος • {title}` — kaydırırken metnin hangi etkinliğe ait olduğu net.
+  - **Bölümler arası mesafe**: Açık zeminli başlık/görsel alanı `pt-16 md:pt-24` ile ferah bir boşluk bırakacak şekilde ayarlandı (zig-zag yön mantığı korundu).
+- **Doğrulama**: `npx eslint` ile sıfır hata/sıfır uyarı; editör tanılamaları temiz.
+
+## [2026-09-07 15:49] — Events: Zig-Zag Görsel Ritmi + Footer Öncesi Geçiş Düzeltmesi
+
+- **`src/app/events/page.tsx` güncellendi** (`EventStory` bileşeni):
+  - **Zig-zag (alternating) yerleşim**: Açık zeminli üst başlık/görsel alanı artık dizideki index’e göre yön değiştiriyor: `index % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'`. Böylece 1. etkinlikte başlık solda/görsel sağda, 2.’de görsel solda/başlık sağda, 3.’te tekrar başlık solda... şeklinde akıcı bir görsel ritim sağlandı. `EventStory` props’larına `index` eklendi.
+  - **Footer öncesi hatalı alt geçiş**: En alttaki son etkinlik için `isLast = index === EVENTS.length - 1` koşulu eklendi. Son etkinlikten çıkarken ters tepe SVG artık render edilmiyor (`{!isLast && <...>}`); bunun yerine son renk bloğunun alt dolgusu `pb-20 md:pb-28` yapıldı ve alt kısım düz bırakıldı. Böylece araya beyaz açılı üçgen girmedi; son etkinliğin rengi koyu yeşil Footer ile organik biçimde buluşuyor.
+- **Doğrulama**: `npx eslint` ile sıfır hata/sıfır uyarı; editör tanılamaları temiz.
+
+## [2026-09-07 15:43] — Events: Tam Ekran Akışkan Hikaye Şeridi (Full-Bleed Story Flow)
+
+- **`src/app/events/page.tsx` yeniden yazıldı**: Tüm kutu/kart bileşenleri (border/shadow’lu kartlar), vitrin zig-zag kartları, featured kart ve ayrı zaman tüneli TAMAMEN kaldırıldı. Yerine her etkinliğin iki aşamalı tam ekran bloklar halinde aktığı editoryal hikaye akışı kuruldu.
+- **Veri (`EVENTS` dizisi)**: Her öğe `id`, `themeColor`, görsel, EN/EL içerik (başlık, tarih, konum, 2 paragraf). `themeColor` SVG fill ve alt gövde arkaplanına dinamik bağlandı. Etkinlikler kronolojik sırada:
+  1. ELA Launching & Annual GA — derin doğa yeşili `#165823`
+  2. Kickstarter 2020 & Leadership Masterclass — derin petrol/teal `#1E4E5F`
+  3. Inquiry-Based Learning & 100mentors — zengin mor `#4B164C`
+  4. 1st TED-ed #WEME — sıcak kiremit/terracotta `#8C2D19`
+  5. Students at Shakespeare's Globe — derin bordo/vişne `#4A151B`
+- **1. Aşama (açık zemin)**: `max-w-6xl mx-auto px-6 py-16 flex flex-col lg:flex-row items-center justify-between gap-12`; solda büyük başlık `text-4xl sm:text-5xl font-black text-slate-900 leading-tight`, tarih `text-slate-500 font-semibold`, konum `inline SVG pin + text-slate-700`; sağda görsel `rounded-2xl overflow-hidden shadow-lg aspect-4/3 w-full lg:w-125 relative` (`next/image`).
+- **Kesintisiz geçiş**: `w-full overflow-hidden leading-none -mb-px` içinde `preserveAspectRatio="none"` SVG (`M0,0 L600,80 L1200,0 L1200,120 L0,120 Z`, `h-12 md:h-20`), `style={{fill: themeColor}}` ile rengi alt bloğa eşit.
+- **2. Aşama (tam genişlik renk bloğu)**: `w-full py-16 px-6 text-white`, `style={{backgroundColor: themeColor}}`; içerik `max-w-5xl mx-auto grid md:grid-cols-2 gap-8 text-white/90 text-base leading-relaxed` (EN/EL iki paragraf).
+- **Alt çıkış (ters tepe)**: `w-full rotate-180 overflow-hidden leading-none -mt-px` + aynı SVG (fill theme) ile sonraki açık zemine geçiş.
+- **Yapı**: `EventStory` bileşeni her blok için 4 parçayı (açık üst, giriş dalgası, renk gövdesi, çıkış dalgası) üretir; `EventStory` içi `useLanguage()` ile EN/EL geçişi; sayfa üstüne küçük bir başlık/rozet eklendi.
+- **Doğrulama**: `npx eslint` ile sıfır hata/sıfır uyarı; editör tanılamaları temiz (`-mb-px`/`-mt-px`/`lg:w-125` standarda çevrildi).
+
+## [2026-09-07 15:41] — Events: Hatalı Üçgen SVG’nin Silinmesi + Zaman Tüneli Arşivi
+
+- **`src/app/events/page.tsx` yeniden düzenlendi**: Sayfa ortasındaki mızrak uçlu, hatalı SVG/polygon açılı ayırıcılar (üst `rotate-180` wedge + alt ters wedge ve ilgili div’ler) tamamen silindi. Sayfa temiz, iki seviyeli profesyonel bir yapıya kavuşturuldu.
+  - **Vitrin (Top – Zig-Zag büyük kartlar)**: Yalnızca 2 güncel vitrin etkinlik gösteriliyor — `SHOWCASE` dizisi: 1) “1st TED-ed #WEME” (Mart 2023 / Atina Benaki), 2) “Read for Good Kampanyası” (Aralık 2020 / 27 okul, €7.590, 500+ çocuk). Her kart `rounded-3xl bg-white border-brand-pink-light p-8 md:p-12 flex lg:flex-row` + ters yön (`lg:flex-row-reverse`), `next/image` görsel, kategori rozeti, başlık, tarih/konum (SVG ikonlu), açıklama ve sponsorlar.
+  - **Featured Impact Campaign kartı**: Eski tam genişlik koyu blok artık taşmayan, modern, bağımsız bir kart `my-16 rounded-3xl bg-brand-green text-white p-8 md:p-12 shadow-xl relative overflow-hidden`; kenarları temiz, içinde (kenarlıksız, `overflow-hidden`) mercan ışık küresi. İçerik 2 kolon: sol “Read for Good” açıklaması, sağ 3 metrik (27 / €7.590 / 500+). Hero/listeden bağımsız.
+  - **Milestones & Past Events Timeline**: `Our Journey & Past Milestones` / `Η Πορεία & οι Δράσεις μας` başlığı (`text-3xl font-extrabold text-brand-green text-center mt-20 mb-12`). Sol çizgili dikey liste: `relative mx-auto max-w-4xl space-y-10 px-6` + ince `bg-brand-pink-light` çizgi; her satır `relative pl-10 md:pl-12`, satır hizasında mercan nokta `absolute top-6 left-0 h-4 w-4 rounded-full bg-brand-pink border-4 border-white shadow-sm`.
+    - 7 gerçek tarihsel dönüm noktası kronolojik (Ocak 2019 ELA Lansmanı → Nisan 2019 1st Teacher Academy → Haziran 2019 Tzoumerka GA → Eylül 2019 1st Youth Summit/Human Rights → Ekim 2019 Extraordinary GA → Şubat 2020 Kickstarter & Leadership Masterclass → Mayıs 2020 Inquiry-Based Learning & 100mentors). Tüm metinler EN/EL.
+  - **Timeline kart tasarımı**: `bg-white p-6 rounded-2xl border-slate-100 shadow-sm hover:border-brand-pink hover:shadow-md transition-all`; üstte tarih (`bg-brand-pink-light/60`) + konum (`bg-slate-100`) rozetleri yan yana; başlık `text-lg font-bold text-slate-900 mb-2`; açıklama `text-slate-600 text-sm leading-relaxed`.
+- **Doğrulama**: `npx eslint` ile sıfır hata/sıfır uyarı; editör tanılamaları temiz (`left-1.75`/`w-0.5` spacing sınıflarına çevrildi).
+
+## [2026-09-07 15:35] — Events: Açılı/Dalgalı Koyu Bölüm Geçişi (Angled Divider + Ambient Glow)
+
+- **`src/app/events/page.tsx` güncellendi**: Hero ile etkinlik listesi arasına modernize açılı/üçgen zemin geçişli koyu yeşil bir “topluluk bandı” bölümü eklendi.
+  - **Üst giriş (light → dark)**: Düz çizgi kullanılmadı; `w-full overflow-hidden leading-none rotate-180` içinde `preserveAspectRatio="none"` inline SVG wedge (`fill-current text-brand-green`, `h-12`) ile keskin değil açılı geçiş.
+  - **Koyu bölüm gövdesi**: `relative overflow-hidden bg-brand-green px-6 py-16 text-white`. Arka planda nabız gibi nefes alan mercan ışık küreleri (`absolute -top-24 -right-24 h-96 w-96 animate-pulse rounded-full bg-brand-pink/20 blur-3xl` + sol altta `bg-brand-pink/10`).
+  - **İçerik (2 kolon, `lg:grid-cols-2`)**:
+    - Sol: çift dilli “Featured Campaign / Προτεινόμενη Καμπάνια” rozeti, “Read for Good / Διαβάζω για το Καλό” başlığı, 3 metrik (27 Schools / €7.590 / 500+ Children reached — EL karşılıklarıyla) ve açıklama metni (`text-white/90 leading-relaxed text-sm sm:text-base`).
+    - Sağ: “Campaign diary / Ημερολόγιο καμπάνιας” başlığı altında tarihli adımlar (13/12 masal anlatısı, 19/12 kostüm & okuma günü, 21/12 kapanış — EN/EL) ve altında Unsplash görselleriyle 3’lü mini galeri (`rounded-xl border-white/20 overflow-hidden shadow-lg hover:scale-105 transition-transform`, `next/image` fill).
+  - **Alt çıkış (dark → light)**: Koyu bandın altında SVG wedge (ters) ile açık zemine (`#FFF2F2`) pürüzsüz bağlanıyor; ardından etkinlik listesi geliyor.
+- **Veri/kopya**: Kampanya örnek içeriği ve metrikler önceki referans tasarımdaki “Read for Good” içeriğine örneklendi (27 okul, 7.590€, 500+ çocuk).
+- **Doğrulama**: `npx eslint` ile sıfır hata/sıfır uyarı; editör tanılamaları temiz.
+> Not: Kampanya örneği gerçek bir yayın içeriği değilse metin/metrikler kolayca gerçek veriyle değiştirilebilir; galeri görselleri temsilî Unsplash kareleridir.
+
 ## [2026-09-07 15:04] — SVG Logo Entegrasyonu (Navbar & Footer)
 
 - **`public/` varlıkları doğrulandı**: `fulllogoela.svg` (tam logo) ve `logoela.svg` (kompakt logo) mevcut; `next/image` ile entegre edildi.
