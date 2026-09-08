@@ -167,6 +167,18 @@ export default function AdminEvents() {
 
     const supabase = createClient();
 
+    // Active session check — a missing session silently drops deletes behind RLS.
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
+    console.log("Active session:", session, "Session error:", sessionError);
+
+    if (!session) {
+      alert("No active session! Please sign out and sign in again.");
+      return;
+    }
+
     // Best-effort cleanup of the event images in the 'media' bucket.
     const paths = (event.images ?? [])
       .map(storagePathFromUrl)
@@ -175,12 +187,29 @@ export default function AdminEvents() {
       await supabase.storage.from("media").remove(paths);
     }
 
-    const { error: err } = await supabase.from("events").delete().eq("id", event.id);
-    if (err) {
-      setError(err.message);
+    // Delete with an exact row count so RLS rejections are visible.
+    const { data, error, count } = await supabase
+      .from("events")
+      .delete({ count: "exact" })
+      .eq("id", event.id)
+      .select();
+
+    console.log("Delete response:", { data, error, count });
+
+    if (error) {
+      alert(`Supabase delete error: ${error.message}`);
       return;
     }
-    await loadEvents();
+
+    if (!data || data.length === 0) {
+      alert(
+        "Record could not be deleted! (A permission/RLS rule may be blocking it.) Please verify the row in the Supabase Table Editor.",
+      );
+      return;
+    }
+
+    // Success: remove from local state.
+    setEvents((prev) => prev.filter((item) => item.id !== event.id));
   }
 
   return (

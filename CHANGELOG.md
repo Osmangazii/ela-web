@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## [2026-09-08 12:44] — Hata Düzeltme: /admin/events Silme RLS Sessiz Başarısızlığı
+
+- **`src/app/admin/events/page.tsx` güncellendi** (`handleDelete` tanısal hale getirildi):
+  - Silme öncesi aktif oturum kontrolü: `supabase.auth.getSession()` — yoksa `console.log("Active session:", session, ...)` çıktısı ve `alert` ile erken dönüş. (RLS arkasında oturumsuz istekler sessizce 0 satır siler.)
+  - Silme artık dönen satır sayısını da getiriyor: `delete({ count: "exact" }).eq("id", id).select()` → `console.log("Delete response:", { data, error, count })`.
+  - `error` varsa `alert("Supabase delete error: …")`; `data` boşsa (RLS/yetki engeli) kullanıcıyı uyaran açık `alert` — silinmeyen satırı Supabase Table Editor’den kontrol etmeye yönlendirir.
+  - Başarılı durumda satır `setEvents(prev => prev.filter(...))` ile lokal state’ten kaldırılır.
+  - Etkinlik görsellerinin `media` bucket’ından best-effort temizliği korundu (oturum kontrolünden sonra).
+- **RLS notu**: İstemci isteği `authenticated` rolüyle gitmiyorsa veya session cookie boşsa `select()` boş döner; konsoldaki “Delete response” çıktısı (data/count) buna tanı koyar. Çözüm yine de migration’daki `authenticated` DELETE policy’sinin doğru tabloya/role tanımlı olmasına ve oturumun cookie’de bulunmasına bağlıdır.
+- **Doğrulama**: `npx eslint` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
 ## [2026-09-08 12:34] — Events Yönetim Paneli (/admin/events) CRUD (tam fonksiyonel)
 
 - **`src/app/admin/events/page.tsx` yeniden yazıldı**: Schools sayfasındaki desenle (`createClient` → `@/lib/supabase/client`, tablo, tema) birebir uyumlu, tam fonksiyonel CRUD ekranı.
