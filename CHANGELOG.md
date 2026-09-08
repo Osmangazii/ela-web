@@ -1,5 +1,110 @@
 # CHANGELOG
 
+## [2026-09-08 12:34] — Events Yönetim Paneli (/admin/events) CRUD (tam fonksiyonel)
+
+- **`src/app/admin/events/page.tsx` yeniden yazıldı**: Schools sayfasındaki desenle (`createClient` → `@/lib/supabase/client`, tablo, tema) birebir uyumlu, tam fonksiyonel CRUD ekranı.
+  - **Liste (tablo)**: İlk görsel önizlemesi (“—” placeholder), Başlık (EN/EL), Tarih (EN/EL), Konum (EN/EL truncate), `order_index`, Aksiyonlar (Delete). `order_index`’e göre artan sıralama; loading ve boş-liste durumları.
+  - **Ekleme formu (grid)**: `title_en/el`, `date_en/el`, `location_en/el` (zorunlu), `theme_color` (color picker, default `#165823`), `order_index` (default 0), `col1_en/el`, `col2_en/el` (opsiyonel textarea).
+  - **Çoklu görsel yükleme**: `multiple` dosya seçici — her dosya `media` bucket’ına `events/${Date.now()}_${file.name}` yoluyla yüklenir, public URL’ler `images` dizisine eklenir; form içinde küçük önizlemeler + tek tek ✕ kaldırma; sıralı (sequential) yükleme ile yükleme durumu güvenli.
+  - **Submit & silme**: Submit `events` tablosuna `insert` ve liste yenilenir. Delete → `confirm()` → `delete().eq('id', id)`; etkinliğe ait görseller `media` bucket’ından best-effort temizlenir (public URL’den storage path çözümleme `storagePathFromUrl`).
+  - Hatalar üstte anlaşılır kutuda; `uploading`/`saving` durumlarında butonlar disabled. Görseller `next/image` ile (Supabase host artık remotePatterns’te) render ediliyor.
+- **Doğrulama**: `npx eslint` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
+## [2026-09-08 12:29] — Hata Düzeltme: next/image unconfigured host (Supabase Storage)
+
+- **`next.config.ts` güncellendi**: `images.remotePatterns` dizisine Supabase Storage domaini eklendi — `https://ocozqgrpuhnzgfczpmxe.supabase.co` için `pathname: '/storage/v1/object/public/**'`. Mevcut `images.unsplash.com` kuralı korundu (hiçbir mevcut yapılandırma bozulmadı). Böylece `media` bucket’ından yüklenen görsellerin `<Image />` ile render edilmesi artık hostname whitelist hatası vermez.
+- **Doğrulama**: `next.config.ts` editör tanılaması temiz (söz dizimi geçerli). Runtime görsel yükleme/önizleme testi için çalışan Supabase ortamı ve `next build` önerilir.
+
+## [2026-09-08 12:27] — Schools Yönetim Paneli (/admin/schools) CRUD
+
+- **`src/app/admin/schools/page.tsx` oluşturuldu (yeni)**: Tam fonksiyonel okul yönetim ekranı (client component). Mevcut tema (brand renkleri, Tailwind) ile uyumlu.
+  - **Liste**: Modern tablo — Görsel (`image_url` önizleme ya da “—” placeholder), Okul adı, Şehir, Kurucu bilgisi (`founder_info` truncate), Sıra (`order_index`) ve Aksiyonlar (Delete). `order_index`’e göre sıralı. Loading ve boş-liste durumları ayrı mesajlarla.
+  - **Ekleme formu**: `name` (zorunlu), `city` (zorunlu), `founder_info` (opsiyonel), `order_index` (default 0) ve görsel/logo yükleyici. Yükleme `media` bucket’ına `schools/${Date.now()}_${file.name}` yoluyla; ardından `storage.from('media').getPublicUrl(path)` ile `image_url` form alanına atanır (önizleme + kaldırma). Submit `schools` tablosuna `insert` ve liste anında yenilenir.
+  - **Silme**: Satırdaki “Delete” → `confirm()` onayı; okul satırı `delete().eq('id', id)` ile silinir. Bağlı görsel varsa public URL’den storage path çıkarılıp `media` bucket’ından best-effort temizlenir.
+  - Hata durumları üstte anlaşılır mesaj kutusuyla; yükleme/kaydetme sırasında butonlar disabled.
+- **`src/lib/supabase/client.ts` sadeleştirildi**: `createBrowserClient` artık `Database` tipine bağlanmıyor (satır şekilleri `@/types/database`’deki `*Item` tipleriyle çağrı noktasında assert ediliyor) — bu, `insert/update/delete` builder’larının derlenmesini garantiler. Sunucu istemcisi (`server.ts`) `Database` ile tipli kalmaya devam ediyor.
+- **Doğrulama**: `npx eslint src/app/admin src/lib/supabase` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+> Not: Runtime doğrulaması için migration çalışıp oturum açılmış bir admin gerekir; CRUD akışı Events ekranıyla aynı istemci desenini izliyor.
+
+## [2026-09-08 12:23] — Hata Düzeltme: fetchServerAction “Unexpected response” (login)
+
+- **`src/app/admin/login/page.tsx` yeniden yazıldı**: Giriş akışından Server Action bağımlılığı tamamen kaldırıldı.
+  - `persistAuthSession` (server action) import’u/çağrısı ve `useRouter` kullanımı silindi.
+  - Giriş artık doğrudan tarayıcı Supabase istemcisiyle (`createClient` → `@/lib/supabase/client`) yapılıyor: `supabase.auth.signInWithPassword({ email, password })`.
+  - Hata durumunda `error.message` gösterilir; başarıda (`data.user`) temiz ve takılmayan **tam sayfa yönlendirme** `window.location.href = "/admin/events"` — Server Action (fetchServerAction) runtime çakışması tamamen devre dışı; cookie’ler tam sayfa isteğiyle sunucuya iletilir.
+  - `catch` bloğunda `err instanceof Error` ile güvenli mesaj çıkarımı (herhangi bir `any` yok). Buton loading state’i hata/yönlendirme durumlarında doğru biçimde serbest kalıyor.
+  - Next lint kuralı için tam sayfa geçişinin gerekçeli `eslint-disable` yorumu korundu.
+- **`src/app/admin/actions.ts` sadeleştirildi**: Artık kullanılmayan `persistAuthSession` sunucu eylemi kaldırıldı; dosyada yalnız `signOutAction` (layout “Sign out” formu) kaldı.
+- **Doğrulama**: `npx eslint src/app/admin` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+> Not: `@supabase/ssr` tarayıcı istemcisi oturumu cookie olarak sakladığından middleware/server bileşenleri tam sayfa isteğinde oturumu tanıyabilir. Runtime doğrulaması için `next build` + gerçek giriş denemesi önerilir.
+
+## [2026-09-08 12:19] — Hata Düzeltme: Login Sonrası “Giriş Yapılıyor…” Takılması
+
+- **`src/app/admin/login/page.tsx` güncellendi**: `signInWithPassword` + `persistAuthSession` (SSR cookie yazımı) başarılı olduktan sonraki yönlendirme mantığı düzeltildi.
+  - Eski akış (`router.push("/admin")` + `router.refresh()`) Router Cache’in yeni oturumu anında algılayamaması nedeniyle butonu “Signing in…” durumunda asılı bırakıyordu.
+  - Yeni akış: önce `router.refresh()` (sunucu bileşenleri taze cookie’lerle yeniden render edilir), ardından **tam sayfa yönlendirme** `window.location.href = "/admin/events"` — tüm Supabase çerezlerinin sunucuya eksiksiz iletilmesini garanti eder ve takılmayı önler.
+  - `setLoading(false)` yalnız hata/eksik-session durumlarında çağrılıyor; başarıda buton sayfa ayrılana dek yükleme durumunda kalıyor (istenen davranış).
+  - Next’in `no-location-assign-relative-destination` lint kuralı için bilinçli tam sayfa geçişini açıklayan tek satırlık `eslint-disable` eklendi.
+- **Doğrulama**: `npx eslint src/app/admin/login/page.tsx` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+> Not: Çalışan Supabase ortamına ihtiyaç duyduğundan runtime testi burada yapılamadı; sayfa yenilemeli geçiş cookie taşıma garantisi verdiğinden takılmanın giderilmesi beklenir.
+
+## [2026-09-08 12:17] — ACİL: /admin/login 307 Sonsuz Döngü (Layout & Middleware Çakışması)
+
+- **Kök neden**: `/admin/login` sayfası `src/app/admin/layout.tsx` altında render ediliyordu; layout sunucu tarafında `getUser()` ile oturumsuz kullanıcıyı `/admin/login`’e `redirect` ediyordu → login sayfası kendini sonsuz 307’yle döndürüyordu.
+- **`src/app/admin/layout.tsx` yeniden yazıldı (client layout)**: Katı sunucu `redirect` kontrolü ve `getUser()` TAMAMEN kaldırıldı. Layout artık yalnız görsel iskelet: `usePathname()` ile `/admin/login` (trailing slash dahil) tespit edildiğinde yalnızca `{children}` döner (sidebar/header yok); diğer admin sayfalarında sidebar + “Sign out” (server action formu) gösterilir. Tüm yetkilendirme kararları tek elden `middleware.ts`’e devredildi.
+- **`src/middleware.ts` sadeleştirildi**: Login öncelikli akış —
+  1. `pathname === '/admin/login'` ise oturum açmamış kullanıcı doğrudan geçirilir (`return response`); yalnız zaten oturum açmışsa `/admin/events`’e redirect edilir (login’e geri dönmez → döngü imkânsız).
+  2. Diğer tüm `/admin*` rotalarında kullanıcı yoksa `/admin/login`’e `redirect`.
+  - Çift kontrol (layout + middleware’in aynı anda redirect) kaldırıldı; matcher statik/api yollarını hariç tutuyor.
+- **Doğrulama**: `npx eslint` (layout + middleware) sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+> Not: Login akışı `login/page.tsx` client `signInWithPassword` + `persistAuthSession` (server action) ile cookie yazar; ardından `/admin` → middleware kullanıcıyı görür ve dashboard erişimi açılır. Runtime doğrulaması için `next build` ve tarayıcı testi önerilir.
+
+## [2026-09-08 12:13] — Hata Düzeltme: middleware Sonsuz Yönlendirme Döngüsü
+
+- **`src/middleware.ts` yeniden yazıldı**: Firefox “Sayfa doğru bir şekilde yönlendirilmiyor” hatasının kaynağı olan belirsiz/eksik sınır koşulları netleştirildi ve döngü ihtimali sıfırlandı.
+  - Yardımcı eşleşmeler: `isAdminRoute` (`/admin`, `/admin/` ve `/admin/*`) ile `isLoginRoute` (`/admin/login` + trailing slash toleransı) ayrı fonksiyonlara çekildi.
+  - **Kural 1**: Oturum açmamış kullanıcı korumalı admin rotasına giderse `/admin/login`’e `redirect` — login sayfasının KENDİSİ (`isLoginRoute`) korumadan kesin olarak muaf, böylece kendini sürekli yönlendiremez.
+  - **Kural 2**: Zaten oturum açmış kullanıcı `/admin/login`’e girerse doğrudan `/admin/events` paneline `redirect` (kök `/admin` üzerinden ikinci bir hop yerine; `/admin/login`’e geri dönmez → döngü yok).
+  - Redirect öncesi `url.search` sıfırlanır; gereksiz `next` parametresi bırakılmaz.
+  - `config.matcher`: `_next/static`, `_next/image`, `favicon.ico`, `api/` ve statik görsel uzantıları (`svg/png/jpg/jpeg/gif/webp/ico`) hariç tutulur.
+- **Doğrulama**: `npx eslint src/middleware.ts` sıfır hata/sıfır uyarı; editör tanılamaları temiz. (Runtime döngünün giderildiğini doğrulamak için en iyisi `next build` + tarayıcıda `/admin` testidir.)
+
+## [2026-09-08 12:10] — Hata Düzeltme: “next/headers” istemci tarafında import edilemez
+
+- **`src/app/admin/actions.ts` düzeltildi**: Dosyanın en başına `'use server';` direktifi eklendi. Eksikti; bu yüzden client login sayfası `persistAuthSession` import ettiğinde dosya sunucuya özel kodu (`@/lib/supabase/server.ts` → `next/headers`/cookies) client bundle’a taşıyordu ve “You're importing a module that depends on 'next/headers'…” hatasına yol açıyordu. Artık tüm export’lar gerçek Server Action olarak sunucuda çalışır; client tarafı yalnızca RPC referansını alır.
+- **İstemci/sunucu ayrımı doğrulandı**:
+  - Client component’ler: `login/page.tsx` → `@/lib/supabase/client` (`createBrowserClient`) kullanıyor; `events/page.tsx` de yalnız client (`@supabase/ssr` createBrowserClient) kullanıyor.
+  - Server Action / Server Component: `actions.ts` ve `layout.tsx` → `@/lib/supabase/server` (`createServerClient` + cookies) kullanıyor.
+  - `login/page.tsx` artık yalnızca client supabase + sunucu action (`persistAuthSession`) import ediyor; server supabase client’ı doğrudan import etmiyor.
+- **Doğrulama**: `npx tsc --noEmit` temiz; `npx eslint src/app/admin` sıfır hata/sıfır uyarı; editör tanılamaları temiz.
+
+## [2026-09-08 12:07] — Supabase Korumalı Admin Paneli (/admin)
+
+- **`src/app/admin/login/page.tsx` (yeni)**: Minimalist, editöryel giriş formu (e-posta + şifre). `@supabase/ssr` tarayıcı istemcisiyle `supabase.auth.signInWithPassword`. Yükleme (loading) durumu butonda, hata durumunda kullanıcı dostu mesaj; başarıda oturum `persistAuthSession` Server Action’ı ile SSR cookie’lerine yazılıp `/admin`’e yönlenir (`router.push` + `refresh`).
+- **`src/app/admin/actions.ts` (yeni)**: Server Actions — `signOutAction` (cookies temizler, `/admin/login`’e `redirect`) ve `persistAuthSession` (client’ta alınan session token’larını SSR cookie jar’ına `auth.setSession` ile yazar).
+- **`src/app/admin/layout.tsx` (yeni)**: Sunucu tarafı oturum kontrolü — `createClient` (server) ile `getUser`; kullanıcı yoksa `/admin/login`’e `redirect`. Sol sidebar: “Events Management” (`/admin/events`), “Schools Management” (`/admin/schools`), “← Back to site” (`/`), “Sign out” (form → `signOutAction`). Kullanıcı e-postası gösterilir; içerik `ml-60` alanında.
+- **`src/app/admin/page.tsx` (yeni)**: `/admin` kökü `/admin/events`’e `redirect` eder.
+- **`src/app/admin/events/page.tsx` (yeni)**: Events Management — mevcut etkinlikleri `order_index`’e göre listeler (EN başlık, tarih, ilk görsel önizlemesi, tema rengi noktası, “Delete”); ekleme formu/modalı (`title_en/el`, `date_en/el`, `location_en/el`, `theme_color` default `#165823`, `col1/col2` EN/EL, `order_index`); görsel yükleme dosya seçilince Supabase `media` bucket’ına yüklenir ve dönen public URL `images` listesine eklenir (önizleme + kaldırma). Submit `events` tablosuna `insert`, silme `delete().eq('id')`. Yükleme/kaydetme/hata durumları yönetilir. (Veri satırları `EventItem` ile tiplenir; bu sayfada genel amaçlı client kullanılır.)
+- **Yönlendirme & koruma**: Middleware + server layout `/admin/*`’ı login gerektirecek şekilde kapatır; `/admin` kökü otomatik `/admin/events`’e gider.
+- **Doğrulama**: `npx tsc --noEmit` temiz; `npx eslint src/app/admin` sıfır hata/sıfır uyarı; editör tanılamaları temiz.
+> Not: `/admin/schools` sayfası henüz oluşturulmadı (sidebar linki var; layout oturum kontrolünden geçer). Veritabanı erişimi olmadığından login/CRUD akışları runtime’da doğrulanmadı; Supabase’te migration çalışıp bir kullanıcı oluşturulunca test edilebilir. Login’den sonra SSR oturumunun cookie’ye yazılması için `persistAuthSession` gereklidir (client-only signIn cookie üretmez).
+
+## [2026-09-08 11:54] — Next.js (App Router) + Supabase Entegrasyonu
+
+- **Paketler kuruldu**: `@supabase/supabase-js` ve `@supabase/ssr` `package.json`’a eklendi (npm install; yalnızca Node sürüm uyarıları — mevcut ortam Node 18).
+- **`.env.local`**: `NEXT_PUBLIC_SUPABASE_URL=https://ocozqgrpuhnzgfczpmxe.supabase.co` ve `NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_0d_vUnA5Pm-asaAz_IZ0KQ_xqid9mHW` eklendi.
+- **SQL migration** `supabase/migrations/0001_init.sql` (Supabase SQL Editor’de tek seferde çalıştırılmak üzere):
+  - `public.events`: id UUID PK default gen_random_uuid(); title_en/title_el, date_en/date_el, location_en/location_el (NOT NULL); theme_color TEXT default ‘#165823’; images TEXT[] default ‘{}’; col1_en/el, col2_en/el; order_index INT default 0; created_at TIMESTAMPTZ default now().
+  - `public.schools`: id UUID PK default gen_random_uuid(); name, city (NOT NULL); founder_info, image_url, order_index INT default 0, created_at TIMESTAMPTZ default now().
+  - **RLS**: her iki tabloda enable row level security; herkes için SELECT policy; sadece `authenticated` için INSERT/UPDATE/DELETE policy.
+  - **Storage**: `media` adında public bucket (on conflict do nothing); SELECT herkese, INSERT/UPDATE/DELETE yalnız `authenticated` kullanıcılara açık policy’ler.
+- **Client** `src/lib/supabase/client.ts`: `createBrowserClient<Database>` örneği (tarayıcı bileşenleri); env kontrolü ve `?? ""` ile tip güvenliği.
+- **Server** `src/lib/supabase/server.ts`: Server Components/Server Actions için `next/headers` cookies tabanlı `createServerClient<Database>` (async `getAll`/`setAll`); Server Component cookie-yazma hatasını yutuyor.
+- **`src/middleware.ts`**: Supabase oturumunu her istekte tazeleyen (`getUser`) yapı; `/admin/*` rotalarını koruyor — oturum yoksa `/admin/login`’e (query `next` ile) yönlendirir, `/admin/login` sayfasının kendisini döngüye sokmaz; oturum açmış kullanıcıyı login’den `/admin`’e taşır. Static asset’ler matcher ile hariç tutulur.
+- **Tipler** `src/types/database.ts`: `EventItem` (events satırı, `*_en`/`*_el` alanlarıyla), `SchoolItem` (schools satırı) ve client tipleri için `Database` arayüzü (Insert/Update partial’ları dahil).
+- **Doğrulama**: `npx tsc --noEmit` temiz; yeni dosyaların editör tanılamaları hata/uyarısız. `eslint` taramasında Supabase dosyaları uyarısız.
+> Not: Supabase URL/anon key, kullanıcı tarafından verilen yayınlanabilir (publishable) anahtardır; production’da bile güvenli (RLS alt yapıda korur). SQL migration’ı henüz çalıştırmadım (harici veritabanına erişim yok) — Supabase SQL Editor’de koşulması gerekir.
+
 ## [2026-09-07 16:59] — Okul Kartı Hover: İç Zoom → Dışa Büyüme (Pop-out Lift)
 
 - **`src/app/who-we-are/page.tsx` güncellendi** (Members okul kartları): Görselin kendi kutusu içinde kırpılarak zoomlanması (`overflow-hidden` + `group-hover:scale-105`) yerine, görsel alanının kendisi dışa doğru fiziksel olarak büyüyor.
