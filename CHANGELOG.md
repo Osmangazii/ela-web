@@ -1,5 +1,48 @@
 # CHANGELOG
 
+## [2026-09-15 13:27] — Reorder Persist Hatası Düzeltildi + “Save Order” Butonu
+
+- **Kök neden**: Sürükleme sonrası yalnız `{ id, order_index }` ile yapılan `upsert`, mevcut satırlar için INSERT denemesi tetikliyor ve `schools.name` / `events.title_en` NOT NULL kısıtlarını ihlal ediyordu.
+- **`src/app/admin/schools/page.tsx` ve `src/app/admin/events/page.tsx` güncellendi**:
+  - **Otomatik kaydetme kaldırıldı**: `handleReorder` artık yalnız lokal diziyi (optimistik) sıralar, `order_index`’i 0..n olarak günceller ve `orderChanged = true` yapar; hiçbir API çağrısı yapmaz.
+  - **“Save Order” + “Discard”**: Liste üstünde araç çubuğu — “Save Order” (Idle: “Save Order”, Saving: “Saving…”, değişiklik yokken disabled) ve değişiklikleri geri alan “Discard”. `initialOrder` snapshot’ı ile reset yapılır.
+  - **Hedefli UPDATE (upsert yok)**: `handleSaveOrder` her öğe için `supabase.from(table).update({ order_index: index }).eq('id', item.id)` çağrılarını `Promise.all` ile toplar; herhangi biri hatalıysa “Failed to update one or more items.” gösterilir, başarıda `orderChanged=false` ve “Order saved successfully.” bildirimi verilir.
+  - Hata/başarı notice kutuları ve mevcut tüm CRUD akışları korundu.
+- **Doğrulama**: `npx eslint src/app/admin` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+> Not: “Save Order” tam sayılı UPDATE yaptığı için `upsert` ile INSERT tetiklenmesi ve NOT NULL ihlalleri ortadan kalktı. RLS’teki `authenticated` UPDATE policy’si yeterlidir.
+
+## [2026-09-15 13:24] — Admin: Sürükle-Bırak Sıralama (Schools & Events)
+
+- **Paketler**: `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities` kuruldu.
+- **`src/components/admin/SortableList.tsx` (yeni)**: Yeniden kullanılabilir jenerik sıralanabilir liste. `DndContext` + `SortableContext` (verticalListSortingStrategy), PointerSensor (5px mesafe eşiği) ve KeyboardSensor (klavye erişilebilirliği). Her satır solda `cursor-grab active:cursor-grabbing` tutamaç (GripVertical tarzı inline SVG) gösterir; `onDragEnd`'de `arrayMove` ile yeni dizi callback ile iletilir. Sürükleme sırasında satır `z-10 opacity-80`.
+- **`src/app/admin/schools/page.tsx` güncellendi**:
+  - Statik tablo yerine `SortableList` — satırda tutamaç, logo, ad (EN/EL), şehir, üyelik rozeti ve Edit/Delete aksiyonları.
+  - **Optimistik persist**: `handleReorder` yeni sırayı lokal state’e uygular, her öğenin `order_index`’ini 0..n olarak yeniden hesaplar ve Supabase’e `upsert([{id, order_index}…])` ile yazar; başarıda “Order updated” notice’ı, hata olursa “Failed to update order. …”.
+  - Formdan manuel “Order index” inputu kaldırıldı; yeni kayıt sonda (`order_index = schools.length`), düzenlemede mevcut sıra korunur.
+- **`src/app/admin/events/page.tsx` güncellendi**: Aynı desen — `SortableList` (tutamaç, kapak görseli, başlık EN/EL + tarih, tema rengi noktası, Edit/Delete), `handleReorder` optimistik + `upsert`, “Order updated” geri bildirimi. Formdan “Order index” inputu kaldırıldı; yeni kayıt sonda, düzenlemede sıra korunur. (Bir önceki adımdaki çift dilli yan yana kolonlar ve native date picker korundu; fazlalık kalan bir etiket temizlendi.)
+- **Doğrulama**: `npx eslint src/app/admin src/components/admin` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+> Not: `upsert` yalnız `id` + `order_index` gönderiyor; RLS’teki `authenticated` UPDATE policy’si gerektirir (mevcut). Runtime test için oturum açılmış admin gerekir.
+
+## [2026-09-15 13:19] — Admin Events Formu: Yan Yana EN/EL Kolonları + Native Date Picker
+
+- **`src/app/admin/events/page.tsx` güncellendi**: Sekmeli dil geçişi kaldırıldı; çift dilli alanlar artık aynı anda yan yana görünüyor, tarih ise tek bir native takvim seçicisiyle yönetiliyor.
+  - **Tabs kaldırıldı**: `LangTab` tipi, `langTab` state’i ve “English (EN)/Greek (EL)” toggle butonları tamamen silindi.
+  - **2 kolonlu düzen**: `grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8`. Sol kolon “English Details (EN)” (`rounded-2xl border border-black/5 bg-slate-50/50 p-6`): Title (EN), Location (EN), Description 1 (EN), Description 2 (EN). Sağ kolon “Greek Details (EL)” (`rounded-2xl border border-brand-pink-light bg-brand-pink-light/20 p-6`): Title (EL), Location (EL), Description 1/2 (EL). Görsel ayrım belirgin.
+  - **Ortak alanlar (alt grid)**: Tek “Event Date *” alanı artık `<input type="date">` native takvim seçicisi — `updateDate()` her iki dil tarih alanını (`date_en` ve `date_el`) aynı YYYY-MM-DD değeriyle doldurur (açıklama notu eklendi). Ayrıca Theme color, Order index ve “Cover Image (and gallery)” yükleme alanları korundu.
+  - Tüm etiket/buton/boş durum metinleri İngilizce kalıyor.
+- **Doğrulama**: `npx eslint` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+> Not: Tarih artık ISO (YYYY-MM-DD) olarak saklanıyor; eski serbest metin tarihler düzenlenirken tarih alanı boş gelebilir, seçimle birlikte her iki dile ISO tarih yazılır.
+
+## [2026-09-15 13:15] — Admin Events: Edit Akışı + Schools Standardına Uyum
+
+- **`src/app/admin/events/page.tsx` yeniden yazıldı** (`/admin/schools` ile aynı UX/UI standardı):
+  - **Tam Edit/Update akışı**: Tabloda her satıra “Edit” butonu. Tıklandığında form seçili etkinliğin verileriyle dolar (title/date/location EN-EL, col1/col2, theme_color, order_index, images); başlık “Edit Event: [Title]” olur, submit butonu “Update Event”; “Cancel” formu temizleyip Create moduna döner. Submit `supabase.from('events').update(...).eq('id', editingId)`, ardından liste yenilenir.
+  - **Görsel yönetimi**: Mevcut `images` dizisi forma yüklenir; ilk görsel “COVER” etiketiyle işaretlenir. Yeni dosya(lar) yüklenerek (media bucket) eklenir/değiştirilir, tek tek kaldırılabilir; yeni dosya seçilmezse mevcut korunur.
+  - **EN/EL sekmeleri**: Kompakt tab toggle (`English (EN)` / `Greek (EL)`), yalnız ilgili dilin başlık/tarih/konum/açıklama alanlarını gösterir; ortak alanlar (tema, sıra, kapak görseli) her zaman görünür.
+  - **Tam İngilizce UI**: Butonlar “Create Event”, “Update Event”, “Cancel”, “Edit”, “Delete”; etiketler “Title (EN/EL)”, “Event Date”, “Location (EN/EL)”, “Description 1/2 (EN/EL)”, “Cover Image (and gallery)”; boş/loda durumları İngilizce. Confirm dialogu “Are you sure you want to delete this event?”. Başarı mesajları: “Event updated successfully”, “Event created successfully”, “Event deleted successfully” (yeşil notice kutusu). Hata mesajları “Failed to save/delete data. …”.
+  - Delete akışındaki tanısal oturum/RLS kontrolleri (getSession + `delete({count:'exact'}).select()`) korundu; tüm mesajlar İngilizce.
+- **Doğrulama**: `npx eslint` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
 ## [2026-09-15 12:25] — Admin Paneli Tamamen İngilizceye Yerlileştirildi (TR metin temizliği)
 
 - **`src/app/admin/schools/page.tsx` güncellendi**:

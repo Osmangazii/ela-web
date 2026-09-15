@@ -3,6 +3,7 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
+import SortableList from "@/components/admin/SortableList";
 import type { SchoolItem } from "@/types/database";
 
 interface FormState {
@@ -16,7 +17,6 @@ interface FormState {
   member_status_el: string;
   description_en: string;
   description_el: string;
-  order_index: number;
 }
 
 const EMPTY_FORM: FormState = {
@@ -30,7 +30,6 @@ const EMPTY_FORM: FormState = {
   member_status_el: "",
   description_en: "",
   description_el: "",
-  order_index: 0,
 };
 
 const SUBTITLE_PRESETS = [
@@ -75,6 +74,9 @@ export default function AdminSchools() {
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [orderChanged, setOrderChanged] = useState(false);
+  const [savingOrder, setSavingOrder] = useState(false);
+  const [initialOrder, setInitialOrder] = useState<SchoolItem[]>([]);
   const [subtitlePresetIdx, setSubtitlePresetIdx] = useState(SUBTITLE_CUSTOM_INDEX);
   const [memberPresetIdx, setMemberPresetIdx] = useState(0);
 
@@ -87,7 +89,10 @@ export default function AdminSchools() {
     if (err) {
       setError(err.message);
     } else if (data) {
-      setSchools((data as unknown as SchoolItem[]) ?? []);
+      const list = (data as unknown as SchoolItem[]) ?? [];
+      setSchools(list);
+      setInitialOrder(list);
+      setOrderChanged(false);
     }
     setLoading(false);
   }
@@ -127,7 +132,6 @@ export default function AdminSchools() {
       member_status_el: school.member_status_el ?? "",
       description_en: school.description_en ?? school.founder_info ?? "",
       description_el: school.description_el ?? school.founder_info ?? "",
-      order_index: school.order_index ?? 0,
     });
     setImageUrl(school.image_url);
 
@@ -206,6 +210,9 @@ export default function AdminSchools() {
     const subtitleEl = trimmed(form.subtitle_el).toUpperCase();
     const statusEn = trimmed(form.member_status_en).toUpperCase();
     const statusEl = trimmed(form.member_status_el).toUpperCase();
+    // Order is derived from the drag-and-drop list, not a manual input.
+    const existing = schools.find((s) => s.id === editingId);
+    const orderValue = existing ? (existing.order_index ?? 0) : schools.length;
     const payload = {
       name_en: form.name_en,
       name_el: form.name_el,
@@ -217,7 +224,7 @@ export default function AdminSchools() {
       member_status_el: statusEl || null,
       description_en: form.description_en || null,
       description_el: form.description_el || null,
-      order_index: form.order_index,
+      order_index: orderValue,
       image_url: imageUrl,
       name: form.name_en || form.name_el,
       city: form.city_en || form.city_el,
@@ -238,6 +245,47 @@ export default function AdminSchools() {
     setShowForm(false);
     setSaving(false);
     await loadSchools();
+  }
+
+  function handleReorder(next: SchoolItem[]) {
+    // Optimistic local reorder only — persistence happens via "Save Order".
+    const reordered = next.map((s, i) => ({ ...s, order_index: i }));
+    setSchools(reordered);
+    setNotice(null);
+    setOrderChanged(true);
+  }
+
+  async function handleSaveOrder() {
+    if (!orderChanged || savingOrder) return;
+    setSavingOrder(true);
+    setError(null);
+    setNotice(null);
+
+    const supabase = createClient();
+    const results = await Promise.all(
+      schools.map((school, index) =>
+        supabase.from("schools").update({ order_index: index }).eq("id", school.id),
+      ),
+    );
+    const hasError = results.some((res) => res.error);
+
+    if (hasError) {
+      setError("Failed to update one or more items.");
+      setSavingOrder(false);
+      return;
+    }
+
+    setInitialOrder(schools);
+    setOrderChanged(false);
+    setNotice("Order saved successfully.");
+    setSavingOrder(false);
+  }
+
+  function handleResetOrder() {
+    if (!orderChanged) return;
+    setSchools(initialOrder);
+    setOrderChanged(false);
+    setNotice(null);
   }
 
   async function handleDelete(school: SchoolItem) {
@@ -408,17 +456,7 @@ export default function AdminSchools() {
           </div>
 
           {/* Shared fields */}
-          <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
-            <label className="block">
-              <span className={labelClass()}>Order index</span>
-              <input
-                className={inputClass}
-                type="number"
-                value={form.order_index}
-                onChange={(e) => update("order_index", Number(e.target.value))}
-              />
-            </label>
-
+          <div className="mt-6">
             <div>
               <span className={labelClass()}>Logo / image</span>
               <div className="flex flex-wrap items-center gap-3">
@@ -471,61 +509,77 @@ export default function AdminSchools() {
       ) : schools.length === 0 ? (
         <p className="mt-8 text-sm text-slate-500">No schools yet. Create your first one above.</p>
       ) : (
-        <div className="mt-6 overflow-x-auto rounded-2xl border border-slate-200/80 bg-white">
-          <table className="w-full min-w-190 text-left text-sm">
-            <thead>
-              <tr className="border-b border-slate-100 text-xs font-bold uppercase tracking-wider text-slate-400">
-                <th className="px-4 py-3">Logo</th>
-                <th className="px-4 py-3">Name (EN / EL)</th>
-                <th className="px-4 py-3">City</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Order</th>
-                <th className="px-4 py-3 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {schools.map((school) => (
-                <tr key={school.id} className="border-b border-slate-50 last:border-0 hover:bg-brand-bg/40">
-                  <td className="px-4 py-3">
-                    {school.image_url ? (
-                      <span className="relative block h-12 w-12 overflow-hidden rounded-lg bg-slate-50">
-                        <Image src={school.image_url} alt="" fill className="object-contain p-1" sizes="48px" />
-                      </span>
-                    ) : (
-                      <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-slate-100 text-xs font-bold text-slate-400">
-                        —
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3">
-                    <p className="font-bold text-slate-900">{school.name_en ?? school.name}</p>
-                    <p className="text-xs text-slate-500">{school.name_el ?? school.name}</p>
-                  </td>
-                  <td className="px-4 py-3 text-slate-600">{school.city_en ?? school.city}</td>
-                  <td className="px-4 py-3 text-xs text-slate-500">{school.member_status_en ?? "—"}</td>
-                  <td className="px-4 py-3 text-slate-500">{school.order_index}</td>
-                  <td className="px-4 py-3">
-                    <div className="flex justify-end gap-2">
-                      <button
-                        type="button"
-                        onClick={() => startEdit(school)}
-                        className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(school)}
-                        className="rounded-full border border-brand-pink/40 bg-white px-4 py-1.5 text-sm font-semibold text-brand-pink transition-colors hover:bg-brand-pink hover:text-white"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="mt-6">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-xs text-slate-400">Drag the handle to reorder, then save your changes.</p>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleResetOrder}
+                disabled={!orderChanged || savingOrder}
+                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Discard
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveOrder}
+                disabled={!orderChanged || savingOrder}
+                className="rounded-full bg-brand-pink px-5 py-2 text-sm font-bold text-white shadow-sm transition-all hover:bg-[#ff637b] hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {savingOrder ? "Saving…" : "Save Order"}
+              </button>
+            </div>
+          </div>
+          <SortableList
+            items={schools}
+            onReorder={handleReorder}
+            renderItem={(school: SchoolItem, handle) => (
+              <div className="flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-4">
+                {handle}
+
+                <span className="relative block h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-slate-50">
+                  {school.image_url ? (
+                    <Image src={school.image_url} alt="" fill className="object-contain p-1" sizes="48px" />
+                  ) : (
+                    <span className="flex h-full w-full items-center justify-center text-xs font-bold text-slate-400">
+                      —
+                    </span>
+                  )}
+                </span>
+
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-bold text-slate-900">{school.name_en ?? school.name}</p>
+                  <p className="truncate text-xs text-slate-500">
+                    {(school.name_el ?? school.name) || "—"} · {school.city_en ?? school.city}
+                  </p>
+                </div>
+
+                {school.member_status_en && (
+                  <span className="hidden shrink-0 rounded-full bg-brand-pink-light/60 px-3 py-1 text-xs font-bold text-brand-green sm:inline-block">
+                    {school.member_status_en}
+                  </span>
+                )}
+
+                <div className="flex shrink-0 justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => startEdit(school)}
+                    className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(school)}
+                    className="rounded-full border border-brand-pink/40 bg-white px-4 py-1.5 text-sm font-semibold text-brand-pink transition-colors hover:bg-brand-pink hover:text-white"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            )}
+          />
         </div>
       )}
     </div>
