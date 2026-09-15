@@ -167,7 +167,7 @@ export default function WhoWeAre() {
             <div className="relative lg:col-span-5">
               <div className="relative mx-auto w-full max-w-md">
                 {/* Main summary card */}
-                <div className="relative z-0 rotate-1 rounded-4xl border border-brand-pink-light bg-white p-8 shadow-lg transition-transform duration-300 hover:rotate-0 hover:shadow-xl">
+                <div className="relative z-0 rotate-1 overflow-hidden rounded-4xl border border-brand-pink-light bg-white p-8 shadow-lg transition-transform duration-300 hover:rotate-0 hover:shadow-xl">
                   <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-2 rounded-t-4xl bg-linear-to-r from-brand-pink to-brand-pink-light" />
 
                   <div className="rounded-2xl bg-brand-bg p-6">
@@ -284,7 +284,7 @@ export default function WhoWeAre() {
                           {status}
                         </p>
                       )}
-                      <p className="mb-4 line-clamp-3 min-h-20 text-center text-sm leading-relaxed text-gray-600">
+                      <p className="mb-4 line-clamp-3 overflow-hidden text-ellipsis text-center text-sm leading-relaxed text-gray-600">
                         {description}
                       </p>
                       <div className="min-h-6">

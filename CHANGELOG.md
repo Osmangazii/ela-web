@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## [2026-09-15 14:56] — Kart Üst Renk Şeridi Köşe Taşması Düzeltildi
+
+- **`src/app/who-we-are/page.tsx` güncellendi**: Hero özet kartının en üstündeki pembe gradient şerit (`h-2 rounded-t-4xl bg-linear-to-r …`) kartın yuvarlatılmış köşelerinden taşıp sivri çıkıntı oluşturuyordu.
+  - Kartın kök div’ine `overflow-hidden` eklendi — şerit artık kartın `rounded-4xl` köşelerine otomatik kırpılıyor, sol/sağ üst köşelerde taşma kalmıyor.
+  - Şerit konumu (`absolute inset-x-0 top-0`, `w-full`, negatif margin yok) ve kartın rotate/hover davranışı korundu.
+- **Doğrulama**: `npx eslint` ve `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
+## [2026-09-15 14:55] — Yarım Satır Taşması Düzeltildi (Line Clamp + Overflow)
+
+- **`src/app/who-we-are/page.tsx` güncellendi**: Okul kartı açıklamesinde sabit yükseklik (`min-h-20`) kaldırıldı; paragraf artık `line-clamp-3 overflow-hidden text-ellipsis` ile tam 3 satırda kesiliyor ve temizce `…` ile bitiyor. “Read More” öncesi `mb-4` boşluğu korundu.
+- **`src/app/events/EventsView.tsx` güncellendi**: Event bölümünde `lg:overflow-hidden` kaldırıldı (yerine `lg:overflow-y-auto`) — koyu “Highlights & Impact” bloğu içeriği viewport’tan yüksek olduğunda son satır yarım kesilmiyor, gerektiğinde bölüm içi kaydırma ile tamamı erişilebilir oluyor.
+- **Doğrulama**: `npx eslint` (who-we-are + events) sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
 ## [2026-09-15 14:12] — Mobilde Mor Alan–Footer Arasındaki Beyaz Boşluk Sıfırlandı
 
 - **`src/app/events/EventsView.tsx` güncellendi**: Mobilde etkinlik bölümünün alt padding’i (`pb-12`) kaldırıldı.
