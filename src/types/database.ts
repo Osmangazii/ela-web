@@ -28,12 +28,24 @@ export interface EventItem {
 /** Row type for the `schools` table. */
 export interface SchoolItem {
   id: string;
+  // legacy columns (kept for backwards compatibility / fallback)
   name: string;
   city: string;
   founder_info: string | null;
   image_url: string | null;
   order_index: number | null;
   created_at: string | null;
+  // bilingual columns
+  name_en: string | null;
+  name_el: string | null;
+  subtitle_en: string | null;
+  subtitle_el: string | null;
+  city_en: string | null;
+  city_el: string | null;
+  member_status_en: string | null;
+  member_status_el: string | null;
+  description_en: string | null;
+  description_el: string | null;
 }
 
 /** Supabase Database shape used to type the clients. */
@@ -86,6 +98,16 @@ export interface Database {
           image_url?: string | null;
           order_index?: number | null;
           created_at?: string | null;
+          name_en?: string | null;
+          name_el?: string | null;
+          subtitle_en?: string | null;
+          subtitle_el?: string | null;
+          city_en?: string | null;
+          city_el?: string | null;
+          member_status_en?: string | null;
+          member_status_el?: string | null;
+          description_en?: string | null;
+          description_el?: string | null;
         };
         Update: Partial<{
           name: string;
@@ -93,6 +115,16 @@ export interface Database {
           founder_info: string | null;
           image_url: string | null;
           order_index: number | null;
+          name_en: string | null;
+          name_el: string | null;
+          subtitle_en: string | null;
+          subtitle_el: string | null;
+          city_en: string | null;
+          city_el: string | null;
+          member_status_en: string | null;
+          member_status_el: string | null;
+          description_en: string | null;
+          description_el: string | null;
         }>;
         Relationships: [];
       };

@@ -1,8 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import { useLanguage, type Lang } from "@/components/language-context";
+import { createClient } from "@/lib/supabase/client";
+import type { SchoolItem } from "@/types/database";
 
 interface Copy {
   // Hero + manifesto
@@ -96,56 +99,31 @@ const DICT: Record<Lang, Copy> = {
   },
 };
 
-const CITY: Record<string, { en: string; el: string }> = {
-  athens: { en: "Athens", el: "Αθήνα" },
-  patras: { en: "Patras", el: "Πάτρα" },
-  agrinio: { en: "Agrinio", el: "Αγρίνιο" },
-  thessaloniki: { en: "Thessaloniki", el: "Θεσσαλονίκη" },
-  larissa: { en: "Larissa", el: "Λάρισα" },
-  heraklion: { en: "Heraklion", el: "Ηράκλειο" },
-  volos: { en: "Volos", el: "Βόλος" },
-  piraeus: { en: "Piraeus", el: "Πειραιάς" },
-  chania: { en: "Chania", el: "Χανιά" },
-  corfu: { en: "Corfu", el: "Κέρκυρα" },
-  ioannina: { en: "Ioannina", el: "Ιωάννινα" },
-};
-
-const SCHOOL_IMAGES = [
-  "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?auto=format&fit=crop&w=800&q=80",
-];
-
-interface School {
-  key: string;
-  name: string;
-  initials: string;
-  cityKey: string;
-  category: "language" | "hub";
-  founding: boolean;
-}
-
-const SCHOOLS: School[] = [
-  { key: "koryfi", name: "Koryfi", initials: "K", cityKey: "athens", category: "language", founding: true },
-  { key: "tsiavou", name: "Th. Tsiavou – Rapti", initials: "TR", cityKey: "patras", category: "hub", founding: true },
-  { key: "varela", name: "Varela", initials: "V", cityKey: "agrinio", category: "language", founding: true },
-  { key: "success", name: "Success", initials: "S", cityKey: "thessaloniki", category: "hub", founding: true },
-  { key: "p5", name: "Partner School #5", initials: "P", cityKey: "larissa", category: "language", founding: false },
-  { key: "p6", name: "Partner School #6", initials: "P", cityKey: "heraklion", category: "hub", founding: false },
-  { key: "p7", name: "Partner School #7", initials: "P", cityKey: "volos", category: "language", founding: false },
-  { key: "p8", name: "Partner School #8", initials: "P", cityKey: "piraeus", category: "hub", founding: false },
-  { key: "p9", name: "Partner School #9", initials: "P", cityKey: "chania", category: "language", founding: false },
-  { key: "p10", name: "Partner School #10", initials: "P", cityKey: "corfu", category: "hub", founding: false },
-  { key: "p11", name: "Partner School #11", initials: "P", cityKey: "ioannina", category: "language", founding: false },
-  { key: "p12", name: "Partner School #12", initials: "P", cityKey: "thessaloniki", category: "hub", founding: false },
-];
-
 export default function WhoWeAre() {
   const { lang } = useLanguage();
   const t = DICT[lang];
+
+  const [schools, setSchools] = useState<SchoolItem[]>([]);
+  const [loadingSchools, setLoadingSchools] = useState(true);
+  const [selectedSchool, setSelectedSchool] = useState<SchoolItem | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from("schools")
+        .select("*")
+        .order("order_index", { ascending: true });
+      if (active) {
+        setSchools((data as unknown as SchoolItem[]) ?? []);
+        setLoadingSchools(false);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-brand-bg text-brand-green antialiased">
@@ -234,7 +212,7 @@ export default function WhoWeAre() {
         </section>
 
         {/* MEMBERS / SCHOOLS */}
-        <section id="members" className="mx-auto w-full max-w-7xl px-6 py-12 md:px-8">
+        <section id="members" className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <header className="text-center">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-pink">
               {t.membersKicker}
@@ -247,44 +225,149 @@ export default function WhoWeAre() {
             </p>
           </header>
 
-          <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-            {SCHOOLS.map((school, i) => {
-              const foundingIndex = school.founding
-                ? SCHOOLS.filter((s) => s.founding).findIndex((s) => s.key === school.key)
-                : -1;
-              const cityLabel = CITY[school.cityKey][lang];
-              return (
-                <article key={school.key} className="group flex cursor-pointer flex-col bg-transparent">
-                  <div className="relative mb-4 aspect-16/10 w-full cursor-pointer rounded-2xl transition-all duration-300 ease-out hover:scale-105 hover:shadow-2xl hover:z-20">
-                    <Image
-                      src={SCHOOL_IMAGES[i % SCHOOL_IMAGES.length]}
-                      alt={school.name}
-                      fill
-                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                      className="rounded-2xl object-cover"
-                    />
-                    <span className="absolute bottom-3 left-3 rounded-full bg-black/40 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-md">
-                      {cityLabel}
-                    </span>
-                  </div>
+          {loadingSchools ? (
+            <p className="mt-16 text-center text-sm text-slate-500">
+              {lang === "en" ? "Loading member schools…" : "Φόρτωση σχολείων-μελών…"}
+            </p>
+          ) : schools.length === 0 ? (
+            <p className="mt-16 text-center text-sm text-slate-500">
+              {lang === "en"
+                ? "Member schools are being updated. Please check back soon."
+                : "Τα σχολεία-μέλη ενημερώνονται. Παρακαλούμε ελάτε ξανά σύντομα."}
+            </p>
+          ) : (
+            <div className="mx-auto mt-16 grid max-w-7xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+              {schools.map((school) => {
+                const name = (lang === "en" ? school.name_en : school.name_el) ?? school.name;
+                const subtitle = (lang === "en" ? school.subtitle_en : school.subtitle_el) ?? "";
+                const city = (lang === "en" ? school.city_en : school.city_el) ?? school.city;
+                const status =
+                  (lang === "en" ? school.member_status_en : school.member_status_el) ?? "";
+                const description =
+                  (lang === "en" ? school.description_en : school.description_el) ??
+                  school.founder_info ??
+                  "";
+                const hasLongText = description.length > 80;
+                return (
+                  <article
+                    key={school.id}
+                    className="group flex min-h-105 flex-col items-center justify-between rounded-3xl border border-black/5 bg-white p-8 text-center shadow-sm transition-all duration-300 hover:shadow-xl lg:p-10"
+                  >
+                    <div className="relative mx-auto mb-6 flex aspect-square w-full max-w-70 items-center justify-center overflow-hidden rounded-2xl border border-black/5 bg-slate-50 p-3 sm:max-w-80">
+                      {school.image_url ? (
+                        <Image
+                          src={school.image_url}
+                          alt={name}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 340px"
+                          className="object-contain"
+                        />
+                      ) : (
+                        <span className="flex h-full w-full items-center justify-center text-5xl font-extrabold text-brand-green">
+                          {name.charAt(0).toUpperCase()}
+                        </span>
+                      )}
+                    </div>
 
-                  <p className="mb-1.5 text-xs font-bold uppercase tracking-wider text-brand-pink">
-                    {cityLabel.toUpperCase()}
-                  </p>
-                  <h3 className="line-clamp-1 text-lg font-bold leading-snug text-slate-900 transition-colors group-hover:text-brand-green">
-                    {school.name}
-                  </h3>
-                  <p className="mt-1 line-clamp-2 text-sm leading-relaxed font-normal text-slate-600">
-                    {school.founding
-                      ? t.founding[foundingIndex]?.blurb
-                      : t.partner[school.category]}
-                  </p>
-                </article>
-              );
-            })}
-          </div>
+                    <div className="flex w-full flex-col items-center">
+                      <h3 className="mt-0 mb-1 text-center text-2xl font-bold text-gray-900">{name}</h3>
+                      {subtitle && (
+                        <p className="mb-3 text-center text-xs font-semibold uppercase tracking-widest text-gray-400">
+                          {subtitle}
+                        </p>
+                      )}
+                      <p className="mb-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-400">
+                        {city}
+                      </p>
+                      {status && (
+                        <p className="mb-4 text-center text-xs font-medium uppercase tracking-wider text-gray-400">
+                          {status}
+                        </p>
+                      )}
+                      <p className="mb-4 line-clamp-3 min-h-20 text-center text-sm leading-relaxed text-gray-600">
+                        {description}
+                      </p>
+                      <div className="min-h-6">
+                        {hasLongText && (
+                          <button
+                            type="button"
+                            onClick={() => setSelectedSchool(school)}
+                            className="text-sm font-semibold text-red-600 hover:underline"
+                          >
+                            Read More
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
         </section>
       </main>
+
+      {/* School detail modal */}
+      {selectedSchool &&
+        (() => {
+          const s = selectedSchool;
+          const name = (lang === "en" ? s.name_en : s.name_el) ?? s.name;
+          const subtitle = (lang === "en" ? s.subtitle_en : s.subtitle_el) ?? "";
+          const city = (lang === "en" ? s.city_en : s.city_el) ?? s.city;
+          const status =
+            (lang === "en" ? s.member_status_en : s.member_status_el) ?? "";
+          const description =
+            (lang === "en" ? s.description_en : s.description_el) ?? s.founder_info ?? "";
+          return (
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label={name}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+              onClick={() => setSelectedSchool(null)}
+            >
+              <div
+                className="relative max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-3xl border border-black/5 bg-white p-8 text-center shadow-xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  type="button"
+                  aria-label="Close"
+                  onClick={() => setSelectedSchool(null)}
+                  className="absolute top-4 right-4 flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition-colors hover:bg-brand-pink hover:text-white"
+                >
+                  ✕
+                </button>
+
+                <div className="relative mx-auto mb-5 flex h-40 w-40 items-center justify-center overflow-hidden rounded-2xl border border-black/5 bg-slate-50 p-3">
+                  {s.image_url ? (
+                    <Image src={s.image_url} alt={name} fill sizes="200px" className="object-contain" />
+                  ) : (
+                    <span className="flex h-full w-full items-center justify-center text-4xl font-extrabold text-brand-green">
+                      {name.charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                </div>
+
+                <h3 className="text-2xl font-bold text-gray-900">{name}</h3>
+                {subtitle && (
+                  <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-gray-400">
+                    {subtitle}
+                  </p>
+                )}
+                <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-[#ff6b6b]">
+                  {city}
+                </p>
+                {status && (
+                  <p className="mt-1 text-xs font-medium uppercase tracking-wider text-gray-400">
+                    {status}
+                  </p>
+                )}
+                <p className="mt-4 text-left text-base leading-relaxed text-gray-600">{description}</p>
+              </div>
+            </div>
+          );
+        })()}
     </div>
   );
 }

@@ -1,5 +1,83 @@
 # CHANGELOG
 
+## [2026-09-15 12:25] — Admin Paneli Tamamen İngilizceye Yerlileştirildi (TR metin temizliği)
+
+- **`src/app/admin/schools/page.tsx` güncellendi**:
+  - Preset etiketleri İngilizceye çevrildi: “Yok / Boş” → “None / Empty”, “Custom (Manuel Giriş)” → “Custom (Manual Input)” (hem SUBTITLE_PRESETS hem MEMBER_STATUS_PRESETS).
+  - Form etiketleri düzeltildi: “Subtitle preset” → “Subtitle Preset”, “Member status preset” → “Member Status Preset”, custom input etiketleri “Member Status (EN/EL)”.
+  - **Success/Error mesajları**: `notice` state eklendi — kaydetmede “School created successfully.” / “School updated successfully.”, silmede “School deleted successfully.”; hata mesajları “Failed to save data. …” / “Failed to delete data. …”. Yeşil notice kutusu eklendi.
+  - **Confirm dialogu**: “Are you sure you want to delete this item?” olarak standartlaştırıldı.
+- **`src/app/admin/events/page.tsx` güncellendi**: `notice` state eklendi — “Event created successfully.”, “Event deleted successfully.”; hata mesajı “Failed to save data. …”. Confirm dialogu “Are you sure you want to delete this item?” oldu (tanısal oturum/RLS uyarıları zaten İngilizceydi).
+- **Kontrol**: `src/app/admin` altında Türkçe UI metni kalmadı (Turkic karakter taraması `[ıİşŞğĞçÇöÖüÜ]` boş döndü; anahtar kelime taraması yalnız önceden düzeltilen etiketleri buldu).
+- **Doğrulama**: `npx eslint src/app/admin` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
+## [2026-09-15 12:23] — Admin Schools: Subtitle & Member Status Hazır Kalıp Dropdownları
+
+- **`src/app/admin/schools/page.tsx` güncellendi**: Subtitle ve Member Status için otomatik Yunanca eşleşmeli hazır kalıp seçimi eklendi.
+  - **Sözlükler**: `SUBTITLE_PRESETS` (School of English, Language School, Foreign/Modern Language Center, Education Centers, English French German, School of Languages, School, ELC, Custom — her biri EN/EL eşleşmesiyle) ve `MEMBER_STATUS_PRESETS` (Yok/Boş, Founding Member, Member, Custom).
+  - **Davranış**: Subtitle `<select>`’inden bir kalıp seçilince form state’indeki `subtitle_en`/`subtitle_el` otomatik dolar; “Custom (Manuel Giriş)” seçilirse EN/EL serbest inputları açılır. Member Status `<select>`’inde “Founding Member”/“Member” seçimi EN/EL’i doldurur, “Yok / Boş” alanları temizler; Custom’da inputlar açılır. Seçili kalıp için özet (`EN: … · EL: …`) gösterilir.
+  - **Edit modu akıllı eşleşme**: Kayıt yüklenirken mevcut `subtitle_en/el` ve `member_status_en/el` değerleri presetlerle karşılaştırılır; eşleşme varsa dropdown o kalıbı seçer, yoksa “Custom” moduna geçip mevcut metinleri inputlara yazar.
+  - **Kayıt standardı**: Subtitle ve Member Status kaydedilirken `trim().toUpperCase()` uygulanır; boş değerler `null` olarak kaydedilir. Legacy `name`/`city` senkronizasyonu korundu.
+- **Doğrulama**: `npx eslint` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
+## [2026-09-15 12:12] — Okullar: Çift Dilli Alanlar, Admin Edit Desteği ve Yeni Kart Hiyerarşisi
+
+- **`supabase/migrations/0002_schools_bilingual.sql` (yeni)**: `schools` tablosuna çift dilli kolonlar eklendi (IF NOT EXISTS) — `name_en/el`, `subtitle_en/el`, `city_en/el`, `member_status_en/el`, `description_en/el`. Eski `name`/`city`/`founder_info` geriye dönük uyumluluk için korundu.
+- **`src/types/database.ts` güncellendi**: `SchoolItem` yeni EN/EL kolonlarıyla genişletildi; `Database.public.Tables.schools` Insert/Update tipleri de yeni alanları içerecek şekilde güncellendi.
+- **`src/app/admin/schools/page.tsx` yeniden yazıldı**:
+  - **Çift dilli form**: İki kolon — English (EN) / Greek (EL). Alanlar: Name (EN/EL), Subtitle (EN/EL), City (EN/EL), Member status (EN/EL), Description (EN/EL) + Order index + logo yükleme (`media/schools/…` → public URL).
+  - **Edit desteği**: Tabloya her satırda “Edit” butonu; `startEdit` mevcut verileri forma doldurur (legacy fallback: `name_en ?? name` vb.), form başlığı “Edit School”, submit `update().eq('id', id)`; “Cancel” yeni ekleme moduna döndürür. Insert/update, legacy `name`/`city` alanlarını da senkronlar.
+  - Tablo kolonları: Logo, Name (EN/EL), City, Status, Order, Actions (Edit + Delete). Delete’te görsel storage’dan best-effort temizlenir.
+- **`src/app/who-we-are/page.tsx` güncellendi**: Kart hiyerarşisi orijinal tasarıma göre — Logo → Okul Adı → Alt Başlık → Şehir → Üyelik Rozeti → Açıklama (`line-clamp-3`) → “Read More”. Dil seçimine göre alanlar `*_en`/`*_el` (fallback legacy `name`/`city`/`founder_info`) ile gösterilir. “Read More” (`text-red-600 hover:underline`) temiz bir dialog açar; modal seçili dile göre logo, ad, alt başlık, şehir, üyelik ve tam açıklamayı gösterir.
+- **Doğrulama**: `npx eslint` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+> Not: Yeni kolonların kullanılması için `0002_schools_bilingual.sql`’in Supabase SQL Editor’de çalıştırılması gerekir. Eski kayıtlarda yeni alanlar boş olduğundan kartlar legacy `name/city/founder_info` fallback’iyle görünmeye devam eder.
+
+## [2026-09-15 12:05] — Okul Kartları: Uzun Metin Dengeleme + Detay Modalı
+
+- **`src/app/who-we-are/page.tsx` güncellendi** (üye kartları): Uzun `founder_info` metinlerinin grid satırını uzatıp kartları eşitsiz bırakması engellendi.
+  - **Line-clamp & sabit alan**: Açıklama artık `line-clamp-3 min-h-20 max-w-xs` — 3 satırı aşan metin üç nokta ile kesilir; `min-h-20` ile kısa metinlerde de aynı yükseklik rezerve edilir. Kart `flex flex-col justify-between` hiyerarşisi (mevcut `min-h-105`) ile kolonlar arası simetri korunur.
+  - **SEÇENEK B — Temiz Modal (mobil dostu)**: Metin 80 karakteri aşarsa açıklamanın altında “Read more →” bağlantısı görünür. Tıklandığında `selectedSchool` state’iyle erişilebilir bir dialog açılır (`role="dialog" aria-modal`): okul logosu (kare, `object-contain`), ad, şehir ve tam açıklama; `✕` veya arka plana tıklayarak kapatılır, içerik `max-h-[85vh] overflow-y-auto` ile kaydırılabilir. Hizalama için “Read more” alanı boş olsa da `min-h-6` ile yer tutar.
+  - Mevcut grid, palet, logo alanı ve tipografi korundu.
+- **Doğrulama**: `npx eslint` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
+## [2026-09-15 12:04] — Who We Are: Amblem/Logo Alanı Büyütüldü (Baskın Görsel)
+
+- **`src/app/who-we-are/page.tsx` güncellendi** (üye kartları logo alanı): Sabit `w-48/w-52` sınırı kaldırıldı; amblemler artık kartın üst kısmını baskın şekilde dolduruyor.
+  - **Kapsayıcı**: `relative mx-auto mb-6 flex w-full max-w-70 sm:max-w-80 aspect-square items-center justify-center overflow-hidden rounded-2xl border border-black/5 bg-slate-50 p-3` — hem genişlik hem 1:1 kare korunuyor.
+  - **Padding sadeleştirildi**: İç içe `p-4` + `p-2` kaldırıldı; yalnızca kapsayıcıda `p-3` var, görsel kenarlardan hafif nefes alıyor ve mümkün olan en büyük alanı kaplıyor.
+  - **Image**: `fill` + `className="object-contain"` (padding yok), `sizes="(max-width:768px) 100vw, 340px"` — 400×400 kare logo kırpılmadan dev alanı dolduruyor.
+  - Kart hiyerarşisi (ortalanmış logo → ad → şehir → kurucu bilgisi) ve mevcut palet/tipografi korundu.
+- **Doğrulama**: `npx eslint` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
+## [2026-09-15 11:54] — Who We Are: Üye Kartları Genişletildi (Premium & Ferah Düzen)
+
+- **`src/app/who-we-are/page.tsx` güncellendi** (`Our Members` bölümü): Küçük/sıkışık logo kartları, işaretlenen geniş ve belirgin premium tasarıma döndürüldü; mevcut renk paleti korundu.
+  - **Grid & konteyner**: `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10`, bölüm `max-w-7xl mx-auto px-4 sm:px-6 lg:px-8` ile sayfaya geniş oturuyor.
+  - **Kart mimarisi**: `bg-white rounded-3xl border border-black/5 shadow-sm hover:shadow-xl transition-all duration-300`, geniş iç boşluk `p-8 lg:p-10`, ortalanmış dikey düzen (`flex flex-col items-center text-center`), dolu görünüm için `min-h-105 justify-between`.
+  - **Logo alanı**: `relative mb-6 h-48 w-48 sm:h-52 sm:w-52 overflow-hidden rounded-2xl border border-black/5 bg-slate-50 p-4` (400×400 amblemler için büyük, kare); `<Image fill sizes="(max-width:768px) 100vw, 300px" className="object-contain p-2" />` — logo kırpılmadan sığar; görsel yoksa büyük baş harf fallback.
+  - **Tipografi**: Okul adı `text-2xl font-bold text-gray-900 mb-2`; şehir vurgulu mercan `text-sm font-semibold uppercase tracking-wider text-[#ff6b6b] mb-2`; kurucu bilgisi `text-base text-gray-600 leading-relaxed max-w-xs`.
+- **Doğrulama**: `npx eslint` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
+## [2026-09-15 11:53] — Who We Are: Okul Logoları 1:1 Kare Formata Uyarlandı
+
+- **`src/app/who-we-are/page.tsx` güncellendi** (okul kartları): 400×400 kare amblemler için logo alanı yeniden düzenlendi.
+  - **Kare kapsayıcı**: Logo alanı artık `relative mx-auto mb-5 flex aspect-square w-32 … sm:w-36` (1:1) ve `overflow-hidden rounded-2xl border border-slate-100 bg-white` — şeffaf logolar için temiz beyaz zemin, kartın köşelerine yapışmıyor.
+  - **Kırpma engellendi**: `<Image>` artık `object-contain` (eski `object-cover` kaldırıldı) + `p-3` iç boşluk; logo hiçbir kenardan kesilmiyor, tamamı kapsayıcı içine sığıyor. `width/height={400}` ile kare kaynak oranı korunuyor.
+  - **Fallback**: `image_url` yoksa okul adının baş harfi yine kare alanda ortalanıyor (`bg-brand-pink-light/40`).
+  - **Kart hiyerarşisi**: Üstte ortalanmış kare logo, altında ortalanmış okul adı (`text-center`), şehir (pembe uppercase) ve kurucu bilgisi (`line-clamp-2 text-center`) — dengeli dikey (flex-col) düzen. Hover pop/lift efekti (`hover:scale-105 hover:shadow-2xl hover:z-20`) korundu. Şehir overlay chip'i kaldırıldı (şehir artık başlık altında metin olarak).
+  - Renk paleti ve tipografi mevcut temaya sadık kalınarak korundu.
+- **Doğrulama**: `npx eslint` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
+## [2026-09-15 11:48] — Who We Are: Okul Listesi Supabase'e Bağlandı
+
+- **`src/app/who-we-are/page.tsx` güncellendi**: Okullar bölümü artık sabit/mock diziden değil, Supabase `schools` tablosundan dinamik çekiliyor.
+  - **Veri çekme**: `createClient()` (browser) → `supabase.from('schools').select('*').order('order_index', { ascending: true })`; sonuç `SchoolItem` tipiyle state’e alınır (`useEffect`, unmount guard’lı).
+  - **Dinamik kartlar**: Alan eşleşmeleri — görsel `image_url` (`next/image`, boşsa okul adının baş harfi ile fallback placeholder), ad `name`, şehir `city` (görsel üzeri chip + üstte uppercase meta), açıklama `founder_info`, sıralama `order_index` (sorguda sıralanıyor). Mevcut tasarım/CSS/animasyonlar (rounded-2xl, `hover:scale-105 hover:shadow-2xl hover:z-20`, aspect-16/10, brand renkleri) birebir korundu.
+  - **Yükleme & boş durum**: Veri çekilirken “Loading member schools… / Φόρτωση σχολείων-μελών…”, liste boşsa “Member schools are being updated…” / Yunanca karşılığı gösterilir.
+  - **Temizlik**: Mock veriler (`CITY`, `SCHOOL_IMAGES`, `School` arayüzü, `SCHOOLS` dizisi) kaldırıldı.
+- **Danışmanlık notu**: Sayfa istemci bileşeni (`useLanguage`) olduğundan veri istemci tarafında çekiliyor; sunucu tarafı `revalidate` yerine burada client fetch tercih edildi. İstenirse okullar bölümü ayrı bir Server Component’e çıkarılıp `export const revalidate = 60` (veya `unstable_cache`) ile CACHE’lenebilir.
+- **Doğrulama**: `npx eslint` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
 ## [2026-09-08 12:44] — Hata Düzeltme: /admin/events Silme RLS Sessiz Başarısızlığı
 
 - **`src/app/admin/events/page.tsx` güncellendi** (`handleDelete` tanısal hale getirildi):

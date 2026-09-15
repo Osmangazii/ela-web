@@ -63,6 +63,7 @@ export default function AdminEvents() {
   const [images, setImages] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
 
   async function loadEvents() {
     const supabase = createClient();
@@ -132,6 +133,7 @@ export default function AdminEvents() {
     e.preventDefault();
     setSaving(true);
     setError(null);
+    setNotice(null);
 
     const supabase = createClient();
     const { error: err } = await supabase.from("events").insert({
@@ -151,11 +153,12 @@ export default function AdminEvents() {
     });
 
     if (err) {
-      setError(err.message);
+      setError(`Failed to save data. ${err.message}`);
       setSaving(false);
       return;
     }
 
+    setNotice("Event created successfully.");
     resetForm();
     setShowForm(false);
     setSaving(false);
@@ -163,7 +166,7 @@ export default function AdminEvents() {
   }
 
   async function handleDelete(event: EventItem) {
-    if (!window.confirm(`Delete event "${event.title_en}" permanently?`)) return;
+    if (!window.confirm("Are you sure you want to delete this item?")) return;
 
     const supabase = createClient();
 
@@ -209,6 +212,7 @@ export default function AdminEvents() {
     }
 
     // Success: remove from local state.
+    setNotice("Event deleted successfully.");
     setEvents((prev) => prev.filter((item) => item.id !== event.id));
   }
 
@@ -231,6 +235,11 @@ export default function AdminEvents() {
       {error && (
         <p className="mt-4 rounded-xl border border-brand-pink/40 bg-brand-pink/10 px-4 py-2.5 text-sm text-brand-green">
           {error}
+        </p>
+      )}
+      {notice && (
+        <p className="mt-4 rounded-xl border border-brand-green/30 bg-brand-green/10 px-4 py-2.5 text-sm text-brand-green">
+          {notice}
         </p>
       )}
 
