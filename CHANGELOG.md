@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## [2026-09-15 14:12] — Mobilde Mor Alan–Footer Arasındaki Beyaz Boşluk Sıfırlandı
+
+- **`src/app/events/EventsView.tsx` güncellendi**: Mobilde etkinlik bölümünün alt padding’i (`pb-12`) kaldırıldı.
+  - Event wrapper artık: `relative box-border flex w-full min-h-screen flex-col justify-between pt-24 pb-0 lg:h-screen lg:snap-start lg:overflow-hidden` — mobilde de hiç dikey boşluk kalmıyor.
+  - `flex flex-col justify-between` sayesinde mor “Highlights & Impact” bloğu bölümün en alt sınırına yapışıyor; hemen ardından gelen footer (snap konteyneri içinde, `w-full`) doğrudan mor alanın bittiği pikselden başlıyor — araya açık renkli sayfa zemini sızmıyor.
+  - Bölümler arası `gap`/`space-y` yok; negatif marj gerekmiyor.
+- **Doğrulama**: `npx eslint src/app/events` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
 ## [2026-09-15 14:05] — Events: Footer Snap Sızıntısı Düzeltildi
 
 - **Kök neden**: Global footer (`src/components/Footer.tsx`) layout’ta tüm sayfalarda render ediliyordu; `/events` sayfasında ise 100vh snap konteynerinin DIŞINDA kaldığı için ilk/ara etkinliklerde bile viewport altında görünüyor ve içeriği yukarı itiyordu.

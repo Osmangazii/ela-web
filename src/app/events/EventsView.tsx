@@ -130,7 +130,7 @@ function EventStory({ event, index }: { event: EventItem; index: number }) {
   const reversed = index % 2 === 1;
 
   return (
-    <div className="relative box-border flex w-full min-h-screen flex-col justify-between pt-24 pb-12 lg:h-screen lg:snap-start lg:overflow-hidden lg:pb-0">
+    <div className="relative box-border flex w-full min-h-screen flex-col justify-between pt-24 pb-0 lg:h-screen lg:snap-start lg:overflow-hidden">
       {/* Top: hero (title / date / location + gallery) */}
       <div className="flex flex-1 items-center py-4 lg:py-0">
         <section
