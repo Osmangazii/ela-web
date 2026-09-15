@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useLanguage, type Lang } from "@/components/language-context";
 
 const COPY: Record<Lang, { mission: string; links: { label: string; href: string }[]; contactTitle: string; contactLabel: string; rights: string; privacy: string }> = {
@@ -53,12 +54,20 @@ function InstagramIcon() {
   );
 }
 
-export default function Footer() {
+export default function Footer({ embedded = false }: { embedded?: boolean }) {
   const { lang } = useLanguage();
   const t = COPY[lang];
+  const pathname = usePathname();
+
+  // On the /events snap-scroll page the footer is rendered *inside* the snap
+  // container (as the last section) so it never leaks into earlier events.
+  // The global (layout-level) footer is suppressed there.
+  if (!embedded && pathname?.startsWith("/events")) {
+    return null;
+  }
 
   return (
-    <footer className="bg-brand-green text-white">
+    <footer className="bg-brand-green text-white lg:snap-end snap-normal">
       <div className="mx-auto w-full max-w-7xl px-6 py-14 sm:px-8">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
           {/* Brand */}

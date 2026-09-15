@@ -1,5 +1,103 @@
 # CHANGELOG
 
+## [2026-09-15 14:05] — Events: Footer Snap Sızıntısı Düzeltildi
+
+- **Kök neden**: Global footer (`src/components/Footer.tsx`) layout’ta tüm sayfalarda render ediliyordu; `/events` sayfasında ise 100vh snap konteynerinin DIŞINDA kaldığı için ilk/ara etkinliklerde bile viewport altında görünüyor ve içeriği yukarı itiyordu.
+- **`src/components/Footer.tsx` güncellendi**: `embedded?: boolean` prop’u eklendi. Global kullanımda `usePathname()` ile `/events` (ve alt yolları) tespit edilirse footer render EDİLMEZ (`if (!embedded && pathname?.startsWith('/events')) return null;`). Böylece snap konteynerine sızmaz.
+- **`src/app/events/EventsView.tsx` güncellendi**: Footer artık snap konteynerinin İÇİNDE, etkinlik listesinden sonra son bölüm olarak render ediliyor (`<div className="w-full lg:snap-end"><Footer embedded /></div>`). Yani footer yalnızca en son etkinlikten sonra, sona kaydırıldığında görünür; ilk veya ara etkinliklerde ASLA ekranda kalmaz.
+- **Sonuç**: Sayfa yüksekliği artık snap konteynerininkiyle (100vh) sınırlı; ilk etkinlikte başlık navbar (pt-24) altında düzgün durur, footer sızmaz.
+- **Doğrulama**: `npx eslint` (Footer + events) sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+> Not: Diğer sayfalarda footer davranışı değişmedi (global olarak render edilmeye devam ediyor).
+
+## [2026-09-15 14:02] — Events Snap: Masaüstüne Özel + Mobilde Klasik Kaydırma
+
+- **`src/app/events/EventsView.tsx` güncellendi**:
+  - **Snap yalnızca masaüstünde**: Konteyner `relative min-h-screen overflow-x-hidden scroll-smooth lg:h-screen lg:overflow-y-auto lg:snap-y lg:snap-mandatory` — `lg` altında normal dikey akış (klasik scroll), `lg` ve üzerinde tam ekran snap.
+  - **Event bölümü**: `relative box-border flex w-full min-h-screen flex-col justify-between pt-24 pb-12 lg:h-screen lg:snap-start lg:overflow-hidden lg:pb-0` — mobilde metin rahat sığar/taşma yok, masaüstünde 100vh kilitlenir. Üst hero bölümüne mobilde `py-4` eklendi.
+  - Boş durum `h-screen` → `min-h-screen`.
+- **`src/components/Footer.tsx` güncellendi**: Footer’a `lg:snap-end` ve `snap-normal` eklendi — snap kilidi hafifletildi, footer’a varınca zorunlu durdurma / yukarı çıkarken tak¹lma engellendi.
+- **Doğrulama**: `npx eslint` (events + Footer) sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+> Not: Snap konteyneri sayfa içinde olduğundan footer snap konteynerinin çocuğu değil; `snap-normal`/`lg:snap-end` iyileştirme amaçlı eklendi. Takılma devam ederse footer’ı snap konteynerinin dışına kesin ayrı tutma (mevcut) yeterli; istenirse konteynere `overscroll-contain` de eklenebilir.
+
+## [2026-09-15 13:59] — Events: Mor Blok ile Footer Arasındaki Beyaz Çizgi Kaldırıldı
+
+- **`src/app/events/EventsView.tsx` güncellendi**: Her etkinlik bölümünün altındaki `pb-4` kaldırıldı (`pt-24 pb-0`) — bu padding sayfa arka planını (`#FFF2F2`) açığa çıkararak mor “Highlights & Impact” bloğu ile alttaki yeşil footer arasında beyaz bir çizgi oluşturuyordu.
+  - Koyu tema bölümü artık bölümün tam alt kenarına kadar uzanıyor ve bir sonraki bölüm/footer ile sıfır piksel boşlukla birleşiyor.
+  - Kavis dalgası zaten `-mb-px` + SVG `block` olduğundan araya inline boşluk kaçmıyor; grid `gap` / `space-y` yok.
+- **Doğrulama**: `npx eslint src/app/events` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+> Not: Bölümler arası geçişlerde (koyu → sonraki event’in açık alanı) açık zemin kasıtlıdır; beyaz sızıntı yalnız bölümün kendi dış padding’inden kaynaklanıyordu ve giderildi.
+
+## [2026-09-15 13:56] — Events: Full-Screen Snap Scroll Mimarisi
+
+- **`src/app/events/EventsView.tsx` yeniden yapılandırıldı**: Kayma ve iç içe geçme hatası giderildi; her etkinlik ekrana tam oturuyor ve kaydırıldığında bir sonrakine mıknatıs gibi kilitleniyor.
+  - **Snap konteyneri**: En dışta `relative h-screen snap-y snap-mandatory overflow-y-auto scroll-smooth`; navbar floating (`z-50`) olduğu için içeriği engellemiyor.
+  - **Her event bölümü**: `relative box-border flex h-screen min-h-screen w-full snap-start flex-col justify-between overflow-hidden pt-24 pb-4` — `pt-24` navbar’ın başlık/görseli örtmesini engeller.
+  - **Üst (Hero)**: `flex flex-1 items-center` içinde 2 kolon (metin + slider); zig-zag yön korundu.
+  - **Alt (Highlights & Impact)**: `shrink-0` ile ekranın dibine yapışık — kavisli SVG dalga + `pt-6 pb-10` koyu tema bloğu, hap rozet ve 2 kolonlu açıklama.
+  - **Görsel dengesi**: Slider kapsayıcısı `aspect-16/10 max-h-[42vh] w-full max-w-xl sm:aspect-4/3 lg:max-w-125` — hiçbir ekranda dikey taşma yapmıyor; `next/image` fill + `object-cover`.
+  - **Mobil/küçük ekran**: Snap davranışı korunur; içerik sığmazsa bölüm `overflow-hidden` olsa da konteyner `overflow-y-auto` olduğundan kaydırma mümkün (masaüstünde zorunlu snap).
+  - Boş liste durumu: ekran ortasında “No upcoming events at this moment.”
+- **Doğrulama**: `npx eslint src/app/events` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
+## [2026-09-15 13:53] — Events: Üst Boşluk Budandı, Etkinlik Tek Ekrana Sığdırıldı
+
+- **`src/app/events/EventsView.tsx` güncellendi**: Navbar ile içerik arasındaki gereksiz dikey boşluk kaldırıldı; bir etkinlik bloğu (açık üst + koyu alt) tek viewport’a sığacak şekilde sıkılaştırıldı.
+  - `main`: `pt-24` → `pt-16 pb-4`.
+  - Açık üst bölüm: `pb-16 pt-16 md:pt-24` → `py-6`; kolonlar arası `gap-12` → `gap-10`; `items-center` korundu.
+  - Sol metin kolonu: `max-w-xl space-y-3` — başlık/tarih/lokasyon arası dikey boşluklar toparlandı (`mt-3`/`mt-4` kaldırıldı). Görsel boyutu (`aspect-4/3 lg:w-125`) değiştirilmedi.
+  - Koyu tema bölümü: `pt-16 pb-16 md:pb-20` → `pt-8 pb-10`.
+- **Doğrulama**: `npx eslint src/app/events` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
+## [2026-09-15 13:52] — Events: “Our Events” Başlık Bloğu Kaldırıldı
+
+- **`src/app/events/EventsView.tsx` güncellendi**: Sayfanın en üstündeki ortalanmış başlık bloğu tamamen DOM’dan kaldırıldı — “• A Story of Events / Μια Ιστορία Εκδηλώσεων” rozeti ve “Our Events / Οι Εκδηλώσεις μας” büyük yeşil başlığı artık yok.
+  - Sayfa doğrudan ilk etkinliğin açık zeminli bölümüyle (başlık, tarih, konum + sağdaki galeri slider) başlıyor.
+  - Üstteki gereksiz boşluğu önlemek için `main` konteynerine `pt-24` eklendi; böylece içerik fixed navbar’ın altında düzgün başlıyor ancak ekstra başlık boşluğu kalmıyor.
+  - Kullanılmayan `useLanguage` (`lang`) bu bileşenden kaldırıldı (dil bağımlılığı zaten `EventStory` içinde).
+- **Doğrulama**: `npx eslint src/app/events` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
+## [2026-09-15 13:46] — Event Slider Kontrolleri Orijinal Modern Tasarıma Getirildi
+
+- **`src/app/events/EventsView.tsx` güncellendi** (`EventGallery`): Beyaz yuvarlak demode slider butonları tamamen kaldırıldı; modern şeffaf kontroller uygulandı.
+  - **Oklar**: Arka plan/kutu yok — doğrudan görsel üzerinde yarı saydam chevron (`text-slate-800/60 hover:text-slate-900 transition-colors`), ikon boyutu `h-8 w-8`, görselin sol/sağ dikey ortasında (`top-1/2 left-4/right-4 -translate-y-1/2 z-10`). Sadece `count > 1` ise görünür.
+  - **Sayaç rozeti**: Sağ üstte `absolute top-4 right-4 z-10 bg-black/70 text-white text-xs font-bold px-3 py-1 rounded-full backdrop-blur-sm tracking-wider` içinde `{currentIndex + 1}/{allImages.length}`.
+  - **Alt orta göstergeler**: `absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5`; aktif görsel mercan hap (`w-6 h-2 bg-[#ff5a5f] rounded-full transition-all duration-300`), pasifler küçük beyaz nokta (`w-2 h-2 bg-white/80 hover:bg-white`).
+- **Doğrulama**: `npx eslint src/app/events` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
+## [2026-09-15 13:44] — Events: Fotoğraf Galerisi / Slider Geri Getirildi
+
+- **`src/app/events/EventsView.tsx` güncellendi**: Sağ taraftaki büyük görsel alanı, o etkinliğe ait görseller arasında geçiş yapılabilen bir Slider/Carousel’a dönüştürüldü.
+  - **`EventGallery` bileşeni** (client, `useState`): `images` dizisinin tamamını kullanır (`event.images`), tek görsel varsa tek statik görsel gösterir.
+  - **Oklar**: Görselin sol/sağında ortalanmış yuvarlak butonlar (`bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-md backdrop-blur-sm transition-all`), `ChevronIcon left/right`; `(prev - 1 + count) % count` ve `(prev + 1) % count` ile döngüsel geçiş. **Sadece `images.length > 1` ise görünür.**
+  - **Nokta göstergesi**: Alt ortada küçük noktalar (`w-2` / aktif `w-5 bg-white`), tıklanabilir; kaçıncı görselde olduğunu gösterir.
+  - **Yumuşak geçiş**: Görseller üst üste render edilip aktif olan `opacity-100`, diğerleri `opacity-0` ile `transition-opacity duration-500` çapraz geçiş yapar.
+  - Görsel yoksa tema renkli baş harf placeholder’ı korunur; kapsayıcı `aspect-4/3 rounded-2xl shadow-lg lg:w-125`.
+- **Doğrulama**: `npx eslint src/app/events` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+> Not: Şemamızda galeri `events.images text[]` olarak tutulduğundan `gallery`/`image_url` yerine bu dizi kullanıldı (ilk eleman kapak). Admin formunda çoklu yükleme ile dizi doldurulur.
+
+## [2026-09-15 13:43] — Events UI Geri Alındı: Orijinal Full-Bleed Story Layout
+
+- **`src/app/events/EventsView.tsx` yeniden yazıldı**: Supabase verisiyle beslenen, yanlışlıkla eklenen okul tarzı grid/kutu kart yapısı tamamen kaldırıldı; orijinal zengin tasarım geri getirildi.
+  - **Her etkinlik için üst açık bölüm (2 kolon)**: Sol tarafta devasa başlık (`text-4xl sm:text-5xl font-black text-slate-900 leading-tight`), formatlanmış tarih (`text-slate-500 font-semibold`), pin ikonlu konum; sağ tarafta köşeleri yuvarlatılmış büyük etkinlik görseli (`aspect-4/3`, `lg:w-125`, `next/image object-cover`; görsel yoksa tema renkli baş harf placeholder).
+  - **Kesintisiz geçiş**: `-mb-px` tam genişlik açılı SVG dalga (`fill: theme_color`) ile koyu bölüme giriş.
+  - **Alt koyu tema rengi bölüm (Highlights & Impact)**: Üstte hap rozet — “Highlights & Impact • [Event Title]” / “Στιγμιότυπα & Αντίκτυπος • [Title]”; altında 2 kolonlu açıklama (`col1`/`col2`), `md:grid-cols-2`. Alt kısım düz (`pb-16 md:pb-20`) — önceki onaylı sınır düzeltmesi korundu.
+  - **Zig-zag ritim**: `index % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'`.
+  - **Çift dil + fallback**: Başlık, tarih, konum ve iki açıklama aktif locale’e göre (`el || en` / `en || el`); tarih ISO ise `Intl.DateTimeFormat` ile (EN/EL).
+  - Sayfa başlığı bannerı (“A Story of Events / Μια Ιστορία Εκδηλώσεων” + “Our Events / Οι Εκδηλώσεις μας”) korundu; boş liste mesajı eklendi.
+- Veri hâlâ sunucu tarafında Supabase `events` tablosundan (`order_index` artan, `revalidate = 0`) çekiliyor.
+- **Doğrulama**: `npx eslint src/app/events` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
+## [2026-09-15 13:36] — Public /events: Supabase Dinamik Veri + Çift Dil (EN/EL)
+
+- **`src/app/events/page.tsx` yeniden yazıldı (Server Component)**: Sabit/mock etkinlik dizisi kaldırıldı; veriler Supabase `events` tablosundan sunucu tarafında çekiliyor (`createClient` server → `.select('*').order('order_index', { ascending: true })`). `export const revalidate = 0` ile admin panelindeki değişiklikler anında yansır. Hata durumunda `console.error`.
+- **`src/app/events/EventsView.tsx` (yeni, client)**: Dil bağlamı (`useLanguage`) burada tüketilir; sunucudan gelen `events` prop’u render edilir.
+  - **Çift dilli + fallback**: Başlık (`title_el || title_en` / `title_en || title_el`), konum, tarih ve açıklamalar (col1/col2) aktif locale’e göre seçilir; eksik dilde İngilizceye düşer.
+  - **Tarih biçimlendirme**: ISO (YYYY-MM-DD) değerler `Intl.DateTimeFormat` ile — EN: “October 24, 2026”, EL: “24 Οκτωβρίου 2026”; ISO olmayan serbest metin olduğu gibi gösterilir.
+  - **Kart düzeni**: `theme_color` ile üst aksan şeridi ve takvim ikonu rengi; kapak görseli `next/image` `aspect-video object-cover` (hover’da hafif zoom), görsel yoksa tema renginde baş harf placeholder; takvim rozetli tarih + pin ikonlu konum + başlık + iki açıklama paragrafı. Boş liste durumunda “No upcoming events at this moment.”
+  - Mevcut konteyner genişlikleri, başlık bannerı ve Tailwind stili korundu.
+- **Doğrulama**: `npx eslint src/app/events` sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+> Not: Şemamız `date_en/date_el`, `col1_/col2_` ve `images[]` alanlarını kullandığından görevdeki `event_date` / `description_1_2` / `image_url` isimleri bu alanlara eşlendi. Runtime’da tablo boş/erişilemezse boş durum mesajı gösterilir.
+
 ## [2026-09-15 13:27] — Reorder Persist Hatası Düzeltildi + “Save Order” Butonu
 
 - **Kök neden**: Sürükleme sonrası yalnız `{ id, order_index }` ile yapılan `upsert`, mevcut satırlar için INSERT denemesi tetikliyor ve `schools.name` / `events.title_en` NOT NULL kısıtlarını ihlal ediyordu.
