@@ -1,5 +1,47 @@
 # CHANGELOG
 
+## [2026-09-16 15:17] — Public Announcements Sayfası Supabase'e Bağlandı + Duyuru Migration
+
+- **`src/app/announcements/page.tsx` yeniden yazıldı**: Mock/statik `POSTS` listesi kaldırıldı; artık Server Component olarak Supabase `announcements` tablosundan `select("*").order("created_at", { ascending: false })` ile veri çekiyor (`export const revalidate = 0` — admin değişiklikleri anında yansır). Veri `AnnouncementsView` istemci bileşenine prop olarak geçiliyor.
+- **`src/app/announcements/AnnouncementsView.tsx` (yeni)**: İstemci tarafında `useLanguage()` ile aktif dile (en/el) göre duyuruları render eden bileşen.
+  - **Kategori filtre sekmeleri**: `All / Official Notices / General Assembly / Articles / News` (en) ve Yunanca karşılıkları; `category` değerine göre filtreleme.
+  - **Blok render edici** (`BlockRenderer`) — `AnnouncementBlock` union tipine göre:
+    - `text`: EN/EL içerik, `whitespace-pre-line` ile satır korumalı.
+    - `image`: `next/image` ile; `width` (full/md/sm) genişlik sınıflarına çevrilir (%100 / %60 / %30).
+    - `table`: başlık + satırlarla responsive tablo (`overflow-x-auto`).
+    - `pdf`: başlık + indirme bağlantısı kartı (`target="_blank" rel="noopener noreferrer"`).
+  - **Tarih formatlama**: `Intl.DateTimeFormat` ile en/el (ör. “May 22, 2026” / “22 Μαΐου 2026”).
+  - **Kart tasarımı**: `rounded-3xl border border-slate-200/60 bg-white p-6 md:p-8 shadow-sm` — kategori rozeti + lokalize başlık + tarih + bloklar; boş durum mesajı.
+- **`src/types/database.ts` güncellendi**: `Database.public.Tables.announcements` (Row/Insert/Update) tipi eklendi; böylece typed `server.ts` istemcisi `from("announcements")` sorgusunu doğrulayabiliyor.
+- **`supabase/migrations/0003_announcements.sql` (yeni)**: `announcements` tablosu (`title_en/title_el`, `category`, `date`, `blocks` JSONB, `order_index`, `created_at`) + RLS (public read, authenticated write) + public `announcements` storage bucket ve policy'leri — şema artık repo içinde tekrar üretilebilir.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint` (announcements/page, AnnouncementsView, database.ts) temiz; editör tanılamaları temiz.
+
+## [2026-09-16 15:11] — Admin: Blok Tabanlı Duyuru Yönetimi (Announcement Builder)
+
+- **`src/types/database.ts` güncellendi**: `AnnouncementCategory`, `AnnouncementBlock` (discriminated union: text / image / table / pdf) ve `AnnouncementItem` tipleri eklendi.
+- **`src/app/admin/announcements/page.tsx` (yeni)**: Supabase `announcements` tablosu + `announcements` storage bucket’ını kullanan tam CRUD builder.
+  - **Temel alanlar**: Title (EN/EL), Category dropdown (`Official Notice`, `General Assembly`, `Article`, `News`), native date picker (varsayılan bugün).
+  - **Dikey blok akışı**: Bloklar kartlar hâlinde sıralanır; her kartta sağ üstte [▲ yukarı] [▼ aşağı] [🗑 sil] aksiyonları (ilk/son eleman için disabled).
+  - **Blok tipleri**:
+    - Text: EN/EL `textarea`.
+    - Image: `announcements` bucket’ına yükleme, önizleme ve genişlik seçici (%30/%60/%100 → sm/md/full).
+    - Table: başlık + satır hücre girdileri, “+ sütun” (başlık ekle) ve “+ Add Row” butonları, satır silme.
+    - PDF: `announcements` bucket’ına .pdf yükleme + belge başlığı.
+  - **Ekleme çubuğu**: `[+ Text] [+ Image] [+ Table] [+ PDF]` — yeni blok varsayılan şemayla listenin sonuna eklenir.
+  - **Kaydet/Güncelle**: Form submit’te `blocks` JSONB olarak `insert`/`update`; mevcut `createClient` (browser) kullanılır. Yükleme yolu çakışmasını önlemek için `Date.now() + '-' + file.name` formatı.
+  - Reorder: yukarı/aşağı `arrayMove` mantığıyla React state’te takas (`[a,b]=[b,a]`).
+  - Liste: başlık, kategori, tarih ve blok sayısı; Edit/Delete aksiyonları; loading/boş/error/notice durumları.
+- **`src/app/admin/layout.tsx` güncellendi**: Sidebar’a “Announcements” linki (`/admin/announcements`) eklendi.
+- **Doğrulama**: `npx eslint` (announcements + layout + types) sıfır hata/uyarı; `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+> Not: `announcements` tablosu ve public `announcements` storage bucket’ının Supabase tarafında oluşturulmuş olduğu varsayıldı; storage policy’leri (public read / authenticated write) mevcutsa CRUD çalışır.
+
+## [2026-09-16 14:32] — Erasmus+ Sayfasındaki Partner CTA Bölümü Kaldırıldı
+
+- **`src/app/erasmus/page.tsx` güncellendi**: Sayfanın altındaki “Partner with ELA for Next Calls” / “Contact European Desk” CTA kartı (`<section>` bloğu, ikon, başlık, açıklama ve buton) tamamen silindi.
+  - Artık kullanılmayan sözlük alanları da temizlendi: `ctaTitle`, `ctaDesc`, `ctaButton` (interface + EN/EL `DICT` girdileri).
+  - Başka hiçbir bölüm/veri değiştirilmedi.
+- **Doğrulama**: `npx eslint` ve `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
 ## [2026-09-16 13:15] — Erasmus+ Kartı: Kutu İçinde Kutu (Matruşka) Görünümü Kaldırıldı
 
 - **`src/app/erasmus/page.tsx` güncellendi**: Sağ sütundaki dış gri kapsayıcı (gradient/border/shadow) ve iç beyaz kare kart tamamen kaldırıldı.

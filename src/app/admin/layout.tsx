@@ -36,6 +36,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/admin/events" className={navLink}>
             Events Management
           </Link>
+          <Link href="/admin/announcements" className={navLink}>
+            Announcements
+          </Link>
           <Link href="/admin/schools" className={navLink}>
             Schools Management
           </Link>

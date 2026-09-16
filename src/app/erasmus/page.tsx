@@ -21,9 +21,6 @@ interface Copy {
   action: string;
   projDesc: string;
   impacts: Impact[];
-  ctaTitle: string;
-  ctaDesc: string;
-  ctaButton: string;
 }
 
 const DICT: Record<Lang, Copy> = {
@@ -45,10 +42,6 @@ const DICT: Record<Lang, Copy> = {
       { title: "Mobility & Upskilling", note: "Specialized training abroad" },
       { title: "Sustainable Curriculum", note: "Innovative adult-education methodology" },
     ],
-    ctaTitle: "Partner with ELA for Next Calls",
-    ctaDesc:
-      "Bring your institution into our next European mobility or partnership project.",
-    ctaButton: "Contact European Desk",
   },
   el: {
     badge: "Ευρωπαϊκές Συνεργασίες & Ορίζοντες",
@@ -68,10 +61,6 @@ const DICT: Record<Lang, Copy> = {
       { title: "Κινητικότητα & Αναβάθμιση", note: "Εξειδικευμένη εκπαίδευση στο εξωτερικό" },
       { title: "Βιώσιμο Εκπαιδευτικό Πρόγραμμα", note: "Καινοτόμα μεθοδολογία ενηλίκων" },
     ],
-    ctaTitle: "Συνεργαστείτε με τον ELA",
-    ctaDesc:
-      "Φέρτε τον φορέα σας στο επόμενο ευρωπαϊκό πρόγραμμα κινητικότητας ή συνεργασίας μας.",
-    ctaButton: "Επικοινωνία",
   },
 };
 
@@ -225,26 +214,6 @@ export default function Erasmus() {
             ))}
           </div>
         </article>
-
-        {/* Partner CTA */}
-        <section className="mt-12 flex flex-col items-center justify-center gap-4 rounded-3xl border border-brand-pink-light bg-linear-to-r from-white to-brand-bg p-8 text-center md:p-12">
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-brand-pink-light/70 text-brand-pink">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="h-7 w-7" aria-hidden>
-              <path d="M4 15V8l3-1 4 1 3-1v5c0 1.6-.9 3-2.4 3.8L11 17.5V21" />
-              <path d="M20 9v7l-3 1-4-1-3 1v-5c0-1.6.9-3 2.4-3.8L13 6.5V3" />
-            </svg>
-          </span>
-          <h2 className="max-w-2xl text-2xl font-extrabold tracking-tight text-brand-green sm:text-3xl">
-            {t.ctaTitle}
-          </h2>
-          <p className="max-w-xl text-slate-600">{t.ctaDesc}</p>
-          <a
-            href="#"
-            className="mt-2 inline-block rounded-full bg-brand-pink px-8 py-3.5 font-bold text-white shadow-md transition-all hover:scale-105 hover:bg-[#ff657d]"
-          >
-            {t.ctaButton}
-          </a>
-        </section>
       </main>
     </div>
   );
