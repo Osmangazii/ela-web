@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import { useLanguage, type Lang } from "@/components/language-context";
 
@@ -12,7 +13,6 @@ interface Copy {
   badge: string;
   heroTitle: string;
   heroDesc: string;
-  questionKicker: string;
   q1: string;
   q2: string;
   projectsTitle: string;
@@ -32,7 +32,6 @@ const DICT: Record<Lang, Copy> = {
     heroTitle: "Connecting Educators Across Europe",
     heroDesc:
       "ELA is committed to international excellence. We invite European researchers, educators, and institutions to co-create innovative educational programs in digitalization, active citizenship, and sustainable learning.",
-    questionKicker: "Do you want to collaborate?",
     q1: "Developing joint educational programs with a European perspective?",
     q2: "Sharing best practices and expertise with cross-border colleagues?",
     projectsTitle: "Funded Erasmus+ Projects",
@@ -56,7 +55,6 @@ const DICT: Record<Lang, Copy> = {
     heroTitle: "Συνδέοντας την Εκπαίδευση σε όλη την Ευρώπη",
     heroDesc:
       "Ο ELA ενισχύει τη διεθνή συνεργασία. Προσκαλούμε ερευνητές, εκπαιδευτικούς και φορείς από την Ευρώπη να συνδημιουργήσουμε καινοτόμα προγράμματα για την ψηφιοποίηση, την ενεργό πολιτειότητα και τη βιώσιμη μάθηση.",
-    questionKicker: "Θέλετε να συνεργαστούμε;",
     q1: "Ανάπτυξη κοινών εκπαιδευτικών προγραμμάτων με ευρωπαϊκή προοπτική;",
     q2: "Ανταλλαγή βέλτιστων πρακτικών και τεχνογνωσίας σε ευρωπαϊκό επίπεδο;",
     projectsTitle: "Χρηματοδοτούμενα Προγράμματα Erasmus+",
@@ -77,22 +75,25 @@ const DICT: Record<Lang, Copy> = {
   },
 };
 
-function EuBadge() {
+function EuFundingBadge() {
   return (
-    <span className="inline-flex items-center gap-2 rounded-full bg-[#003399] px-3.5 py-1.5 text-xs font-bold tracking-wide text-white shadow-sm">
-      <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 text-[#FFCC00]" aria-hidden>
-        <path d="M12 2l1.3 3 3.2-.2-2.4 2.1.8 3.1L12 8.7 9.1 10l.8-3.1L7.5 4.8l3.2.2z" />
-      </svg>
-      Erasmus+
-    </span>
-  );
-}
-
-function HandshakeIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" aria-hidden>
-      <path d="M3 7l5-2 6 2 5-2v7c0 2.5-1.5 4.5-4 5.5V21H9v-3.5C6.5 16.5 5 14.5 5 12V7z" />
-    </svg>
+    <div className="inline-flex items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-50/80 px-3.5 py-2 shadow-sm">
+      <Image
+        src="/euroflag.svg"
+        alt="European Union Flag"
+        width={32}
+        height={22}
+        className="h-auto w-8 rounded-sm object-contain shadow-sm"
+      />
+      <div className="flex flex-col text-left leading-tight">
+        <span className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+          Erasmus+
+        </span>
+        <span className="text-xs font-bold text-slate-900">
+          Co-funded by the European Union
+        </span>
+      </div>
+    </div>
   );
 }
 
@@ -105,6 +106,16 @@ function GlobeIcon() {
   );
 }
 
+function UsersIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" aria-hidden>
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  );
+}
+
 function SparkIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6" aria-hidden>
@@ -113,11 +124,6 @@ function SparkIcon() {
   );
 }
 
-function ImpactIcon({ i }: { i: number }) {
-  if (i === 0) return <HandshakeIcon />;
-  if (i === 1) return <GlobeIcon />;
-  return <SparkIcon />;
-}
 export default function Erasmus() {
   const { lang } = useLanguage();
   const t = DICT[lang];
@@ -142,65 +148,78 @@ export default function Erasmus() {
             </p>
           </div>
 
-          {/* Two interactive question cards */}
+          {/* Two static info boxes */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {[t.q1, t.q2].map((q) => (
-              <div
-                key={q}
-                className="flex flex-col rounded-2xl border border-brand-pink-light bg-white p-6 shadow-sm transition-all hover:border-brand-pink"
-              >
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-pink-light/70 text-brand-green">
-                  <HandshakeIcon />
-                </span>
-                <p className="mt-4 text-sm font-semibold leading-relaxed text-slate-700">{q}</p>
-                <span className="mt-4 text-xs font-bold tracking-wider text-brand-pink uppercase">
-                  {t.questionKicker}
-                </span>
+            <div className="rounded-2xl border border-white/80 bg-white/60 p-5 shadow-sm backdrop-blur-md">
+              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                <GlobeIcon />
               </div>
-            ))}
+              <p className="text-sm font-medium leading-relaxed text-slate-700">{t.q1}</p>
+            </div>
+
+            <div className="rounded-2xl border border-white/80 bg-white/60 p-5 shadow-sm backdrop-blur-md">
+              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+                <UsersIcon />
+              </div>
+              <p className="text-sm font-medium leading-relaxed text-slate-700">{t.q2}</p>
+            </div>
           </div>
         </div>
       </section>
 
       <main className="mx-auto w-full max-w-6xl px-6 pb-20 sm:px-8">
-        <h2 className="text-center text-2xl font-extrabold tracking-tight text-brand-green sm:text-3xl">
-          {t.projectsTitle}
-        </h2>
-
         {/* Featured project card */}
-        <article className="relative mt-8 overflow-hidden rounded-3xl border-2 border-brand-pink-light bg-white p-8 shadow-sm md:p-12">
-          <div aria-hidden className="absolute inset-x-0 top-0 h-2 bg-linear-to-r from-brand-pink via-brand-pink-light to-brand-green" />
-
+        <article className="space-y-6 rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm md:p-8">
+          {/* Header row */}
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <EuBadge />
-            <span className="rounded-lg border border-slate-200 bg-slate-100 px-3 py-1.5 font-mono text-xs font-bold text-slate-700">
-              {t.code}
-            </span>
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-green/10 text-brand-green">
+                <GlobeIcon />
+              </span>
+              <h2 className="text-lg font-extrabold tracking-tight text-brand-green sm:text-xl">
+                {t.projectsTitle}
+              </h2>
+            </div>
+            <EuFundingBadge />
           </div>
 
-          <h3 className="mt-6 max-w-3xl text-2xl font-extrabold tracking-tight text-brand-green sm:text-3xl">
-            {t.projTitle}
-          </h3>
+          {/* Middle: text + visual */}
+          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2">
+            <div className="space-y-4">
+              <span className="inline-block rounded-full bg-emerald-50 px-3.5 py-1.5 text-xs font-bold text-emerald-700">
+                {t.action}
+              </span>
+              <h3 className="text-2xl font-black tracking-tight text-[#1b4332]">{t.projTitle}</h3>
+              <p className="text-sm leading-relaxed text-slate-600">{t.projDesc}</p>
+              <span className="inline-block rounded-lg border border-slate-200 bg-slate-100 px-3 py-1.5 font-mono text-xs font-bold text-slate-700">
+                {t.code}
+              </span>
+            </div>
 
-          <span className="mt-4 inline-block rounded-full bg-brand-green/10 px-3.5 py-1.5 text-xs font-bold text-brand-green">
-            {t.action}
-          </span>
+            <div className="flex w-full items-center justify-center p-4">
+              <Image
+                src="/erasmusela.png"
+                alt="ELA Erasmus+ Project"
+                width={480}
+                height={480}
+                className="h-auto w-full max-w-65 object-contain drop-shadow-md md:max-w-75"
+              />
+            </div>
+          </div>
 
-          <p className="mt-5 max-w-3xl leading-relaxed text-slate-600">{t.projDesc}</p>
-
-          {/* Impact highlights */}
-          <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+          {/* Bottom: 3 metrics */}
+          <div className="grid grid-cols-1 gap-4 border-t border-slate-100 pt-6 md:grid-cols-3">
             {t.impacts.map((imp, i) => (
               <div
                 key={imp.title}
-                className="flex items-center gap-4 rounded-2xl border border-brand-pink-light bg-brand-bg p-5 transition-colors hover:border-brand-pink"
+                className="flex items-center gap-3.5 rounded-2xl border border-slate-100 bg-slate-50/70 p-4"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-brand-pink shadow-sm">
-                  <ImpactIcon i={i} />
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-green text-white">
+                  {i === 0 ? <UsersIcon /> : i === 1 ? <GlobeIcon /> : <SparkIcon />}
                 </span>
                 <div>
-                  <p className="text-sm font-extrabold text-brand-green">{imp.title}</p>
-                  <p className="mt-0.5 text-xs text-slate-500">{imp.note}</p>
+                  <p className="text-sm font-bold text-slate-900">{imp.title}</p>
+                  <p className="mt-0.5 text-xs text-slate-400">{imp.note}</p>
                 </div>
               </div>
             ))}

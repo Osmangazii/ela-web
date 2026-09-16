@@ -1,5 +1,46 @@
 # CHANGELOG
 
+## [2026-09-16 13:15] — Erasmus+ Kartı: Kutu İçinde Kutu (Matruşka) Görünümü Kaldırıldı
+
+- **`src/app/erasmus/page.tsx` güncellendi**: Sağ sütundaki dış gri kapsayıcı (gradient/border/shadow) ve iç beyaz kare kart tamamen kaldırıldı.
+  - Sağ sütun artık sade, çerçevesiz ve arka plansız bir flex container: `w-full flex items-center justify-center p-4`.
+  - `erasmusela.png` doğrudan bu alana yerleştirildi (`next/image`): `h-auto w-full max-w-65 object-contain drop-shadow-md md:max-w-75` — ferah, tek katmanlı görünüm, hover/transition yok.
+  - `max-w-[260px]/[300px]` değerleri `max-w-65 / md:max-w-75` spacing sınıflarına çevrildi.
+- **Doğrulama**: `npx eslint` ve `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
+## [2026-09-16 13:03] — Erasmus+ Kartı Sağ Görsel Alanına Proje Mührü Eklendi
+
+- **`src/app/erasmus/page.tsx` güncellendi**: Proje kartının sağ sütunundaki fotoğraf (Unsplash) kaldırıldı; yerine resmi proje mührü `/public/erasmusela.png` yerleştirildi.
+  - **Kapsayıcı**: `w-full h-full min-h-75 lg:min-h-90 rounded-2xl bg-linear-to-br from-slate-50 to-[#faf5f0] border border-slate-200/60 flex items-center justify-center p-6 shadow-sm` — kare görsel kırpılmadan ortalanıyor.
+  - **Görsel**: `next/image` ile `erasmusela.png` (`480×480`), `h-auto max-h-65 md:max-h-75 w-auto object-contain drop-shadow-sm transition-transform duration-300 hover:scale-105` (scale-102 geçersiz olduğundan 105 kullanıldı; `shadow-xs` → `shadow-sm`, `bg-gradient-to-br` → Tailwind v4 `bg-linear-to-br`).
+  - Kullanılmayan `PROJECT_IMAGE` sabiti ve eski görsel bloğu temizlendi.
+- **Doğrulama**: `npx eslint` ve `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
+## [2026-09-16 12:47] — Erasmus+ Proje Kartı Referans Layout ile Yeniden Tasarlandı
+
+- **`src/app/erasmus/page.tsx` güncellendi**: Proje kartı referans görseldeki modern mimariye dönüştürüldü — ana kart `bg-white rounded-3xl border border-slate-200/80 p-6 md:p-8 shadow-sm space-y-6`.
+  - **Header satırı**: Solda küçük ikon kutusu + “Funded Erasmus+ Projects” başlığı (`GlobeIcon`, `bg-brand-green/10 text-brand-green`); sağda resmi AB rozeti (`EuFundingBadge` → `/euroflag.svg` + “ERASMUS+ / Co-funded by the European Union”).
+  - **Orta grid (lg:grid-cols-2)**: Sol kolonda Key Action mikro rozeti (yeşil hafif hap `bg-emerald-50 text-emerald-700`), proje başlığı `text-2xl font-black text-[#1b4332]`, özet (`text-sm leading-relaxed text-slate-600`) ve proje ID mono badge’i; sağ kolonda `aspect-16/10 rounded-2xl overflow-hidden shadow-sm` görsel alanı (`next/image`, temsilî eğitim görseli `PROJECT_IMAGE`).
+  - **Alt bölüm (3 metrik)**: `grid grid-cols-1 md:grid-cols-3 gap-4 pt-6 border-t border-slate-100`; her kutu `bg-slate-50/70 border border-slate-100 rounded-2xl p-4 flex items-center gap-3.5`, solda koyu yeşil yuvarlak ikon (`Users` / `Globe` / `Sparkles`), kalın başlık ve küçük soluk alt metin.
+  - Kullanılmayan `HandshakeIcon` ve `ImpactIcon` kaldırıldı; üstteki gradient şerit ve eski ortalanmış başlık temizlendi.
+- **Doğrulama**: `npx eslint` ve `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
+## [2026-09-16 12:39] — Erasmus+ Rozeti Resmi AB Bayrağı ile Değiştirildi
+
+- **`src/app/erasmus/page.tsx` güncellendi**: Proje kartının sol üstündeki lacivert “Erasmus+” hap rozeti (`EuBadge`) tamamen kaldırıldı.
+  - Yerine `public/euroflag.svg` kullanan yeni `EuFundingBadge` eklendi: `inline-flex items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-50/80 px-3.5 py-2 shadow-sm`; içinde `next/image` ile AB bayrağı (`w-8 h-auto object-contain`) ve iki satırlık metin — üstte “ERASMUS+”, altta “Co-funded by the European Union”.
+  - `next/image` import edildi; kullanılmayan eski `EuBadge` bileşeni silindi.
+- **Doğrulama**: `npx eslint` ve `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
+## [2026-09-16 12:33] — Erasmus+: Sağ Üst 2 Bilgi Kutusu Yenilendi
+
+- **`src/app/erasmus/page.tsx` güncellendi**: Hero’nun sağındaki iki soru kartı sadeleştirildi.
+  - Kaldırıldı: soluk kalkan/el sıkışma SVG ikonları ve alttaki kırmızı “Do you want to collaborate?” (questionKicker) metni; kartlar artık link/buton değil, statik bilgi kutusu.
+  - **Yeni ikonlar**: 1. kutu için `GlobeIcon` (dünya/küre) `bg-emerald-50 text-emerald-600` yumuşak kutu içinde; 2. kutu için yeni `UsersIcon` (topluluk) `bg-amber-50 text-amber-600` kutu içinde.
+  - **Glassmorphism gövde**: `bg-white/60 backdrop-blur-md border border-white/80 rounded-2xl p-5 shadow-sm`; metin `text-slate-700 text-sm font-medium leading-relaxed`.
+  - Sözlükten kullanılmayan `questionKicker` alanı (EN/EL + interface) temizlendi.
+- **Doğrulama**: `npx eslint` ve `npx tsc --noEmit` temiz; editör tanılamaları temiz.
+
 ## [2026-09-15 14:56] — Kart Üst Renk Şeridi Köşe Taşması Düzeltildi
 
 - **`src/app/who-we-are/page.tsx` güncellendi**: Hero özet kartının en üstündeki pembe gradient şerit (`h-2 rounded-t-4xl bg-linear-to-r …`) kartın yuvarlatılmış köşelerinden taşıp sivri çıkıntı oluşturuyordu.
