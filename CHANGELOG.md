@@ -1,5 +1,49 @@
 # CHANGELOG
 
+## [2026-09-22 16:58] — Duyuru Detayı: Beyaz Kart Kapsayıcısı Geri Getirildi + Görsel Köşe Yuvarlaması
+
+- **`src/app/announcements/[id]/page.tsx`**: İçerik yeniden beyaz kart içine alındı:
+  - Sayfa boşluğu: `px-4 pt-32 pb-8 sm:px-6 lg:px-8` (navbar için üst boşluk + kenar payı).
+  - Beyaz kart: `mx-auto mb-16 w-full max-w-6xl rounded-3xl bg-white p-6 shadow-sm sm:p-10 lg:p-12` — pembe sayfa zemini üzerinde yüzüyor.
+- **`src/app/announcements/[id]/AnnouncementDetail.tsx`**: `<article>` üzerindeki sayfa seviyesi sınıflar (`mx-auto max-w-6xl px-4 pt-32 pb-20 …`) kaldırıldı (`w-full`); boşluk ve genişlik artık beyaz karttan geliyor. Geri bağlantısı, rozet, başlık, tarih ve tüm bloklar kartın içinde.
+  - **Görsel köşeleri düzeltildi**: `max-h-150` + `object-contain` kombinasyonu görseli kutu içinde letterbox'layıp kendi kare köşelerini içeride bırakıyordu. Bunun yerine görevdeki reçete uygulandı: `<Image>` artık `block h-auto w-full rounded-2xl object-cover`. Kutu, görselin doğal en-boy oranına oturduğundan kırpma (crop) olmaz ve görsel kutuyu tam doldurduğundan dört köşe de yuvarlak kırpılır. Dış kapsayıcıda `isolate overflow-hidden rounded-2xl` korunur.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint "src/app/announcements/[id]"` temiz; editör tanılamaları temiz.
+
+## [2026-09-22 16:56] — Duyuru Detayı: Görsel Köşe Taşması / Border-Radius Kırpma Düzeltmesi
+
+- **`src/app/announcements/[id]/AnnouncementDetail.tsx`** → `image` bloğu düzeltildi:
+  - Dış kapsayıcıya `isolate` eklendi (`overflow-hidden rounded-2xl` zaten vardı). Bu, WebKit/Safari'de `overflow: hidden` + `border-radius` altında alt elemanların yuvarlak köşelerin dışına taşması (radius bleed) sorununu önler.
+  - `<Image>` etiketine doğrudan `block w-full rounded-2xl` eklendi; böylece görsel de köşeleri kendi üzerinde kırpar, sert dikdörtgen kenar sızması kalmaz.
+  - Not: Kırpma (crop) olmasın diye `object-contain` + `h-auto` korundu; görevde önerilen `h-full object-cover` afiş/poster görsellerini keseceği için uygulanmadı (istenirse tek sınıfla geçilebilir).
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint` (detay bileşeni) temiz; editör tanılamaları temiz.
+
+## [2026-09-22 16:53] — Duyuru Detay Sayfası Kapsayıcısı Genişletildi
+
+- **`src/app/announcements/[id]/AnnouncementDetail.tsx`**: Ana `<article>` kapsayıcısı `max-w-3xl px-6 sm:px-8` → `max-w-6xl px-4 sm:px-6 lg:px-12` (geniş tuval, mobilde kenar boşluğu korunur).
+  - Geri bağlantısı, başlık ve kategori rozeti geniş kapsayıcıya göre sola hizalı kalır.
+  - **Görsel blok**: `next/image` `sizes` değeri `768px` → `1024px`; görsele `max-h-150` (600px) eklendi. Görsel, geniş kapsayıcıya oransal yayılır.
+    - Not: Kırpma olmaması (afiş/poster içerikleri için) adına `object-contain` korundu; görevdeki `object-cover` alternatifi istenirse tek sınıfla değiştirilebilir.
+  - **Tablo blok**: Zaten `w-full` olduğundan yeni geniş kapsayıcıda yatay olarak tam yayılır (yapay sınır yok); `overflow-x-auto` ile yatay kaydırma koruması sürer.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint` (detay bileşeni) temiz; editör tanılamaları temiz.
+
+## [2026-09-22 16:51] — Duyurular: Feed/Liste + Ayrı Detay Sayfası (Bilingual)
+
+- **`src/lib/announcements.ts` (yeni)**: Liste ve detay için ortak yardımcılar — `CATEGORY_LABELS`, `categoryLabel()`, `announcementTitle()`, `formatAnnouncementDate()` (Intl ile en/el) ve `announcementExcerpt()` (ilk `text` bloğundan ~150 karakterlik özet).
+- **`src/app/announcements/AnnouncementsView.tsx` yeniden yazıldı**: Artık yalnızca minimal arşiv/liste gösteriyor.
+  - Blok içerikleri (görsel/tablo/PDF) kaldırıldı; her satırda tarih + kategori rozeti, başlık ve otomatik özet (`line-clamp-2`) var.
+  - Satırlar ince `border-b` ayraçlarıyla listelenir ve her biri `<Link href={`/announcements/${item.id}`}>` ile detay sayfasına gider; sağda ok ikonu hover'da vurgulanır.
+  - Kategori filtre sekmeleri korundu.
+- **`src/app/announcements/[id]/page.tsx` (yeni)**: Dinamik detay rotası (Server Component, `revalidate = 0`). `maybeSingle()` ile ID'ye göre kayıt çeker; bulunamazsa `notFound()`.
+- **`src/app/announcements/[id]/AnnouncementDetail.tsx` (yeni)**: İstemci detay görünümü.
+  - Üstte “← Back to Announcements / Πίσω στις Ανακοινώσεις” bağlantısı; başlık, biçimlendirilmiş tarih ve kategori rozeti.
+  - `blocks` JSONB dizisi dikey sırayla render edilir: **text** (tipografi), **image** (ortalanmış, responsive), **table** (kenarlıklı, `overflow-x-auto`), **pdf** (indirme kartı; HEAD isteğiyle dosya boyutu + PDF ikonu, CORS/hata durumunda sessizce atlanır).
+- **Bilingual**: Hem liste hem detay başlık/tarih/kategori ve metin bloklarını aktif dile (en/el) göre gösterir.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint src/app/announcements src/lib/announcements.ts` temiz. `next build` (Node v24) başarılı — `/announcements` ve `/announcements/[id]` rotaları dinamik olarak listelendi.
+
 ## [2026-09-22 16:37] — Admin Duyuru Tablo Bloğu: Sütun Silme + Okunabilir Girdi Stilleri
 
 - **`src/app/admin/announcements/page.tsx`** → blok oluşturucudaki `table` bloğu düzeltildi:
