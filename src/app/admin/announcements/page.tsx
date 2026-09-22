@@ -316,24 +316,42 @@ export default function AdminAnnouncements() {
                 )}
 
                 {block.type === "table" && (
-                  <div className="space-y-3 overflow-x-auto">
+                  <div className="space-y-3 overflow-x-auto pb-2">
                     <table className="w-full min-w-120 text-sm">
                       <thead>
                         <tr>
                           {block.headers.map((h, c) => (
-                            <th key={c} className="border border-slate-200 bg-slate-50 p-2">
-                              <input
-                                className="w-full rounded border border-transparent bg-transparent text-xs font-bold outline-none focus:border-brand-pink"
-                                value={h}
-                                onChange={(e) => {
-                                  const headers = [...block.headers];
-                                  headers[c] = e.target.value;
-                                  updateBlock(block.id, { headers });
-                                }}
-                              />
+                            <th key={c} className="border border-slate-200 bg-slate-50/80 p-2 align-top">
+                              <div className="flex items-center gap-1">
+                                <input
+                                  className="w-full min-w-0 rounded border border-slate-200 bg-slate-50/80 px-2 py-1 text-xs font-semibold text-slate-900 outline-none placeholder:text-slate-400 focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                                  placeholder="Column header"
+                                  value={h}
+                                  onChange={(e) => {
+                                    const headers = [...block.headers];
+                                    headers[c] = e.target.value;
+                                    updateBlock(block.id, { headers });
+                                  }}
+                                />
+                                {block.headers.length > 1 && (
+                                  <button
+                                    type="button"
+                                    title="Delete column"
+                                    aria-label={`Delete column ${c + 1}`}
+                                    onClick={() => {
+                                      const headers = block.headers.filter((_, i) => i !== c);
+                                      const rows = block.rows.map((row) => row.filter((_, i) => i !== c));
+                                      updateBlock(block.id, { headers, rows });
+                                    }}
+                                    className="shrink-0 rounded p-0.5 text-slate-400 transition-colors hover:text-red-500"
+                                  >
+                                    ✕
+                                  </button>
+                                )}
+                              </div>
                             </th>
                           ))}
-                          <th className="w-10 border border-slate-200 bg-slate-50 p-1">
+                          <th className="w-10 border border-slate-200 bg-slate-50/80 p-1 align-top">
                             <button type="button" onClick={() => updateBlock(block.id, { headers: [...block.headers, "Column"] })} className="text-brand-pink">+</button>
                           </th>
                         </tr>
@@ -344,7 +362,7 @@ export default function AdminAnnouncements() {
                             {block.headers.map((_, c) => (
                               <td key={c} className="border border-slate-200 p-1">
                                 <input
-                                  className="w-full rounded border border-transparent bg-transparent text-xs outline-none focus:border-brand-pink"
+                                  className="w-full rounded border border-slate-200 bg-white px-2 py-1 text-xs text-slate-800 outline-none placeholder:text-slate-400 focus:border-red-500 focus:ring-1 focus:ring-red-500"
                                   value={row[c] ?? ""}
                                   onChange={(e) => {
                                     const rows = block.rows.map((x) => [...x]);

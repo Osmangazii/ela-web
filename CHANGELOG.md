@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## [2026-09-22 16:37] — Admin Duyuru Tablo Bloğu: Sütun Silme + Okunabilir Girdi Stilleri
+
+- **`src/app/admin/announcements/page.tsx`** → blok oluşturucudaki `table` bloğu düzeltildi:
+  - **Sütun silme eklendi**: Her başlık hücresine küçük bir `✕` butonu eklendi (`title="Delete column"`, `aria-label`). Tıklanınca `headers[colIndex]` listeden çıkarılır ve her satır için ilgili hücre `row.filter((_, i) => i !== colIndex)` ile silinir.
+  - **Minimum sütun koruması**: `block.headers.length > 1` koşuluyla son sütunun silinmesi engellenir.
+  - **Kontrast/okunabilirlik düzeltildi**: Başlık girdileri `text-slate-900 font-semibold bg-slate-50/80`, gövde hücresi girdileri `text-slate-800 bg-white`, her ikisinde `placeholder:text-slate-400`; görünür kenarlık ve odak halkası: `border border-slate-200 focus:border-red-500 focus:ring-1 focus:ring-red-500`. Eski `border-transparent bg-transparent` soluk stil kaldırıldı.
+  - **Yatay taşma koruması**: Tablo kapsayıcısına `overflow-x-auto pb-2` eklendi; 6+ sütunda sütunlar sıkışmaz, yatay kaydırılır.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint src/app/admin/announcements/page.tsx` temiz; editör tanılamaları temiz.
+
 ## [2026-09-22 16:21] — Events Alt Renkli Bölümü Genişletildi (Tek Ekrana Sığdırma)
 
 - **`src/app/events/EventsView.tsx`** → `EventStory` alt `Highlights & Impact` bloğu optimize edildi:
