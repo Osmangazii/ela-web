@@ -50,7 +50,7 @@ function EventGallery({ images, alt, theme }: { images: string[]; alt: string; t
   const count = images.length;
 
   return (
-    <div className="relative aspect-16/10 max-h-[42vh] w-full max-w-xl overflow-hidden rounded-2xl bg-slate-100 shadow-lg sm:aspect-4/3 lg:max-w-125">
+    <div className="relative aspect-16/10 max-h-[42vh] w-full max-w-xl overflow-hidden rounded-2xl bg-slate-100 shadow-lg sm:aspect-4/3 lg:w-125 lg:max-w-125 lg:flex-none lg:self-start">
       {count === 0 ? (
         <div
           className="flex h-full w-full items-center justify-center text-6xl font-black text-white"
@@ -130,18 +130,20 @@ function EventStory({ event, index }: { event: EventItem; index: number }) {
   const reversed = index % 2 === 1;
 
   return (
-    <div className="relative box-border flex w-full min-h-screen flex-col justify-between pt-24 pb-0 lg:h-screen lg:snap-start lg:overflow-y-auto">
+    <div className="relative box-border flex w-full min-h-screen flex-col justify-between pt-24 pb-0 lg:h-screen lg:max-h-screen lg:snap-start lg:overflow-hidden">
       {/* Top: hero (title / date / location + gallery) */}
       <div className="flex flex-1 items-center py-4 lg:py-0">
         <section
-          className={`mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-10 px-6 lg:py-4 ${
+          className={`mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-10 px-6 lg:items-start lg:py-4 ${
             reversed ? "lg:flex-row-reverse" : "lg:flex-row"
           }`}
         >
-          <div className="max-w-xl space-y-3">
-            <h2 className="text-4xl leading-tight font-black tracking-tight text-slate-900 sm:text-5xl">
-              {title}
-            </h2>
+          <div className="max-w-xl space-y-3 lg:flex-1">
+            <div className="flex min-h-23 flex-col justify-start sm:min-h-30">
+              <h2 className="text-4xl leading-tight font-black tracking-tight text-slate-900 sm:text-5xl">
+                {title}
+              </h2>
+            </div>
             {date && <p className="text-base font-semibold text-slate-500">{date}</p>}
             {location && (
               <p className="flex items-center gap-2 font-medium text-slate-700">
@@ -168,13 +170,13 @@ function EventStory({ event, index }: { event: EventItem; index: number }) {
           </svg>
         </div>
 
-        <section style={{ backgroundColor: theme }} className="w-full px-6 pt-6 pb-10 text-white">
-          <div className="mx-auto mb-4 max-w-5xl">
+        <section style={{ backgroundColor: theme }} className="w-full px-6 pt-6 pb-10 text-white lg:px-12">
+          <div className="mx-auto mb-4 max-w-7xl">
             <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-bold tracking-widest text-white/90 uppercase">
               {lang === "en" ? "Highlights & Impact" : "Στιγμιότυπα & Αντίκτυπος"} • {title}
             </span>
           </div>
-          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 text-sm leading-relaxed font-normal text-white/90 md:grid-cols-2 sm:text-base">
+          <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 text-sm leading-relaxed font-normal text-white/90 md:grid-cols-2 lg:gap-12 lg:text-[15px]">
             <p>{desc1}</p>
             <p>{desc2}</p>
           </div>

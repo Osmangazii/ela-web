@@ -1,5 +1,37 @@
 # CHANGELOG
 
+## [2026-09-22 16:21] — Events Alt Renkli Bölümü Genişletildi (Tek Ekrana Sığdırma)
+
+- **`src/app/events/EventsView.tsx`** → `EventStory` alt `Highlights & Impact` bloğu optimize edildi:
+  - **Kapsayıcı genişletildi**: Bölüm padding'i `px-6` → `px-6 lg:px-12`; badge ve 2-kolon açıklama gridini saran iç kapsayıcılar `max-w-5xl` → `max-w-7xl`. Uzun açıklamalar artık 8–10 satıra yayılmıyor.
+  - **Tipografi & satır aralığı**: Grid `gap-6` → `gap-8 lg:gap-12`; gövde metninden `sm:text-base` kaldırıldı, masaüstünde `lg:text-[15px]` ile `text-sm leading-relaxed` kullanılıyor (dikey yükseklik azaldı, okunabilirlik korundu).
+  - **Viewport sınırı**: Etkinlik kökü `lg:overflow-y-auto` → `lg:h-screen lg:max-h-screen lg:snap-start lg:overflow-hidden`; masaüstünde iç kaydırma olmadan ve alt metin kırpılmadan tek ekranda kalıyor.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint src/app/events/EventsView.tsx` temiz; editör tanılamaları temiz.
+
+## [2026-09-22 16:14] — Events Kartı CLS: Sabit Sütun Genişliği + Başlık İçin 2 Satırlık Yer Ayırma
+
+- **Kök neden (derinleştirilmiş)**: Satırdaki görsel sütunu sabit genişliğe sahip değildi; metin sütunu içeriğe göre daralıp genişliyordu. 1 satırlık başlıkta görsel sütunu genişliyor, `aspect-*` nedeniyle görselin **yüksekliği** de değişiyor ve `items-center` ile birlikte tüm kart kayıyordu.
+- **`src/app/events/EventsView.tsx`** → `EventGallery` ve `EventStory` güncellendi:
+  - **Görsel sütunu sabitlendi**: Galeriye `lg:w-125 lg:flex-none lg:self-start` eklendi (masaüstünde sabit 500px genişlik → `aspect-4/3` ile sabit yükseklik). Görselin dikey Y konumu artık dil değişiminden etkilenmiyor.
+  - **Metin sütunu sabitlendi**: `max-w-xl space-y-3 lg:flex-1` — kalan alanı doldurur, böylece başlığın satır kaydırma genişliği dile göre değişmez.
+  - **Başlık alanına yer ayırma**: `h2` bir kapsayıcıya alındı: `flex min-h-23 flex-col justify-start sm:min-h-30` (`min-h` 5.75rem/92px → `sm+` 7.5rem/120px).
+    - Değerler **2 satır metin + line-height**'e göre hesaplandı: base (`text-4xl`, `leading-tight` → 45px/satır) 2 satır = 90px; `sm+` (`text-5xl` → 60px/satır) 2 satır = 120px. Böylece başlık 1 veya 2 satır olsa da kapladığı dikey alan **tamamen sabit**; tarih/konum asla oynamaz.
+    - Görevdeki örnek değerler (`4rem / 4.75rem / 5.5rem`) 2 satırı karşılamadığı için (2 satır `text-5xl` ≈ 120px), görevdeki “2 satıra tam sığacak şekilde ayarla” talimatı uyarınca yukarıdaki değerler kullanıldı.
+  - **Hizalama**: `section` hâlâ `items-center lg:items-start` — mobilde (flex-col) yatay ortalama korunur, masaüstü satır düzeninde üstten hizalama zorunlu kılınır (dikey merkezleme kaynaklı kayma engellenir).
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint src/app/events/EventsView.tsx` temiz; editör tanılamaları temiz.
+
+## [2026-09-22 16:11] — Events Kartı: Dil Geçişinde Başlık Satır Sayısı Kaynaklı Zıplama Düzeltildi
+
+- **Bağlam**: Proje `git reset --hard HEAD` ile GitHub'daki temiz sürüme döndükten sonra, EN/EL geçişinde başlığın 1–2 satır olması yüzünden kartın ve sol görselin dikeyde kayması sorunu giderildi.
+- **`src/app/events/EventsView.tsx`** → `EventStory` içindeki ana `section` (sol görsel + sağ metin kapsayıcısı) düzenlendi:
+  - Hizalama: `items-center` (mobil yatay ortalama korunur) → masaüstünde `lg:items-start` eklendi. Böylece iki sütun üstten hizalanır; görselin dikey konumu satır yüksekliğinden bağımsız hâle gelir ve merkezleme kaynaklı kayma biter.
+  - Başlık (`h2`): `flex min-h-18 items-center … lg:min-h-22` verildi (min-h 4.5rem/72px; `lg` 5.5rem/88px). Başlık 1 satır da 2 satır da olsa kapladığı dikey alan sabitlenir; tarih, konum ve sol görsel yerinden oynamaz, tek ekran snap-scroll düzeni korunur.
+  - (Tailwind v4 linter önerisine uygun olarak `min-h-[4.5rem]`→`min-h-18`, `min-h-[5.5rem]`→`lg:min-h-22` bare spacing karşılıkları kullanıldı.)
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint src/app/events/EventsView.tsx` temiz; editör tanılamaları temiz.
+
 ## [2026-09-16 15:17] — Public Announcements Sayfası Supabase'e Bağlandı + Duyuru Migration
 
 - **`src/app/announcements/page.tsx` yeniden yazıldı**: Mock/statik `POSTS` listesi kaldırıldı; artık Server Component olarak Supabase `announcements` tablosundan `select("*").order("created_at", { ascending: false })` ile veri çekiyor (`export const revalidate = 0` — admin değişiklikleri anında yansır). Veri `AnnouncementsView` istemci bileşenine prop olarak geçiliyor.
