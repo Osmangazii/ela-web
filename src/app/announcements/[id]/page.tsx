@@ -1,11 +1,24 @@
 import { notFound } from "next/navigation";
 import Navbar from "@/components/Navbar";
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import type { AnnouncementItem } from "@/types/database";
 import AnnouncementDetail from "./AnnouncementDetail";
 
-// Always render fresh so admin edits appear immediately.
-export const revalidate = 0;
+// ISR: cache each rendered detail page for 1 hour. Admin mutations revalidate on demand.
+export const revalidate = 3600;
+
+// Allow IDs created after the last build to be rendered on demand (and cached).
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  try {
+    const supabase = createPublicClient();
+    const { data } = await supabase.from("announcements").select("id");
+    return ((data as unknown as { id: string }[]) ?? []).map((row) => ({ id: row.id }));
+  } catch {
+    return [];
+  }
+}
 
 export default async function AnnouncementDetailPage({
   params,
@@ -14,7 +27,7 @@ export default async function AnnouncementDetailPage({
 }) {
   const { id } = await params;
 
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("announcements")
     .select("*")

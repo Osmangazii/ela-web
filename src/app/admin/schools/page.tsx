@@ -3,6 +3,7 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
+import { revalidatePublicAction } from "../actions";
 import SortableList from "@/components/admin/SortableList";
 import type { SchoolItem } from "@/types/database";
 
@@ -241,6 +242,7 @@ export default function AdminSchools() {
     }
 
     setNotice(editingId ? "School updated successfully." : "School created successfully.");
+    await revalidatePublicAction("schools");
     resetForm();
     setShowForm(false);
     setSaving(false);
@@ -278,6 +280,7 @@ export default function AdminSchools() {
     setInitialOrder(schools);
     setOrderChanged(false);
     setNotice("Order saved successfully.");
+    await revalidatePublicAction("schools");
     setSavingOrder(false);
   }
 
@@ -310,6 +313,7 @@ export default function AdminSchools() {
       return;
     }
     setNotice("School deleted successfully.");
+    await revalidatePublicAction("schools");
     await loadSchools();
   }
 

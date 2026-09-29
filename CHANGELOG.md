@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## [2026-09-29 16:53] — ISR Önbellekleme, Admin On-Demand Revalidation ve Supabase Keep-Alive
+
+- **`src/lib/supabase/public.ts` (yeni)**: Cookie'siz (`@supabase/supabase-js`) public Supabase istemcisi. `cookies()` kullanmadığı için kullanan rotalar statik üretilip ISR ile önbelleklenebilir (anon key + RLS ile public okuma).
+- **ISR (revalidate 3600) uygulandı**:
+  - `src/app/events/page.tsx`, `src/app/announcements/page.tsx`, `src/app/announcements/[id]/page.tsx` — `revalidate = 0` → `revalidate = 3600`; veri çekimleri cookie'siz `createPublicClient()` ile yapılıyor (önce `server.ts` kullanıldığı için `cookies()` rotaları dinamik kılıyordu, ISR devre dışıydı).
+  - `src/app/announcements/[id]/page.tsx` ayrıca `generateStaticParams()` + `dynamicParams = true` aldı; aksi hâlde Next dinamik segmenti ISR'a sokmuyordu. Build çıktısı: `/announcements/[id]` artık `● (SSG)` ve `1h` revalidate.
+  - **`src/app/who-we-are/page.tsx` yeniden yapılandırıldı**: Görevde adı geçen `src/app/schools/page.tsx` mevcut değil; okullar aslında client-side `/who-we-are` sayfasında çekiliyordu. Bu sayfa Server Component'e çevrildi (okulları server'da ISR ile çeker) ve mevcut client kod `src/app/who-we-are/WhoWeAreView.tsx` (yeni) bileşenine taşındı (schools artık prop).
+  - `/admin/*` rotalarına dokunulmadı (dinamik kalır).
+- **On-demand revalidation**: `src/app/admin/actions.ts` içine `'use server'` `revalidatePublicAction(target)` eklendi — announcements → `revalidatePath('/announcements')` + `revalidatePath('/announcements/[id]', 'page')`; events → `/events`; schools → `/who-we-are` (görevdeki `/schools` rotası olmadığı için). Admin CRUD sayfaları başarılı `insert`/`update`/`delete`/sıra kaydetme sonrası bu action'ı çağırıyor (`admin/announcements`, `admin/events`, `admin/schools`).
+- **Keep-alive endpoint**: `src/app/api/health/route.ts` (yeni) — `events` tablosundan `.select('id').limit(1)` ile minimal sorgu; `{ status: 'ok', timestamp }` döner ve `export const dynamic = 'force-dynamic'` ile önbelleklenmez (cron/UptimeRobot için).
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit`, `npx eslint .` temiz. `next build` (Node v24) başarılı; build tablosunda `/events`, `/announcements`, `/who-we-are` → `1h` revalidate, `/announcements/[id]` → `● (SSG) 1h`, `/api/health` → `ƒ` dinamik.
+
 ## [2026-09-22 16:58] — Duyuru Detayı: Beyaz Kart Kapsayıcısı Geri Getirildi + Görsel Köşe Yuvarlaması
 
 - **`src/app/announcements/[id]/page.tsx`**: İçerik yeniden beyaz kart içine alındı:

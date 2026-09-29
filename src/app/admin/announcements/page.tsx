@@ -3,6 +3,7 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
+import { revalidatePublicAction } from "../actions";
 import type {
   AnnouncementBlock,
   AnnouncementCategory,
@@ -175,6 +176,7 @@ export default function AdminAnnouncements() {
     }
 
     setNotice(editingId ? "Announcement updated successfully" : "Announcement created successfully");
+    await revalidatePublicAction("announcements");
     resetForm();
     setShowForm(false);
     setSaving(false);
@@ -190,6 +192,7 @@ export default function AdminAnnouncements() {
       return;
     }
     setNotice("Announcement deleted successfully");
+    await revalidatePublicAction("announcements");
     await loadAnnouncements();
   }
 

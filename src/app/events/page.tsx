@@ -1,13 +1,13 @@
 import Navbar from "@/components/Navbar";
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import type { EventItem } from "@/types/database";
 import EventsView from "./EventsView";
 
-// Always render fresh so admin edits appear immediately.
-export const revalidate = 0;
+// ISR: cache the rendered page for 1 hour. Admin mutations revalidate on demand.
+export const revalidate = 3600;
 
 export default async function EventsPage() {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("events")
     .select("*")

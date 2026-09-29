@@ -3,6 +3,7 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
+import { revalidatePublicAction } from "../actions";
 import SortableList from "@/components/admin/SortableList";
 import type { EventItem } from "@/types/database";
 
@@ -213,6 +214,7 @@ export default function AdminEvents() {
     }
 
     setNotice(editingId ? "Event updated successfully" : "Event created successfully");
+    await revalidatePublicAction("events");
     resetForm();
     setShowForm(false);
     setSaving(false);
@@ -250,6 +252,7 @@ export default function AdminEvents() {
     setInitialOrder(events);
     setOrderChanged(false);
     setNotice("Order saved successfully.");
+    await revalidatePublicAction("events");
     setSavingOrder(false);
   }
 
@@ -300,6 +303,7 @@ export default function AdminEvents() {
 
     setNotice("Event deleted successfully");
     setEvents((prev) => prev.filter((item) => item.id !== event.id));
+    await revalidatePublicAction("events");
   }
 
   return (
