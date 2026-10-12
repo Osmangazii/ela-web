@@ -23,6 +23,15 @@ export interface EventItem {
   col2_el: string | null;
   order_index: number | null;
   created_at: string | null;
+  // Catalogue fields (0005 migration)
+  is_archived: boolean | null;
+  event_date: string | null;
+  location_or_online: string | null;
+  target_audience: string | null;
+  language: string | null;
+  educational_purpose: string | null;
+  category: string | null;
+  registration_url: string | null;
 }
 
 /** Row type for the `schools` table. */
@@ -70,6 +79,14 @@ export interface Database {
           col2_el?: string | null;
           order_index?: number | null;
           created_at?: string | null;
+          is_archived?: boolean | null;
+          event_date?: string | null;
+          location_or_online?: string | null;
+          target_audience?: string | null;
+          language?: string | null;
+          educational_purpose?: string | null;
+          category?: string | null;
+          registration_url?: string | null;
         };
         Update: Partial<{
           title_en: string;
@@ -85,6 +102,14 @@ export interface Database {
           col2_en: string | null;
           col2_el: string | null;
           order_index: number | null;
+          is_archived: boolean | null;
+          event_date: string | null;
+          location_or_online: string | null;
+          target_audience: string | null;
+          language: string | null;
+          educational_purpose: string | null;
+          category: string | null;
+          registration_url: string | null;
         }>;
         Relationships: [];
       };
@@ -136,6 +161,8 @@ export interface Database {
           title_el: string;
           category?: string | null;
           date?: string | null;
+          deadline_date?: string | null;
+          target_audience?: string | null;
           blocks?: AnnouncementBlock[] | null;
           order_index?: number | null;
           created_at?: string | null;
@@ -145,7 +172,69 @@ export interface Database {
           title_el: string;
           category: string | null;
           date: string | null;
+          deadline_date: string | null;
+          target_audience: string | null;
           blocks: AnnouncementBlock[] | null;
+          order_index: number | null;
+        }>;
+        Relationships: [];
+      };
+      board_members: {
+        Row: BoardMember;
+        Insert: {
+          id?: string;
+          full_name: string;
+          position?: string | null;
+          photo_url?: string | null;
+          school_name?: string | null;
+          city?: string | null;
+          profile_text?: string | null;
+          ela_contribution?: string | null;
+          order_index?: number | null;
+          created_at?: string | null;
+        };
+        Update: Partial<{
+          full_name: string;
+          position: string | null;
+          photo_url: string | null;
+          school_name: string | null;
+          city: string | null;
+          profile_text: string | null;
+          ela_contribution: string | null;
+          order_index: number | null;
+        }>;
+        Relationships: [];
+      };
+      erasmus_projects: {
+        Row: ErasmusProject;
+        Insert: {
+          id?: string;
+          title: string;
+          project_code?: string | null;
+          action_type?: string | null;
+          status?: string | null;
+          summary?: string | null;
+          priorities?: string | null;
+          partner_countries?: string | null;
+          start_date?: string | null;
+          end_date?: string | null;
+          results_summary?: string | null;
+          attachment_url?: string | null;
+          order_index?: number | null;
+          created_at?: string | null;
+        };
+        Update: Partial<{
+          title: string;
+          project_code: string | null;
+          action_type: string | null;
+          status: string | null;
+          summary: string | null;
+          priorities: string | null;
+          partner_countries: string | null;
+          start_date: string | null;
+          end_date: string | null;
+          results_summary: string | null;
+          attachment_url: string | null;
           order_index: number | null;
         }>;
         Relationships: [];
@@ -159,10 +248,10 @@ export interface Database {
 }
 
 export type AnnouncementCategory =
-  | "Official Notice"
-  | "General Assembly"
-  | "Article"
-  | "News";
+  | "Membership Updates"
+  | "Calls for Participation"
+  | "Institutional News"
+  | "Deadlines & Important Dates";
 
 export type AnnouncementBlock =
   | {
@@ -197,7 +286,44 @@ export interface AnnouncementItem {
   title_el: string;
   category: AnnouncementCategory | string | null;
   date: string | null;
+  deadline_date: string | null;
+  target_audience: string | null;
   blocks: AnnouncementBlock[] | null;
+  order_index: number | null;
+  created_at: string | null;
+}
+
+/** Row type for the `board_members` table. */
+export interface BoardMember {
+  id: string;
+  full_name: string;
+  position: string | null;
+  photo_url: string | null;
+  school_name: string | null;
+  city: string | null;
+  profile_text: string | null;
+  ela_contribution: string | null;
+  order_index: number | null;
+  created_at: string | null;
+}
+
+/** Official Erasmus+ project status values. */
+export type ErasmusStatus = "Active" | "Completed" | "Call for Partners";
+
+/** Row type for the `erasmus_projects` table. */
+export interface ErasmusProject {
+  id: string;
+  title: string;
+  project_code: string | null;
+  action_type: string | null;
+  status: ErasmusStatus | string | null;
+  summary: string | null;
+  priorities: string | null;
+  partner_countries: string | null;
+  start_date: string | null;
+  end_date: string | null;
+  results_summary: string | null;
+  attachment_url: string | null;
   order_index: number | null;
   created_at: string | null;
 }

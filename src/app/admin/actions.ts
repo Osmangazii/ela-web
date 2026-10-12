@@ -14,7 +14,7 @@ export async function signOutAction() {
   redirect("/admin/login");
 }
 
-export type PublicRevalidateTarget = "announcements" | "events" | "schools";
+export type PublicRevalidateTarget = "announcements" | "events" | "schools" | "erasmus";
 
 /**
  * Revalidate the affected public ISR pages immediately after an admin mutation,
@@ -33,8 +33,11 @@ export async function revalidatePublicAction(target: PublicRevalidateTarget) {
       revalidatePath("/events");
       break;
     case "schools":
-      // The public schools list lives on /who-we-are.
-      revalidatePath("/who-we-are");
+      // The public schools directory lives on /membership.
+      revalidatePath("/membership");
+      break;
+    case "erasmus":
+      revalidatePath("/erasmus");
       break;
   }
 }

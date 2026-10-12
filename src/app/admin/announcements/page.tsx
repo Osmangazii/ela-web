@@ -11,10 +11,10 @@ import type {
 } from "@/types/database";
 
 const CATEGORIES: AnnouncementCategory[] = [
-  "Official Notice",
-  "General Assembly",
-  "Article",
-  "News",
+  "Membership Updates",
+  "Calls for Participation",
+  "Institutional News",
+  "Deadlines & Important Dates",
 ];
 
 const WIDTHS: { value: "full" | "md" | "sm"; label: string }[] = [
@@ -57,8 +57,10 @@ export default function AdminAnnouncements() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [titleEn, setTitleEn] = useState("");
   const [titleEl, setTitleEl] = useState("");
-  const [category, setCategory] = useState<AnnouncementCategory>("Official Notice");
+  const [category, setCategory] = useState<AnnouncementCategory>("Membership Updates");
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [deadlineDate, setDeadlineDate] = useState("");
+  const [targetAudience, setTargetAudience] = useState("");
   const [blocks, setBlocks] = useState<AnnouncementBlock[]>([]);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -85,8 +87,10 @@ export default function AdminAnnouncements() {
   function resetForm() {
     setTitleEn("");
     setTitleEl("");
-    setCategory("Official Notice");
+    setCategory("Membership Updates");
     setDate(new Date().toISOString().slice(0, 10));
+    setDeadlineDate("");
+    setTargetAudience("");
     setBlocks([]);
     setEditingId(null);
   }
@@ -100,8 +104,10 @@ export default function AdminAnnouncements() {
     setEditingId(item.id);
     setTitleEn(item.title_en);
     setTitleEl(item.title_el);
-    setCategory((item.category as AnnouncementCategory) ?? "Official Notice");
+    setCategory((item.category as AnnouncementCategory) ?? "Membership Updates");
     setDate(item.date ?? "");
+    setDeadlineDate(item.deadline_date ?? "");
+    setTargetAudience(item.target_audience ?? "");
     setBlocks(item.blocks ?? []);
     setShowForm(true);
   }
@@ -164,7 +170,15 @@ export default function AdminAnnouncements() {
     setNotice(null);
 
     const supabase = createClient();
-    const payload = { title_en: titleEn, title_el: titleEl, category, date, blocks };
+    const payload = {
+      title_en: titleEn,
+      title_el: titleEl,
+      category,
+      date,
+      deadline_date: deadlineDate || null,
+      target_audience: targetAudience.trim() || null,
+      blocks,
+    };
     const { error: err } = editingId
       ? await supabase.from("announcements").update(payload).eq("id", editingId)
       : await supabase.from("announcements").insert(payload);
@@ -248,6 +262,19 @@ export default function AdminAnnouncements() {
             <label className="block">
               <span className={labelClass()}>Date</span>
               <input type="date" className={inputClass} value={date} onChange={(e) => setDate(e.target.value)} />
+            </label>
+            <label className="block">
+              <span className={labelClass()}>Deadline date (optional)</span>
+              <input type="date" className={inputClass} value={deadlineDate} onChange={(e) => setDeadlineDate(e.target.value)} />
+            </label>
+            <label className="block">
+              <span className={labelClass()}>Target audience (optional)</span>
+              <input
+                className={inputClass}
+                value={targetAudience}
+                onChange={(e) => setTargetAudience(e.target.value)}
+                placeholder="e.g. All Accredited Members"
+              />
             </label>
           </div>
 

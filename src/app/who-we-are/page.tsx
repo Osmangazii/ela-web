@@ -1,22 +1,22 @@
 import { createPublicClient } from "@/lib/supabase/public";
-import type { SchoolItem } from "@/types/database";
+import type { BoardMember } from "@/types/database";
 import WhoWeAreView from "./WhoWeAreView";
 
-// ISR: cache the rendered page for 1 hour. Admin mutations revalidate on demand.
+// ISR: cache the rendered page for 1 hour.
 export const revalidate = 3600;
 
 export default async function WhoWeArePage() {
   const supabase = createPublicClient();
   const { data, error } = await supabase
-    .from("schools")
+    .from("board_members")
     .select("*")
     .order("order_index", { ascending: true });
 
   if (error) {
-    console.error("Failed to load schools:", error.message);
+    console.error("Failed to load board members:", error.message);
   }
 
-  const schools = (data as unknown as SchoolItem[]) ?? [];
+  const boardMembers = (data as unknown as BoardMember[]) ?? [];
 
-  return <WhoWeAreView schools={schools} />;
+  return <WhoWeAreView boardMembers={boardMembers} />;
 }

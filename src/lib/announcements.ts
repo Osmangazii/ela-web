@@ -4,16 +4,16 @@ import type { Lang } from "@/components/language-context";
 /** Human labels for each announcement category, per language. */
 export const CATEGORY_LABELS: Record<Lang, Record<AnnouncementCategory, string>> = {
   en: {
-    "Official Notice": "Official Notice",
-    "General Assembly": "General Assembly",
-    Article: "Article",
-    News: "News",
+    "Membership Updates": "Membership Updates",
+    "Calls for Participation": "Calls for Participation",
+    "Institutional News": "Institutional News",
+    "Deadlines & Important Dates": "Deadlines & Important Dates",
   },
   el: {
-    "Official Notice": "Επίσημη Ανακοίνωση",
-    "General Assembly": "Γενική Συνέλευση",
-    Article: "Άρθρο",
-    News: "Νέα",
+    "Membership Updates": "Ενημερώσεις Μελών",
+    "Calls for Participation": "Προσκλήσεις Συμμετοχής",
+    "Institutional News": "Θεσμικά Νέα",
+    "Deadlines & Important Dates": "Προθεσμίες & Σημαντικές Ημερομηνίες",
   },
 };
 
@@ -66,4 +66,14 @@ export function announcementExcerpt(item: AnnouncementItem, lang: Lang, max = 15
   const clean = raw.replace(/\s+/g, " ").trim();
   if (clean.length <= max) return clean;
   return `${clean.slice(0, max).trimEnd()}…`;
+}
+
+/**
+ * Localised "Deadline: <date>" label. Empty string when there is no deadline,
+ * so callers can render it as an optional badge.
+ */
+export function deadlineText(value: string | null, lang: Lang): string {
+  const formatted = formatAnnouncementDate(value, lang);
+  if (!formatted) return "";
+  return `${lang === "el" ? "Προθεσμία" : "Deadline"}: ${formatted}`;
 }

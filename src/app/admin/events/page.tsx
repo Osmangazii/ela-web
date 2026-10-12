@@ -9,6 +9,14 @@ import type { EventItem } from "@/types/database";
 
 const DEFAULT_THEME = "#165823";
 
+/** The four official ELA event categories. */
+const CATEGORIES = [
+  "Student events",
+  "Professional learning",
+  "Family and community learning",
+  "International exchange",
+] as const;
+
 interface FormState {
   title_en: string;
   title_el: string;
@@ -21,6 +29,15 @@ interface FormState {
   col1_el: string;
   col2_en: string;
   col2_el: string;
+  // Catalogue fields
+  is_archived: boolean;
+  event_date: string;
+  location_or_online: string;
+  target_audience: string;
+  language: string;
+  educational_purpose: string;
+  category: string;
+  registration_url: string;
 }
 
 const EMPTY_FORM: FormState = {
@@ -35,6 +52,14 @@ const EMPTY_FORM: FormState = {
   col1_el: "",
   col2_en: "",
   col2_el: "",
+  is_archived: false,
+  event_date: "",
+  location_or_online: "",
+  target_audience: "",
+  language: "",
+  educational_purpose: "",
+  category: "",
+  registration_url: "",
 };
 
 const inputClass =
@@ -42,6 +67,23 @@ const inputClass =
 
 function labelClass() {
   return "mb-1 block text-xs font-semibold text-slate-600";
+}
+
+/** Trim optional text; empty/whitespace becomes null so Supabase accepts it cleanly. */
+function orNull(value: string): string | null {
+  const trimmed = value.trim();
+  return trimmed === "" ? null : trimmed;
+}
+
+/**
+ * Surface a helpful hint when the failure is a stale PostgREST schema cache
+ * (i.e. a new column exists in the DB but not in the API's column list).
+ */
+function dbErrorHint(message: string): string {
+  if (/schema cache|could not find the .* column|does not exist/i.test(message)) {
+    return `${message} — Hint: apply supabase/migrations/0005_events_catalog.sql (or supabase/reload_schema.sql) and run "NOTIFY pgrst, 'reload schema';".`;
+  }
+  return message;
 }
 
 function storagePathFromUrl(url: string): string | null {
@@ -125,6 +167,14 @@ export default function AdminEvents() {
       col1_el: event.col1_el ?? "",
       col2_en: event.col2_en ?? "",
       col2_el: event.col2_el ?? "",
+      is_archived: event.is_archived ?? false,
+      event_date: event.event_date ?? "",
+      location_or_online: event.location_or_online ?? "",
+      target_audience: event.target_audience ?? "",
+      language: event.language ?? "",
+      educational_purpose: event.educational_purpose ?? "",
+      category: event.category ?? "",
+      registration_url: event.registration_url ?? "",
     });
     setImages(event.images ?? []);
     setEditingId(event.id);
@@ -196,11 +246,19 @@ export default function AdminEvents() {
       location_el: form.location_el,
       theme_color: form.theme_color || DEFAULT_THEME,
       images,
-      col1_en: form.col1_en || null,
-      col1_el: form.col1_el || null,
-      col2_en: form.col2_en || null,
-      col2_el: form.col2_el || null,
+      col1_en: orNull(form.col1_en),
+      col1_el: orNull(form.col1_el),
+      col2_en: orNull(form.col2_en),
+      col2_el: orNull(form.col2_el),
       order_index: orderValue,
+      is_archived: form.is_archived,
+      event_date: orNull(form.event_date),
+      location_or_online: orNull(form.location_or_online),
+      target_audience: orNull(form.target_audience),
+      language: orNull(form.language),
+      educational_purpose: orNull(form.educational_purpose),
+      category: orNull(form.category),
+      registration_url: orNull(form.registration_url),
     };
 
     const { error: err } = editingId
@@ -208,7 +266,7 @@ export default function AdminEvents() {
       : await supabase.from("events").insert(payload);
 
     if (err) {
-      setError(`Failed to save data. ${err.message}`);
+      setError(`Failed to save data. ${dbErrorHint(err.message)}`);
       setSaving(false);
       return;
     }
@@ -293,7 +351,7 @@ export default function AdminEvents() {
     console.log("Delete response:", { data, error: err, count });
 
     if (err) {
-      setError(`Failed to delete data. ${err.message}`);
+      setError(`Failed to delete data. ${dbErrorHint(err.message)}`);
       return;
     }
     if (!data || data.length === 0) {
@@ -449,6 +507,101 @@ export default function AdminEvents() {
             </div>
           </div>
 
+          {/* Catalogue details */}
+          <div className="mt-6 rounded-2xl border border-black/5 bg-slate-50/50 p-6">
+            <h3 className="mb-4 text-sm font-bold tracking-wider text-slate-500 uppercase">
+              Catalogue Details
+            </h3>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <label className="block">
+                <span className={labelClass()}>Category</span>
+                <select
+                  className={inputClass}
+                  value={form.category}
+                  onChange={(e) => update("category", e.target.value)}
+                >
+                  <option value="">—</option>
+                  {CATEGORIES.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="block">
+                <span className={labelClass()}>Catalogue date</span>
+                <input
+                  type="date"
+                  className={inputClass}
+                  value={form.event_date}
+                  onChange={(e) => update("event_date", e.target.value)}
+                />
+              </label>
+
+              <label className="block">
+                <span className={labelClass()}>Location or online</span>
+                <input
+                  className={inputClass}
+                  value={form.location_or_online}
+                  onChange={(e) => update("location_or_online", e.target.value)}
+                  placeholder="e.g. Athens / Online"
+                />
+              </label>
+
+              <label className="block">
+                <span className={labelClass()}>Target audience</span>
+                <input
+                  className={inputClass}
+                  value={form.target_audience}
+                  onChange={(e) => update("target_audience", e.target.value)}
+                  placeholder="e.g. Students (15–18)"
+                />
+              </label>
+
+              <label className="block">
+                <span className={labelClass()}>Language</span>
+                <input
+                  className={inputClass}
+                  value={form.language}
+                  onChange={(e) => update("language", e.target.value)}
+                  placeholder="e.g. English / Greek"
+                />
+              </label>
+
+              <label className="block">
+                <span className={labelClass()}>Registration / CTA link</span>
+                <input
+                  className={inputClass}
+                  value={form.registration_url}
+                  onChange={(e) => update("registration_url", e.target.value)}
+                  placeholder="https://…"
+                />
+              </label>
+
+              <label className="block md:col-span-2">
+                <span className={labelClass()}>Educational purpose</span>
+                <textarea
+                  className={`${inputClass} min-h-24 resize-y`}
+                  value={form.educational_purpose}
+                  onChange={(e) => update("educational_purpose", e.target.value)}
+                />
+              </label>
+
+              <label className="flex items-center gap-3 md:col-span-2">
+                <input
+                  type="checkbox"
+                  checked={form.is_archived}
+                  onChange={(e) => update("is_archived", e.target.checked)}
+                  className="h-4 w-4 accent-brand-pink"
+                />
+                <span className="text-sm font-semibold text-slate-700">
+                  Archive this event (moves it to the Past / Archive tab)
+                </span>
+              </label>
+            </div>
+          </div>
+
           <div className="mt-6 flex justify-end gap-3">
             <button
               type="button"
@@ -519,8 +672,20 @@ export default function AdminEvents() {
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-bold text-slate-900">{event.title_en}</p>
                   <p className="truncate text-xs text-slate-500">
-                    {event.title_el} · {event.date_en}
+                    {event.title_el} · {event.event_date ?? event.date_en}
                   </p>
+                  <div className="mt-1 flex flex-wrap items-center gap-2">
+                    {event.category && (
+                      <span className="rounded-full bg-brand-pink-light/60 px-2 py-0.5 text-xs font-semibold text-brand-green">
+                        {event.category}
+                      </span>
+                    )}
+                    {event.is_archived && (
+                      <span className="rounded-full bg-slate-200 px-2 py-0.5 text-xs font-semibold text-slate-600">
+                        Archived
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 <span

@@ -8,28 +8,33 @@ import { useLanguage, type Lang } from "./language-context";
 interface Dictionary {
   links: { label: string; href: string }[];
   cta: string;
+  ctaHref: string;
 }
 
 const DICTIONARY: Record<Lang, Dictionary> = {
   en: {
     links: [
+      { label: "Purpose", href: "/#purpose" },
       { label: "Who We Are", href: "/who-we-are" },
-      { label: "Information", href: "/information" },
+      { label: "Membership", href: "/membership" },
       { label: "Events", href: "/events" },
-      { label: "Announcements", href: "/announcements" },
       { label: "Erasmus+", href: "/erasmus" },
+      { label: "Announcements", href: "/announcements" },
     ],
     cta: "Join Us",
+    ctaHref: "/membership",
   },
   el: {
     links: [
+      { label: "Σκοπός", href: "/#purpose" },
       { label: "Ποιοι Είμαστε", href: "/who-we-are" },
-      { label: "Πληροφορίες", href: "/information" },
+      { label: "Μελοσύνη", href: "/membership" },
       { label: "Εκδηλώσεις", href: "/events" },
-      { label: "Ανακοινώσεις", href: "/announcements" },
       { label: "Erasmus+", href: "/erasmus" },
+      { label: "Ανακοινώσεις", href: "/announcements" },
     ],
     cta: "Εγγραφή",
+    ctaHref: "/membership",
   },
 };
 
@@ -63,12 +68,12 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop links */}
-        <ul className="hidden items-center gap-6 lg:flex">
+        <ul className="hidden items-center gap-5 lg:flex">
           {dict.links.map((link) => (
             <li key={link.label}>
               <Link
                 href={link.href}
-                className="whitespace-nowrap text-sm font-bold tracking-wide text-slate-800 transition-colors hover:text-brand-green"
+                className="whitespace-nowrap text-xs font-bold tracking-wider text-slate-800 uppercase transition-colors hover:text-brand-green"
               >
                 {link.label}
               </Link>
@@ -100,7 +105,7 @@ export default function Navbar() {
 
           {/* CTA */}
           <Link
-            href="#apply"
+            href={dict.ctaHref}
             className="hidden rounded-full bg-brand-pink px-5 py-2.5 text-sm font-bold tracking-wide text-white shadow-md transition-opacity hover:opacity-90 sm:block"
           >
             {dict.cta}
@@ -148,7 +153,7 @@ export default function Navbar() {
                 <Link
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className="block rounded-full px-4 py-2.5 text-sm font-bold tracking-wide text-slate-800 transition-colors hover:bg-brand-pink-light hover:text-brand-green"
+                  className="block rounded-full px-4 py-2.5 text-sm font-bold tracking-wide text-slate-800 uppercase transition-colors hover:bg-brand-pink-light hover:text-brand-green"
                 >
                   {link.label}
                 </Link>
@@ -157,7 +162,7 @@ export default function Navbar() {
           </ul>
           <div className="mt-2 border-t border-brand-pink-light px-2 pt-3 pb-1">
             <Link
-              href="#apply"
+              href={dict.ctaHref}
               onClick={() => setOpen(false)}
               className="block rounded-full bg-brand-pink px-5 py-2.5 text-center text-sm font-bold tracking-wide text-white shadow-md transition-opacity hover:opacity-90"
             >

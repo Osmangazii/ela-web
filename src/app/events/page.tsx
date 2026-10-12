@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import { createPublicClient } from "@/lib/supabase/public";
 import type { EventItem } from "@/types/database";
-import EventsView from "./EventsView";
+import EventsCatalog from "./EventsCatalog";
 
 // ISR: cache the rendered page for 1 hour. Admin mutations revalidate on demand.
 export const revalidate = 3600;
@@ -22,7 +22,7 @@ export default async function EventsPage() {
   return (
     <div className="min-h-screen bg-brand-bg text-brand-green antialiased">
       <Navbar />
-      <EventsView events={events} />
+      <EventsCatalog events={events} />
     </div>
   );
 }

@@ -1,5 +1,226 @@
 # CHANGELOG
 
+## [2026-10-12 13:24] — Tüm Public Sayfalarda Üst Eyebrow Rozetleri Kaldırıldı
+
+- Başlıkların hemen üstündeki küçük “eyebrow” pill/rozetleri public sayfalardan kaldırıldı (Erasmus’ta zaten yapılmıştı). Kaldırılanlar:
+  - **`src/app/page.tsx` (ana sayfa)**: “Educational Leadership Association” rozeti.
+  - **`src/app/who-we-are/WhoWeAreView.tsx`**: “About ELA” rozeti.
+  - **`src/app/membership/MembershipView.tsx`**: “Membership” rozeti.
+  - **`src/app/events/EventsCatalog.tsx`**: “Programmes & Events” rozeti.
+  - **`src/app/information/page.tsx`**: “Legal Status & Bylaws” rozeti.
+  - Her dosyada kullanılmayan `badge` anahtarı `Copy` tipinden ve EN/EL sözlüklerinden temizlendi; H1’ler artık bölümün ilk öğesi. `/announcements` ve `/privacy-policy`’de badge yoktu.
+- **Not**: Ana sayfa/`who-we-are`/`membership`/`events` içindeki **bölüm kicker’ları** (ör. “Our Purpose”, “Our Educational Approach” gibi bölüm başlıklarının üstündeki düz metin etiketler) — bunlar ana sayfa başlığı üstünde değil, bölüm h2’lerinin üstünde olduğundan kapsam dışı bırakıldı. İstenirse onlar da kaldırılabilir.
+- **Doğrulama**: `npx tsc --noEmit`, `npx eslint .` temiz; `next build` (Node v24) başarılı. `t.badge` ve pill desenine dair kalan eşleşme yok.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+
+## [2026-10-12 13:22] — Erasmus+ Hero Sadeleştirildi
+
+- **`src/app/erasmus/ErasmusView.tsx`**: Kullanıcı geri bildirimiyle hero’dan iki öğe kaldırıldı:
+  - Üstteki küçük pill/rozet (“European Collaboration & Horizons” / EL karşılığı) kaldırıldı; `Copy` tipinden ve EN/EL sözlüklerinden `badge` anahtarı temizlendi.
+  - “Co-funded” rozetinin yanındaki tek başına duran `/erasmusela.png` mühür görseli kaldırıldı.
+  - **“Co-funded by the European Union” bayrak rozeti ve hero metni (H1 + açıklama) korundu.** H1 artık hero’nun ilk öğesi.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint .` temiz; `next build` (Node v24) başarılı.
+
+## [2026-10-12 13:19] — Erasmus+ Sayfası: Statik Featured Banner Kaldırıldı + Portföy Düzeni
+
+- **`src/app/erasmus/ErasmusView.tsx`**:
+  - **Statik “Funded Erasmus+ Projects” banner’ı tamamen kaldırıldı** (KA122-ADU showcase makalesi: projTitle/projDesc/code/action metinleri ve 3 metrik). Bilgi artık Supabase’teki dinamik portföyden geliyor.
+  - **Resmi öğeler korundu**: “Co-funded by the European Union” rozeti hero’da kalıyor; `/erasmusela.png` proje mührü hero’daki rozetin yanına taşındı (kaldırılan karttan kaybolmasın diye).
+  - **Stratejik kapsam başlığı** eklendi: hero sağ kolonda “Erasmus+ Vision & Strategic Scope” başlığı + 4 öncelik kartı.
+  - **Portföy kartları**: zaten `grid-cols-1 lg:grid-cols-2` (dar 3 sütun değil) ve `line-clamp` yok; kartlar tam genişlikte nefes alıyor (önceki görevden).
+  - Kullanılmayan hale gelen metin anahtarları (`q1/q2`, `projectsTitle`, `projTitle`, `code`, `action`, `projDesc`, `impacts`, `labelCode`, `labelPeriod`) ve `SparkIcon` temizlendi.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint .` temiz; `next build` (Node v24) başarılı — `/erasmus` `1h` revalidate ile statik.
+
+## [2026-10-12 13:16] — Erasmus+ Proje Kartları: Daha Geniş Düzen + Tam Metin
+
+- **`src/app/erasmus/ErasmusView.tsx`** → proje kataloğu ve kart düzeni yenilendi:
+  - **Izgara genişletildi**: `md:grid-cols-2 lg:grid-cols-3` → `grid-cols-1 lg:grid-cols-2` (dar 3 sütun yerine ferah 1–2 sütun); kartlar metne nefes alacak şekilde uzuyor.
+  - **`line-clamp` kaldırıldı**: özet paragrafı artık tam okunuyor (cümleler kesilmiyor).
+  - **Kart içi hiyerarşi yeniden düzenlendi**: üstte durum + action-type rozetleri → belirgin büyük başlık (`text-xl sm:text-2xl font-black`) → project code + tarih aralığı meta satırı (takvim ikonuyla) → tam özet → (varsa) “Results” kutusu → partner countries + priorities etiketleri (2 kolon) → alta yapışan birincil CTA (`flex-1 items-end`).
+  - `DICT`’e `labelResults` eklendi (EN “Results”, EL “Αποτελέσματα”); `CalendarIcon` eklendi. ELA marka renk paleti (brand-pink/green) korundu.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint .` temiz; `next build` (Node v24) başarılı.
+
+## [2026-10-12 13:05] — Erasmus+ Şeması Doğrulandı + Örnek Veriler (SQL)
+
+- **Şema doğrulaması** (`node scripts/verify-schema.mjs`): `erasmus_projects` kolonlarının tamamı canlı (`title, project_code, status, priorities, partner_countries, attachment_url` vb. hepsi OK). Tablo 0 satır.
+- **Seed denemesi**: anon anahtarla REST INSERT denendi → `401 / code 42501` (RLS ihlali). Bu beklenen ve doğru davranış (yazmalar `authenticated` ile sınırlı).
+- **`supabase/seed_erasmus_projects.sql` (yeni)**: 3 örnek proje (biri her durum için) — **Active** (KA122-ADU mobility), **Call for Partners** (KA220-SCH green & inclusive), **Completed** (TED-Ed DARE). Idempotent `insert ... where not exists` (aynı `project_code` varsa atlar) + doğrulama sorgusu. Supabase SQL Editor’de çalıştırılmalı.
+- **`scripts/seed-erasmus.mjs` kaldırıldı** (anon anahtarla çalışamıyordu; yanıltıcıydı).
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx eslint .` temiz.
+
+## [2026-10-12 13:01] — ERASMUS+ Modülü: Şema + Public Sayfa + Admin CRUD
+
+- **PART 1 — Announcements RLS**: Güvenli no-op UPDATE testi artık `200 []` döndürüyor; `announcements` `events`/`schools` gibi kilitli. ✅
+- **Şema** — `supabase/migrations/0007_erasmus_projects.sql` (yeni): `erasmus_projects` tablosu (id, title, project_code, action_type, status, summary, priorities, partner_countries, start_date, end_date, results_summary, attachment_url, order_index, created_at). **İdempotent**: tablo zaten kısmen mevcutsa eksik kolonları `ALTER ... IF NOT EXISTS` ile ekler (canlıda `action_type/status/summary/priorities/results_summary/attachment_url/order_index` eksikti), RLS'i etkinleştirir, **tüm** policy'leri DO bloğuyla temizleyip 4 doğru policy'yi kurar, `notify pgrst, 'reload schema';` çalıştırır. `supabase/reload_schema.sql` de erasmus bölümüyle genişletildi.
+- **`src/types/database.ts`**: `ErasmusStatus` + `ErasmusProject` tipleri ve `Database.public.Tables.erasmus_projects` eklendi.
+- **`src/lib/erasmus.ts` (yeni)**: `ERASMUS_STATUSES`, `ERASMUS_STATUS_LABELS` (EN/EL), `erasmusStatusLabel()`, `splitList()` (virgülle ayrılmış → liste), `formatErasmusDateRange()` (Intl, EN/EL).
+- **Admin** — `src/app/admin/erasmus/page.tsx` (yeni): tam CRUD (title*, project_code, action_type, status select, summary, priorities, partner_countries, start_date, end_date, results_summary, attachment_url, order_index); liste + Edit/Delete; hata ipucu; `revalidatePublicAction('erasmus')`. Sidebar’a “Erasmus+ Projects” linki eklendi. `actions.ts`’e `'erasmus'` hedefi (→ `/erasmus`).
+- **Public `/erasmus`** — `page.tsx` (server, `revalidate = 3600`, `createPublicClient()` ile `erasmus_projects`) + `ErasmusView.tsx` (client):
+  - Mevcut resmi öğeler korundu (AB bayrağı “Co-funded” rozeti, `/erasmusela.png` proje mührü, öne çıkan flagship kart + metrikler).
+  - Hero: “Erasmus+ Vision & Strategic Scope” — 4 stratejik öncelik kartı (Inclusion & Diversity, Digital Literacy, Teacher Professional Development, Green Transition).
+  - Durum sekmeleri: All / Active Projects / Calls for Partnerships / Completed Projects & Results (EN/EL).
+  - Proje kartları: başlık, project code badge, action type badge, partner countries, priority etiketleri, durum rozeti, “View Details / Download Summary” CTA (attachment varsa).
+  - “Call for Strategic Partnerships” banner'ı (mailto:erasmus@ela.edu.gr — yer tutucu).
+  - Tüm etiketler/başlıklar EN/EL.
+- **`scripts/verify-schema.mjs`**: `erasmus_projects` kontrolü eklendi.
+- **Canlı durum**: `erasmus_projects` tablosu kısmen mevcut; `status/priorities/attachment_url/order_index` vb. eksik → `0007_erasmus_projects.sql` (veya güncellenmiş `reload_schema.sql`) Supabase SQL Editor’de bir kez çalıştırılmalı.
+- **Doğrulama**: `npx tsc --noEmit`, `npx eslint .` temiz; `next build` (Node v24) başarılı — `/erasmus` `1h` revalidate ile statik, `/admin/erasmus` mevcut.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+
+## [2026-10-12 12:50] — ⚠️ Announcements RLS: Yeniden Test → Hâlâ Açık; Düzeltme Güçlendirildi
+
+- **Test sonucu (anon anahtarla)**: `announcements` tablosu **hâlâ herkese açık**: boş gövdeyle INSERT `201` (satır oluştu), UPDATE ve DELETE de başarılı. Aynı probe `events` ve `schools` için `401 / code 42501` (RLS ihlali) döndü → sorun yalnızca `announcements`'ta. Uygulanan RLS düzeltmesi etkili olmamış (muhtemelen izin verici bir policy duruyor ya da RLS hâlâ kapalı).
+- **Temizlik**: INSERT probe'uyla istemeden oluşan fazladan satır (`id=9b37e2bd-…`, boş başlık) hemen silindi; tabloda yalnızca orijinal duyuru kaldı.
+- **`supabase/fix_announcements_rls.sql` güçlendirildi**: Artık (1) mevcut policy'leri ve `relrowsecurity` durumunu listeler, (2) RLS'i etkinleştirir, (3) **tablodaki TÜM policy'leri bir `DO` bloğuyla tek tek düşürür** (bilinen isimlerle sınırlı değil), (4) doğru 4 policy'yi yeniden oluşturur, (5) doğrular. Kullanıcı bunu Supabase SQL Editor'de çalıştırmalı.
+- **ERASMUS+ görevi**: Kullanıcı “ERASMUS+ page prompt”tan bahsetti ancak mesajda bir görev metni yer almıyordu; talimat istenecek.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+
+## [2026-10-12 12:46] — Duyuru Örnek Verileri Eklendi + ⚠️ Announcements RLS Bulgusu
+
+- **Şema doğrulandı**: `0006` uygulanmış; `announcements` artık `deadline_date`, `target_audience`, `order_index` kolonlarını içeriyor ve eski `General Assembly` kategorisi `Institutional News` olarak remap edilmiş.
+- **Örnek veriler yazıldı** (mevcut duyuru satırı, `id=bdb80aed-…`): `deadline_date = 2026-10-24`, `target_audience = All Accredited Members`. Yazıldıktan sonra tekrar okunarak doğrulandı.
+- **Önizleme notu**: Yazma doğrudan DB'ye (REST PATCH) yapıldığı için admin akışındaki `revalidatePath` tetiklenmedi — public `/announcements` ISR cache'i en fazla 1 saat içinde güncellenir. Hemen görmek için admin panelinden duyuruyu kaydetmek (revalidation tetikler) yeterli.
+- **⚠️ GÜVENLİK BULGUSU**: `anon`/publishable anahtarla `announcements` tablosunda **UPDATE yapılabildi** (yazma kalıcı). Aynı no-op test `events` ve `schools` için `200 []` (0 satır) döndü — yani RLS orada çalışıyor. `announcements` yazmaları `authenticated` ile sınırlı değil (RLS kapalı ya da izin verici bir policy var). Düzeltme için `supabase/fix_announcements_rls.sql` (yeni) eklendi: mevcut policy'leri listeler, RLS'i etkinleştirir ve doğru policy'leri kurar. Bu, Supabase SQL Editor'de çalıştırılmalı.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `scripts/verify-schema.mjs` tüm kontrol edilen kolonlar için OK; CRUD/örnek veri canlıda teyit edildi.
+
+## [2026-10-12 12:39] — Duyurular: Resmi ELA Kategorileri + Deadline/Target Audience Rozetleri
+
+- **Kategoriler güncellendi** (resmi ELA etiketleri): `Membership Updates`, `Calls for Participation`, `Institutional News`, `Deadlines & Important Dates`. Liste filtresi “All” + bu 4 kategori; admin kategori select’i aynı değerleri sunuyor.
+- **Yeni isteğe bağlı alanlar** (şema + tip + admin + görünüm):
+  - `deadline_date` → `/announcements` liste satırında ve detay başlığında **öne çıkan rozet** (“Deadline: Oct 24, 2026” / “Προθεσμία: …”), dolgun `bg-brand-pink` stiliyle.
+  - `target_audience` → kategori rozetinin yanında nötr (kenarlıklı) rozet (“All Accredited Members” vb.).
+- **`src/types/database.ts`**: `AnnouncementCategory` yeni değerlerle değiştirildi; `AnnouncementItem` + `Insert`/`Update` tiplerine `deadline_date` ve `target_audience` eklendi.
+- **`src/lib/announcements.ts`**: `CATEGORY_LABELS` yeni kategorilere göre güncellendi (EN/EL); `deadlineText()` yardımcısı eklendi.
+- **`src/app/announcements/AnnouncementsView.tsx`**: `FILTER_TABS` yeni kategorilere göre; liste satırının sol kolonunda kategori + hedef kitle rozetleri ve deadline rozeti (düzen/tipografi korunarak eklendi).
+- **`src/app/announcements/[id]/AnnouncementDetail.tsx`**: Başlık rozet satırına target audience + deadline rozetleri eklendi; geri kalan yapı değişmedi.
+- **`src/app/admin/announcements/page.tsx`**: `CATEGORIES` yeni değerler; forma “Deadline date” ve “Target audience” girdileri; state/reset/edit/payload güncellendi; varsayılan kategori `Membership Updates`.
+- **Şema** — `supabase/migrations/0006_announcements_fields.sql` (yeni): `deadline_date` (text), `target_audience` (text), eksik olan `order_index` + legacy kategori remap (`Official Notice`/`General Assembly`/`News` → `Institutional News`) + `notify pgrst, 'reload schema';`. `supabase/reload_schema.sql` de announcements bölümüyle genişletildi.
+- **Doğrulama / Durum**: `scripts/verify-events-schema.mjs` yerine genelleştirilmiş `scripts/verify-schema.mjs` (events + announcements kolon kontrolü + veri özeti). Canlı kontrol: events kolonları OK; **announcements `deadline_date`/`target_audience` henüz yok** → `0006_announcements_fields.sql` (veya güncellenmiş `reload_schema.sql`) Supabase SQL Editor’de bir kez çalıştırılmalı. Aksi hâlde admin kaydetme “column does not exist” hatası verir.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint .` temiz; `next build` (Node v24) başarılı.
+
+## [2026-10-12 12:33] — ✅ Events Şeması Canlıda Doğrulandı (Migration Uygulandı)
+
+- **ÇÖZÜM**: Kullanıcı Supabase Dashboard SQL Editor üzerinden migration'ı uyguladı ve şema cache'ini yeniledi. Canlı doğrulama (`node scripts/verify-events-schema.mjs`) sonucu:
+  - `events` tablosu artık **23 kolon**: 15 orijinal + `category, is_archived, event_date, target_audience, language, educational_purpose, location_or_online, registration_url`.
+  - Sekiz yeni kolonun tamamı PostgREST'e görünür (hepsi HTTP 200).
+  - Veri: **4 etkinlik**, 4'ü upcoming / 0 archived; kategoriler birer adet (Student events, Professional learning, Family and community learning, International exchange).
+- **`scripts/verify-events-schema.mjs`**: Kolon görünürlüğüne ek olarak veri özeti (toplam/upcoming/archived + kategori dağılımı) yazdıracak şekilde genişletildi.
+- **Sonuç**: Admin panelindeki kaydetme/güncelleme hatasının kök nedeni (kolonların veritabanında olmaması) giderildi. İstemci kodu değişikliği ve yeniden deploy gerekmez. Yazma işlemleri için gereken RLS politikaları (`events_insert_authenticated` / `events_update_authenticated`) 0001'den beri mevcut ve yeni kolonları kapsar.
+- **Not**: Kimliği doğrulanmış yazma testi bu ortamdan anon anahtarıyla yapılamaz; admin oturumuyla kaydetme manuel doğrulanmalı. İstenirse Archive sekmesinin de test edilebilmesi için `is_archived = true` örnek bir kayıt eklenebilir.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+
+## [2026-10-12 12:20] — Events Şeması Canlı Doğrulama + Bulgular (Migration Uygulanamadı)
+
+- **BULGU**: Canlı Supabase örneğinde `events` tablosu yalnızca **15 orijinal kolonu** içeriyor (`id, title_en, title_el, date_en, date_el, location_en, location_el, theme_color, images, col1_en, col1_el, col2_en, col2_el, order_index, created_at`). Yeni 8 kolonun **hiçbiri** (`category`, `is_archived`, `event_date`, `location_or_online`, `target_audience`, `language`, `educational_purpose`, `registration_url`) veritabanında **yok** — yani `0005_events_catalog.sql` bu örneğe hiç uygulanmamış (yalnızca bayat şema cache'i değil).
+- **Kanıt**: anon anahtarla `GET /rest/v1/events?select=category` → `{"code":"42703","message":"column events.category does not exist"}`; `select=*` ile kolon listesi üstteki gibi.
+- **`scripts/verify-events-schema.mjs` (yeni)**: `.env.local`'i okuyup REST API üzerinden tablonun kolonlarını ve yeni kolonların görünürlüğünü kontrol eden tanı script'i (uygulama koduna dahil değil; `node scripts/verify-events-schema.mjs`).
+- **Kısıt**: Bu ortamda DDL çalıştırılamıyor — yalnızca public URL + anon/publishable anahtarı var; service-role anahtarı, Postgres bağlantı dizisi, Supabase PAT ve `supabase`/`psql` CLI yok. Ağ erişimi mevcut.
+- **Sonuç**: Uygulama/İstemci kodu tarafında yapılacak değişiklik yok; migration'ın canlı veritabanında bir kez çalıştırılması gerekiyor (`supabase/reload_schema.sql` → Supabase SQL Editor).
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+
+## [2026-10-12 12:16] — Events: PostgREST Şema Cache Hatası Düzeltmesi (Tüm Yeni Kolonlar)
+
+- **Kök neden**: `events` tablosuna eklenen yeni kolonlar (`is_archived`, `event_date`, `location_or_online`, `target_audience`, `language`, `educational_purpose`, `category`, `registration_url`) PostgREST'in şema cache'inde görünmediği için admin kaydetme/güncelleme “Could not find the '…' column of 'events' in the schema cache” hatası veriyordu.
+- **`supabase/migrations/0005_events_catalog.sql`**: Dosya sonuna `notify pgrst, 'reload schema';` eklendi — migration yeniden çalıştırıldığında tüm kolonlar `ADD COLUMN IF NOT EXISTS` ile tekrar uygulanır ve API cache'i tazelenir.
+- **`supabase/reload_schema.sql` (yeni)**: Tek atımlık (idempotent) düzeltme script'i — tüm `alter table ... add column if not exists` komutlarını yeniden çalıştırır, indeksi kurar, `notify pgrst, 'reload schema';` ile cache'i tazeler ve kolonları listeleyen bir doğrulama sorgusu içerir. Supabase SQL Editor'e yapıştırıp bir kez çalıştırmak yeterli.
+- **`src/app/admin/events/page.tsx`**:
+  - Yeni `orNull()` yardımcısı eklendi; boş/yalnızca boşluk içeren opsiyonel alanlar (`category`, `event_date`, `location_or_online`, `target_audience`, `language`, `educational_purpose`, `registration_url`, `col1/col2_*`) artık temizlenmiş `null` olarak gönderiliyor.
+  - Yeni `dbErrorHint()` yardımcısı eklendi; kaydetme/silme hatalarında mesaj şema cache hatası içeriyorsa kullanıcıya “migration’ı uygula + `NOTIFY pgrst, 'reload schema';` çalıştır” ipucu gösteriliyor.
+  - (Bu düzeltme sırasında oluşan yinelenen delete satırı da temizlendi.)
+- **Notlar**: Bu ortamdan Supabase'e SQL çalıştırılamıyor; adımların canlı veritabanında bir kez uygulanması gerekiyor (SQL Editor ya da `supabase db push`). Alternatif olarak Supabase Dashboard → Settings → API → “Reload schema”. İstemci kodu değişmedi; kolonlar eklendikten sonra yeniden deploy gerekmez.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint .` temiz; `next build` (Node v24) başarılı.
+
+## [2026-10-12 12:09] — Events Sayfası: Katalog Düzeni + Yeni Şema & Admin Desteği (A1 + B1)
+
+- **Veritabanı / Şema** — `supabase/migrations/0005_events_catalog.sql` (yeni): `events` tablosuna `is_archived` (bool, default false), `event_date` (date), `location_or_online`, `target_audience`, `language`, `educational_purpose`, `category`, `registration_url` kolonları + `is_archived` indeksi. RLS politikaları (public read / authenticated write) mevcut politikalardan miras alınır.
+- **`src/types/database.ts`**: `EventItem` + `Insert`/`Update` tiplerine yeni katalog alanları eklendi.
+- **`src/app/admin/events/page.tsx`**: Forma “Catalogue Details” bölümü eklendi — Category (4 resmi kategori select’i), Catalogue date, Location or online, Target audience, Language, Registration/CTA link, Educational purpose ve “Archive this event” onay kutusu. `FormState`/`EMPTY_FORM`/`startEdit`/`handleSubmit` payload güncellendi; listede kategori rozeti ve “Archived” etiketi gösteriliyor.
+- **`src/app/events/page.tsx` + `EventsCatalog.tsx` (yeni)**: `/events` katalog sayfasına dönüştürüldü (`revalidate = 3600` korunur).
+  - **Header & Lead**: H1 “Where educational vision becomes practice” + verilen intro.
+  - **Our Educational Approach**: 7 çekirdek ilke, responsive kart ızgarası.
+  - **Events**: Upcoming / Past·Archive geçişi (`is_archived`) + 4 kategori filtresi (Student events, Professional learning, Family and community learning, International exchange) ve kategori ipuçları.
+  - **Event kartı**: kategori rozeti, başlık (EN/EL), tarih (`event_date`, yoksa `date_en/el`), konum (`location_or_online`, yoksa `location_en/el`), `target_audience`, `language`, `educational_purpose` (line-clamp-3) ve aktif kayıt/CTA bağlantısı.
+  - Boş durum mesajları (upcoming/archive/filtre); EN + EL çift dilli.
+  - Eski tam ekran snap-scroll hikaye düzeni (`EventsView.tsx`) **kaldırıldı** (A1 kararı).
+- **`src/components/Footer.tsx`**: `/events` üzerindeki “footer gizleme” mantığı ve `embedded` prop’u kaldırıldı; global footer artık bu sayfada da görünür.
+- **Notlar**: Yeni katalog alanları tek dilde (görevdeki alan adlarıyla birebir); başlık mevcut `title_en/el` ile iki dilli kalır. Migration'ın Supabase'te bir kez çalıştırılması gerekir.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint .` temiz; `next build` (Node v24) başarılı — `/events` `1h` revalidate ile statik.
+
+## [2026-10-12 11:59] — Üyelik Okul Kartları: Logo Banner + Tıklanabilir Kart & Detay Modalı
+
+- **`src/app/membership/MembershipView.tsx`** güncellendi:
+  - **Logo alanı yeniden tasarlandı**: Küçük kare avatar kutusu kaldırıldı; kartın üstünde tam genişlikte belirgin bir banner alanı (`h-24 w-full`, arka plansız, `object-contain`) oluşturuldu. Logolar artık alanı rahatça dolduruyor.
+  - **Tam metin için modal**: Kartta açıklama `line-clamp-2` ile kısa özet olarak kalıyor; kartın tamamı tıklanabilir (görünmez `absolute inset-0` buton, klavye odaklanabilir) ve “Read more” bağlantısı gösteriliyor. Tıklanınca `SchoolModal` açılıyor:
+    - Tam logo (banner), tam okul adı, kategori (subtitle), konum (`Şehir, Ülke`), kesilmemiş tam açıklama ve üyelik/İδρυτικό Μέλος rozeti (varsa).
+    - **ESC** tuşu ve dışına tıklama ile kapanır (`useEffect` ile `keydown` dinleyicisi + overlay `onClick`).
+  - Karta `sm:grid-cols-2` (responsive) ızgara; başlık/alt başlık/şehir logosuyla hizalı.
+- **Not**: `schools` tablosunda web sitesi/iletişim veya ΕΟΠΠΕΠ alanları bulunmadığından modalda yalnızca mevcut alanlar (üyelik durumu rozeti) gösterilir; yeni şema alanı eklenmedi.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint .` temiz; `next build` (Node v24) başarılı.
+
+## [2026-10-12 11:54] — Üyelik Sayfası Okul Kartları: Logo Alanı Büyütüldü
+
+- **`src/app/membership/MembershipView.tsx`** → `MemberSchoolCard` logo kapsayıcısı güncellendi:
+  - Boyut `h-16 w-16` → **`h-20 w-24`** (80×96) — hem kare hem yatay logolar için daha geniş alan.
+  - Ağır gri zemin ve kenarlık kaldırıldı (`border border-black/5 bg-slate-50` silindi); iç padding (`p-1.5`) kaldırıldı. Kapsayıcı artık şeffaf (`flex items-center justify-center`).
+  - `<Image>` `object-contain` ile tüm kapsayıcıyı kullanır (fill + object-contain = `max-w-full max-h-full` davranışı), `sizes` `64px` → `96px`.
+  - Fallback baş harf `text-2xl` → `text-3xl`.
+  - Başlık/alt başlık/şehir metin sütunu `items-center` ile büyüyen logoya göre hizalı kaldı.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint src/app/membership` temiz; `next build` (Node v24) başarılı.
+
+## [2026-10-12 11:52] — “Membership” Sayfası: Resmi ELA Metni + Dinamik Okul Dizini
+
+- **`src/app/membership/MembershipView.tsx`**: Resmi master copy ile yeniden yazıldı — 5 bölüm, EN + EL:
+  1. **Header & Lead**: H1 “Stronger schools through shared learning” + verilen 2 paragraf.
+  2. **What membership offers**: 7 maddelik, tik ikonlu, 2 kolonlu liste (kart/ızgara).
+  3. **Who can apply**: verilen uygunluk metni; beyaz vurgu bloğu.
+  4. **Call to Action**: “Begin a conversation with ELA” + iki buton — **Request Membership Information** (birincil, `mailto:membership@ela.edu.gr`) ve **Meet Our Members** (`#members` bölümüne yumuşak kaydırma, `scrollIntoView`).
+  5. **Our Member Schools**: Supabase `schools` verisinden gelen dinamik üye kartları (logo, ad, alt başlık, şehir, açıklama `line-clamp-3`, üyelik durumu rozeti); boş durum mesajı.
+  - `id="members"` + `scroll-mt-28` ile navbar altında kalmasız kaydırma.
+- **`src/app/membership/page.tsx`**: Değişmedi — Server Component, `revalidate = 3600` (1s ISR), `createPublicClient()` ile `schools` çeker.
+- **Notlar**: Master copy İngilizce verildiği için Yunanca karşılıkları eklendi. Birincil CTA için gerçek bir iletişim e-postası belirtilmediğinden `mailto:membership@ela.edu.gr` yer tutucu olarak kullanıldı (form/modal yok).
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint .` temiz; `next build` (Node v24) başarılı — `/membership` `1h` revalidate ile statik.
+
+## [2026-10-12 11:48] — “Who We Are” Sayfası: Resmi ELA Metni + Supabase Board Bölümü
+
+- **`src/app/who-we-are/page.tsx`**: Server Component olarak yeniden yazıldı; `revalidate = 3600` (1s ISR) ve cookie'siz `createPublicClient()` ile Supabase `board_members` tablosunu `order_index`'e gore çeker. Okul listesi bu sayfadan kaldırıldı (okullar artık `/membership`'te).
+- **`src/app/who-we-are/WhoWeAreView.tsx`**: Sağlanan master copy ile baştan yazıldı — 5 bölüm, EN + EL çift dilli:
+  1. **Header & Lead**: H1 “A community built around educational purpose” + verilen 2 paragraf.
+  2. **Mission & Vision**: masaüstünde 2 kolonlu, ikonlu beyaz kartlar (verilen metinler).
+  3. **Callout/Spotlight**: “What Changing the Face of Education means to us” — koyu yeşil vurgu bloğu.
+  4. **Our values**: 6 değer, responsive 2/3 kolonlu ızgara (Quality with purpose, Learner agency, Professional inquiry, Collaboration, Inclusion and belonging, Global outlook).
+  5. **Board of Directors**: verilen giriş metni + Supabase'ten gelen board üyeleri kartları (`photo_url`, `full_name`, `position`, `school_name | city`, `profile_text`, `ela_contribution`); boş durum mesajı dahil.
+- **`src/types/database.ts`**: `BoardMember` tipi ve `Database.public.Tables.board_members` (Row/Insert/Update) eklendi.
+- **`supabase/migrations/0004_board_members.sql` (yeni)**: `board_members` tablosu (`full_name`, `position`, `photo_url`, `school_name`, `city`, `profile_text`, `ela_contribution`, `order_index`, `created_at`) + RLS (public read, authenticated write).
+- **`src/app/admin/actions.ts`**: `schools` revalidation artık yalnızca `/membership` (okullar who-we-are'de artık gösterilmiyor).
+- **Not**: Master copy İngilizce verildiği için tüm yeni metinlerin Yunanca karşılıkları da eklendi (site çift dilli). Board verisi tek dilde (DB'den geldiği gibi) gösterilir. `board_members` tablosu Supabase'te yoksa sorgu hata döner (loglanır) ve boş durum gösterilir.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint .` temiz; `next build` (Node v24) başarılı — `/who-we-are` `1h` revalidate ile statik.
+
+## [2026-10-12 11:37] — Marka Uyumu: Navigasyon ve Ana Sayfa (Resmi ELA Metinleri)
+
+- **`src/components/Navbar.tsx`**: Menü öğeleri resmi ELA yapısına göre güncellendi — **PURPOSE · WHO WE ARE · MEMBERSHIP · EVENTS · ERASMUS+ · ANNOUNCEMENTS** (EN) ve Yunanca karşılıkları. Masaüstü bağlantıları `uppercase tracking-wider text-xs` yapıldı; `Dictionary`'ye `ctaHref` eklendi ve CTA (`Join Us`) `#apply` yerine `/membership`'e bağlandı.
+  - `PURPOSE` → `/#purpose` (ana sayfadaki yeni “Purpose/pillars” bölümü), `MEMBERSHIP` → `/membership`.
+- **`src/app/page.tsx`**: Ana sayfa resmi metinlerle yeniden düzenlendi:
+  - **Hero**: H1 “Changing the Face of Education” + verilen uzun lead metni; CTA'lar “Discover ELA” → `/who-we-are` ve “Find an ELA School” → `/membership`.
+  - **4 sütun (pillar)** bölümü (`id="purpose"`, anchor `scroll-mt-28`): “Education changes when educators learn together”, “Quality that becomes visible in learning”, “Learners as active participants”, “Learning connected to the world” — ikonlu beyaz kartlar.
+  - **Kapanış bölümü** (koyu yeşil kart): verilen metin + “Explore Events” (`/events`), “Meet Our Community” (`/who-we-are`), “Connect with ELA” (`/membership`) butonları.
+  - Tüm metinler EN + EL çift dilli.
+- **`src/app/membership/page.tsx` + `MembershipView.tsx` (yeni)**: Hero CTA'sının ve menünün gerektirdiği `/membership` rotası oluşturuldu. Server Component ISR (`revalidate = 3600`) ile okulları çeker; client view çift dilli hero + üye okul ızgarası + CTA gösterir. (Not: Görev yalnızca navbar + ana sayfayı kapsıyordu; `/membership` ve `/purpose` hedefleri kırık bağlantı olmasın diye `/membership` gerçek sayfa olarak eklendi, PURPOSE ana sayfadaki `#purpose` bölümüne bağlandı.)
+- **`src/app/admin/actions.ts`**: `schools` revalidation hedefine `/membership` de eklendi.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint .` temiz; `next build` (Node v24) başarılı — `/membership` `1h` revalidate ile statik üretildi.
+
 ## [2026-09-29 16:53] — ISR Önbellekleme, Admin On-Demand Revalidation ve Supabase Keep-Alive
 
 - **`src/lib/supabase/public.ts` (yeni)**: Cookie'siz (`@supabase/supabase-js`) public Supabase istemcisi. `cookies()` kullanmadığı için kullanan rotalar statik üretilip ISR ile önbelleklenebilir (anon key + RLS ile public okuma).

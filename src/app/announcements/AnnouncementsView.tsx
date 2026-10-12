@@ -8,6 +8,7 @@ import {
   announcementExcerpt,
   announcementTitle,
   categoryLabel,
+  deadlineText,
   formatAnnouncementDate,
 } from "@/lib/announcements";
 
@@ -16,17 +17,17 @@ type CategoryKey = "all" | AnnouncementCategory;
 const FILTER_TABS: Record<Lang, { key: CategoryKey; label: string }[]> = {
   en: [
     { key: "all", label: "All" },
-    { key: "Official Notice", label: "Official Notices" },
-    { key: "General Assembly", label: "General Assembly" },
-    { key: "Article", label: "Articles" },
-    { key: "News", label: "News" },
+    { key: "Membership Updates", label: "Membership Updates" },
+    { key: "Calls for Participation", label: "Calls for Participation" },
+    { key: "Institutional News", label: "Institutional News" },
+    { key: "Deadlines & Important Dates", label: "Deadlines & Important Dates" },
   ],
   el: [
     { key: "all", label: "Όλα" },
-    { key: "Official Notice", label: "Επίσημες Ανακοινώσεις" },
-    { key: "General Assembly", label: "Γενικές Συνελεύσεις" },
-    { key: "Article", label: "Άρθρα" },
-    { key: "News", label: "Νέα" },
+    { key: "Membership Updates", label: "Ενημερώσεις Μελών" },
+    { key: "Calls for Participation", label: "Προσκλήσεις Συμμετοχής" },
+    { key: "Institutional News", label: "Θεσμικά Νέα" },
+    { key: "Deadlines & Important Dates", label: "Προθεσμίες & Σημαντικές Ημερομηνίες" },
   ],
 };
 
@@ -100,16 +101,28 @@ export default function AnnouncementsView({ announcements }: { announcements: An
                 href={`/announcements/${item.id}`}
                 className="group flex cursor-pointer flex-col gap-3 border-b border-slate-200/80 px-3 py-6 transition-colors hover:bg-white/70 md:flex-row md:items-center md:gap-8"
               >
-                {/* Left: date & category */}
-                <div className="md:w-44 md:shrink-0">
+                {/* Left: date, category & meta badges */}
+                <div className="md:w-52 md:shrink-0">
                   {date && (
                     <p className="text-sm font-semibold text-slate-500 transition-colors group-hover:text-brand-green">
                       {date}
                     </p>
                   )}
-                  <span className="mt-1 inline-block rounded-full bg-brand-pink-light/50 px-2.5 py-0.5 text-xs font-bold text-brand-green">
-                    {categoryLabel(item.category, lang)}
-                  </span>
+                  <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                    <span className="inline-block rounded-full bg-brand-pink-light/50 px-2.5 py-0.5 text-xs font-bold text-brand-green">
+                      {categoryLabel(item.category, lang)}
+                    </span>
+                    {item.target_audience && (
+                      <span className="inline-block rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-600">
+                        {item.target_audience}
+                      </span>
+                    )}
+                  </div>
+                  {item.deadline_date && (
+                    <span className="mt-1.5 inline-block rounded-full bg-brand-pink px-2.5 py-0.5 text-xs font-bold text-white shadow-sm">
+                      {deadlineText(item.deadline_date, lang)}
+                    </span>
+                  )}
                 </div>
 
                 {/* Middle: title + excerpt */}

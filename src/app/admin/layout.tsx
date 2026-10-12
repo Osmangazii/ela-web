@@ -42,6 +42,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/admin/schools" className={navLink}>
             Schools Management
           </Link>
+          <Link href="/admin/erasmus" className={navLink}>
+            Erasmus+ Projects
+          </Link>
         </nav>
 
         <div className="space-y-2 border-t border-white/10 px-3 py-4">

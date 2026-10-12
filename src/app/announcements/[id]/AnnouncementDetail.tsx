@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useLanguage, type Lang } from "@/components/language-context";
 import type { AnnouncementBlock, AnnouncementItem } from "@/types/database";
-import { announcementTitle, categoryLabel, formatAnnouncementDate } from "@/lib/announcements";
+import { announcementTitle, categoryLabel, deadlineText, formatAnnouncementDate } from "@/lib/announcements";
 
 type PdfBlockData = Extract<AnnouncementBlock, { type: "pdf" }>;
 
@@ -182,9 +182,21 @@ export default function AnnouncementDetail({ announcement }: { announcement: Ann
 
       {/* Header */}
       <header className="mt-6 border-b border-slate-200/70 pb-6">
-        <span className="inline-block rounded-full bg-brand-pink-light/50 px-3 py-1 text-xs font-bold text-brand-green">
-          {categoryLabel(announcement.category, lang)}
-        </span>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-block rounded-full bg-brand-pink-light/50 px-3 py-1 text-xs font-bold text-brand-green">
+            {categoryLabel(announcement.category, lang)}
+          </span>
+          {announcement.target_audience && (
+            <span className="inline-block rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600">
+              {announcement.target_audience}
+            </span>
+          )}
+          {announcement.deadline_date && (
+            <span className="inline-block rounded-full bg-brand-pink px-3 py-1 text-xs font-bold text-white shadow-sm">
+              {deadlineText(announcement.deadline_date, lang)}
+            </span>
+          )}
+        </div>
         <h1 className="mt-3 text-3xl leading-tight font-black tracking-tight text-slate-900 sm:text-4xl">
           {title}
         </h1>

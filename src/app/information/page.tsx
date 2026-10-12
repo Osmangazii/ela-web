@@ -4,7 +4,6 @@ import Navbar from "@/components/Navbar";
 import { useLanguage, type Lang } from "@/components/language-context";
 
 interface Copy {
-  badge: string;
   title: string;
   subtitle: string;
   purposeTitle: string;
@@ -20,7 +19,6 @@ interface Copy {
 
 const DICT: Record<Lang, Copy> = {
   en: {
-    badge: "Legal Status & Bylaws",
     title: "Official Association Information",
     subtitle:
       "Established as 'ΕΝΩΣΗ ΚΑΙΝΟΤΟΜΩΝ ΕΚΠΑΙΔΕΥΤΗΡΙΩΝ' (Educational Leadership Association - ELA), a non-profit legal entity committed to upgrading private foreign language education.",
@@ -47,7 +45,6 @@ const DICT: Record<Lang, Copy> = {
     ctaButton: "Apply for Membership",
   },
   el: {
-    badge: "Καταστατικό & Πληροφορίες",
     title: "Επίσημες Πληροφορίες Συνδέσμου",
     subtitle:
       "Ιδρύθηκε ως 'ΕΝΩΣΗ ΚΑΙΝΟΤΟΜΩΝ ΕΚΠΑΙΔΕΥΤΗΡΙΩΝ' (Educational Leadership Association - ELA), μη κερδοσκοπικό νομικό πρόσωπο ιδιωτικού δικαίου για την αναβάθμιση της ξενόγλωσσης εκπαίδευσης.",
@@ -111,11 +108,7 @@ export default function Information() {
 
       {/* HERO */}
       <header className="mx-auto max-w-5xl px-6 pt-32 pb-10 text-center">
-        <span className="inline-flex items-center gap-2 rounded-full border border-brand-pink-light bg-white px-4 py-1.5 text-xs font-bold tracking-wider text-brand-green uppercase shadow-sm">
-          <span className="h-1.5 w-1.5 rounded-full bg-brand-pink" aria-hidden />
-          {t.badge}
-        </span>
-        <h1 className="mt-6 text-4xl font-black tracking-tight text-brand-green sm:text-5xl">
+        <h1 className="text-4xl font-black tracking-tight text-brand-green sm:text-5xl">
           {t.title}
         </h1>
         <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-slate-600 sm:text-lg">
