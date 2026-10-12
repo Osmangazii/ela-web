@@ -9,10 +9,12 @@ const COPY: Record<Lang, { mission: string; links: { label: string; href: string
     mission:
       "Empowering young minds and the educators who guide them — together across Greece and Europe.",
     links: [
+      { label: "Purpose", href: "/" },
       { label: "Who We Are", href: "/who-we-are" },
-      { label: "Information", href: "/information" },
+      { label: "Membership", href: "/membership" },
       { label: "Events", href: "/events" },
       { label: "Erasmus+", href: "/erasmus" },
+      { label: "Announcements", href: "/announcements" },
     ],
     contactTitle: "Get in touch",
     contactLabel: "Press & partnerships",
@@ -23,10 +25,12 @@ const COPY: Record<Lang, { mission: string; links: { label: string; href: string
     mission:
       "Ενδυναμώνουμε τους νέους και τους εκπαιδευτικούς που τους καθοδηγούν — μαζί σε όλη την Ελλάδα και την Ευρώπη.",
     links: [
+      { label: "Σκοπός", href: "/" },
       { label: "Ποιοι Είμαστε", href: "/who-we-are" },
-      { label: "Πληροφορίες", href: "/information" },
+      { label: "Μελοσύνη", href: "/membership" },
       { label: "Εκδηλώσεις", href: "/events" },
       { label: "Erasmus+", href: "/erasmus" },
+      { label: "Ανακοινώσεις", href: "/announcements" },
     ],
     contactTitle: "Επικοινωνία",
     contactLabel: "Τύπος & συνεργασίες",

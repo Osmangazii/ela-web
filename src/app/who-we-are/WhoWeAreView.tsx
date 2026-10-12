@@ -126,10 +126,11 @@ const DICT: Record<Lang, Copy> = {
   },
 };
 
-function StarIcon({ className }: { className?: string }) {
+function EyeIcon({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
-      <path d="M12 2c.8 3 2.6 4.8 5.5 5.5-2.9.7-4.7 2.5-5.5 5.5-.8-3-2.6-4.8-5.5-5.5C9.4 6.8 11.2 5 12 2z" />
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
+      <circle cx="12" cy="12" r="3" />
     </svg>
   );
 }
@@ -217,15 +218,15 @@ export default function WhoWeAreView({ boardMembers }: { boardMembers: BoardMemb
         {/* 2. MISSION & VISION */}
         <section className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2">
           <div className="rounded-3xl border border-brand-pink-light/70 bg-white p-8 shadow-sm">
-            <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-green/10 text-brand-green">
+            <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-800">
               <CompassIcon className="h-6 w-6" />
             </span>
             <h2 className="text-2xl font-bold text-brand-green">{t.missionTitle}</h2>
             <p className="mt-3 text-base leading-relaxed text-slate-600">{t.missionText}</p>
           </div>
           <div className="rounded-3xl border border-brand-pink-light/70 bg-white p-8 shadow-sm">
-            <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-pink/10 text-brand-pink">
-              <StarIcon className="h-6 w-6" />
+            <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-800">
+              <EyeIcon className="h-6 w-6" />
             </span>
             <h2 className="text-2xl font-bold text-brand-green">{t.visionTitle}</h2>
             <p className="mt-3 text-base leading-relaxed text-slate-600">{t.visionText}</p>

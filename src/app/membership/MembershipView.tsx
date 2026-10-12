@@ -97,14 +97,6 @@ function CheckIcon({ className }: { className?: string }) {
   );
 }
 
-function StarIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
-      <path d="M12 2c.8 3 2.6 4.8 5.5 5.5-2.9.7-4.7 2.5-5.5 5.5-.8-3-2.6-4.8-5.5-5.5C9.4 6.8 11.2 5 12 2z" />
-    </svg>
-  );
-}
-
 function ArrowIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
@@ -196,8 +188,7 @@ function SchoolModal({ school, onClose }: { school: SchoolItem; onClose: () => v
             {s.city}, {t.country}
           </p>
           {s.status && (
-            <span className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-brand-pink-light/60 px-3 py-1 text-xs font-bold text-brand-green">
-              <StarIcon className="h-3 w-3 text-brand-pink" />
+            <span className="mt-3 inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-800">
               {s.status}
             </span>
           )}
@@ -245,8 +236,7 @@ function MemberSchoolCard({ school, onOpen }: { school: SchoolItem; onOpen: () =
 
       <div className="mt-auto flex items-center justify-between gap-3 pt-5">
         {s.status ? (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-pink-light/60 px-3 py-1 text-xs font-bold text-brand-green">
-            <StarIcon className="h-3 w-3 text-brand-pink" />
+          <span className="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-800">
             {s.status}
           </span>
         ) : (

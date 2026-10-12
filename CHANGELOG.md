@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## [2026-10-12 13:45] — Footer “Quick Links” Başlık Navigasyonuyla Hizalandı
+
+- **`src/components/Footer.tsx`**: Quick Links listesi başlık menüsüyle birebir eşitlendi:
+  - **Purpose** (`/`) · **Who We Are** (`/who-we-are`) · **Membership** (`/membership`) · **Events** (`/events`) · **Erasmus+** (`/erasmus`) · **Announcements** (`/announcements`).
+  - Eski “Information” (`/information`) linki kaldırıldı; yerine “Membership” (`/membership`) geldi ve eksik olan Announcements eklendi.
+  - Yunanca karşılıklar: Σκοπός · Ποιοι Είμαστε · Μελοσύνη · Εκδηλώσεις · Erasmus+ · Ανακοινώσεις.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint .` temiz; `next build` (Node v24) başarılı.
+
+## [2026-10-12 13:34] — Who We Are (Mission/Vision) & Üye Rozetleri Tutarlılaştırıldı
+
+- **`src/app/who-we-are/WhoWeAreView.tsx`** (Mission & Vision kartları):
+  - “Our vision” kartındaki pembe/rose konteyner (`bg-brand-pink/10 text-brand-pink`) ve pembe spark ikonu kaldırıldı.
+  - Her iki kartın ikon rozeti artık birebir aynı: `mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-800`.
+  - Vision ikonu temiz bir “Eye” (Lucide) ile değiştirildi; Mission `CompassIcon` olarak kaldı. Kullanılmayan `StarIcon` kaldırıldı.
+- **`src/app/membership/MembershipView.tsx`** (okul üye rozetleri — kart + detay modalı):
+  - Rozet içindeki pembe spark (`StarIcon`) ve pembe arka plan (`bg-brand-pink-light/60 text-brand-green font-bold`) kaldırıldı.
+  - Yerine sade marka-uyumlu yeşil etiket: `inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-800` (ör. “FOUNDING MEMBER”). Kullanılmayan `StarIcon` kaldırıldı.
+- **`CHANGELOG.md`**: Bu kayıt eklendi.
+- **Doğrulama**: `npx tsc --noEmit` ve `npx eslint .` temiz; `next build` (Node v24) başarılı.
+
 ## [2026-10-12 13:24] — Tüm Public Sayfalarda Üst Eyebrow Rozetleri Kaldırıldı
 
 - Başlıkların hemen üstündeki küçük “eyebrow” pill/rozetleri public sayfalardan kaldırıldı (Erasmus’ta zaten yapılmıştı). Kaldırılanlar:
