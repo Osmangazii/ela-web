@@ -74,9 +74,9 @@ function PdfBlock({ block, lang }: { block: PdfBlockData; lang: Lang }) {
       href={block.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white px-4 py-3.5 shadow-sm transition-colors hover:border-brand-pink"
+      className="group flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white px-4 py-3.5 shadow-sm transition-colors hover:border-brand-coral"
     >
-      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-pink/10 text-brand-pink">
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-coral/10 text-brand-coral">
         <FileIcon />
       </span>
       <span className="flex min-w-0 flex-col leading-tight">
@@ -87,7 +87,7 @@ function PdfBlock({ block, lang }: { block: PdfBlockData; lang: Lang }) {
           PDF{size ? ` · ${size}` : ""}
         </span>
       </span>
-      <span className="ml-auto flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-colors group-hover:bg-brand-pink group-hover:text-white">
+      <span className="ml-auto flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-colors group-hover:bg-brand-aubergine group-hover:text-white">
         <DownloadIcon />
       </span>
     </a>
@@ -174,7 +174,7 @@ export default function AnnouncementDetail({ announcement }: { announcement: Ann
       {/* Back link */}
       <Link
         href="/announcements"
-        className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition-colors hover:text-brand-pink"
+        className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition-colors hover:text-brand-aubergine"
       >
         <BackIcon />
         {lang === "el" ? "Πίσω στις Ανακοινώσεις" : "Back to Announcements"}
@@ -183,7 +183,7 @@ export default function AnnouncementDetail({ announcement }: { announcement: Ann
       {/* Header */}
       <header className="mt-6 border-b border-slate-200/70 pb-6">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-block rounded-full bg-brand-pink-light/50 px-3 py-1 text-xs font-bold text-brand-green">
+          <span className="inline-block rounded-full bg-brand-aubergine/5 px-3 py-1 text-xs font-bold text-brand-aubergine">
             {categoryLabel(announcement.category, lang)}
           </span>
           {announcement.target_audience && (
@@ -192,7 +192,7 @@ export default function AnnouncementDetail({ announcement }: { announcement: Ann
             </span>
           )}
           {announcement.deadline_date && (
-            <span className="inline-block rounded-full bg-brand-pink px-3 py-1 text-xs font-bold text-white shadow-sm">
+            <span className="inline-block rounded-full bg-brand-lime px-3 py-1 text-xs font-bold text-brand-aubergine shadow-sm">
               {deadlineText(announcement.deadline_date, lang)}
             </span>
           )}

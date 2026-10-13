@@ -56,7 +56,7 @@ export default function AnnouncementsView({ announcements }: { announcements: An
     <>
       {/* HERO */}
       <header className="mx-auto max-w-6xl px-6 pt-32 pb-8 text-center">
-        <h1 className="text-4xl font-extrabold tracking-tight text-brand-green">
+        <h1 className="text-4xl font-extrabold tracking-tight text-brand-aubergine">
           {lang === "en" ? "Announcements & Insights" : "Ανακοινώσεις & Άρθρα"}
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-slate-600">
@@ -78,8 +78,8 @@ export default function AnnouncementsView({ announcements }: { announcements: An
                 onClick={() => setSelectedCategory(tab.key)}
                 className={`rounded-full px-5 py-2.5 text-sm transition-all ${
                   active
-                    ? "bg-brand-pink font-bold text-white shadow-sm"
-                    : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                    ? "bg-brand-lime font-bold text-brand-aubergine shadow-sm hover:bg-brand-lime-dark"
+                    : "border border-slate-200 bg-white text-slate-700 hover:border-brand-aubergine/20 hover:bg-slate-50"
                 }`}
               >
                 {tab.label}
@@ -104,12 +104,12 @@ export default function AnnouncementsView({ announcements }: { announcements: An
                 {/* Left: date, category & meta badges */}
                 <div className="md:w-52 md:shrink-0">
                   {date && (
-                    <p className="text-sm font-semibold text-slate-500 transition-colors group-hover:text-brand-green">
+                    <p className="text-sm font-semibold text-slate-500 transition-colors group-hover:text-brand-aubergine">
                       {date}
                     </p>
                   )}
                   <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                    <span className="inline-block rounded-full bg-brand-pink-light/50 px-2.5 py-0.5 text-xs font-bold text-brand-green">
+                    <span className="inline-block rounded-full bg-brand-aubergine/5 px-2.5 py-0.5 text-xs font-bold text-brand-aubergine">
                       {categoryLabel(item.category, lang)}
                     </span>
                     {item.target_audience && (
@@ -119,7 +119,7 @@ export default function AnnouncementsView({ announcements }: { announcements: An
                     )}
                   </div>
                   {item.deadline_date && (
-                    <span className="mt-1.5 inline-block rounded-full bg-brand-pink px-2.5 py-0.5 text-xs font-bold text-white shadow-sm">
+                    <span className="mt-1.5 inline-block rounded-full bg-brand-lime px-2.5 py-0.5 text-xs font-bold text-brand-aubergine shadow-sm">
                       {deadlineText(item.deadline_date, lang)}
                     </span>
                   )}
@@ -127,7 +127,7 @@ export default function AnnouncementsView({ announcements }: { announcements: An
 
                 {/* Middle: title + excerpt */}
                 <div className="min-w-0 flex-1">
-                  <h2 className="text-lg leading-snug font-bold text-slate-900 transition-colors group-hover:text-brand-pink sm:text-xl">
+                  <h2 className="text-lg leading-snug font-bold text-slate-900 transition-colors group-hover:text-brand-aubergine sm:text-xl">
                     {title}
                   </h2>
                   {excerpt && (
@@ -136,7 +136,7 @@ export default function AnnouncementsView({ announcements }: { announcements: An
                 </div>
 
                 {/* Right: arrow affordance */}
-                <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-400 transition-all group-hover:border-brand-pink group-hover:bg-brand-pink group-hover:text-white md:flex">
+                <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-400 transition-all group-hover:border-brand-lime group-hover:bg-brand-lime group-hover:text-brand-aubergine md:flex">
                   <ArrowIcon />
                 </span>
               </Link>

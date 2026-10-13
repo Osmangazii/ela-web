@@ -46,7 +46,7 @@ export default function Navbar() {
 
   return (
     <nav className="fixed inset-x-0 top-4 z-50 mx-auto w-[94%] max-w-6xl">
-      <div className="flex h-16 items-center justify-between gap-4 rounded-full border border-brand-pink-light bg-white/95 px-6 py-3 shadow-md backdrop-blur-md">
+      <div className="flex h-16 items-center justify-between gap-4 rounded-full border border-brand-aubergine/10 bg-white/95 px-6 py-3 shadow-md backdrop-blur-md">
         {/* Logo */}
         <Link href="/" className="flex shrink-0 items-center">
           <Image
@@ -73,7 +73,7 @@ export default function Navbar() {
             <li key={link.label}>
               <Link
                 href={link.href}
-                className="whitespace-nowrap text-xs font-bold tracking-wider text-slate-800 uppercase transition-colors hover:text-brand-green"
+                className="whitespace-nowrap text-xs font-bold tracking-wider text-slate-800 uppercase transition-colors hover:text-brand-aubergine"
               >
                 {link.label}
               </Link>
@@ -88,16 +88,16 @@ export default function Navbar() {
             type="button"
             aria-label="Change language"
             onClick={toggleLang}
-            className="flex items-center gap-1 rounded-full border border-brand-pink-light bg-white px-2.5 py-1 text-xs font-bold tracking-wide transition-colors"
+            className="flex items-center gap-1 rounded-full border border-brand-aubergine/10 bg-white px-2.5 py-1 text-xs font-bold tracking-wide transition-colors"
           >
             <span
-              className={currentLang === "en" ? "font-extrabold text-brand-green" : "text-slate-400 hover:text-slate-600"}
+              className={currentLang === "en" ? "font-extrabold text-brand-aubergine" : "text-slate-400 hover:text-slate-600"}
             >
               EN
             </span>
-            <span className="text-brand-pink-light">|</span>
+            <span className="text-brand-aubergine/20">|</span>
             <span
-              className={currentLang === "el" ? "font-extrabold text-brand-green" : "text-slate-400 hover:text-slate-600"}
+              className={currentLang === "el" ? "font-extrabold text-brand-aubergine" : "text-slate-400 hover:text-slate-600"}
             >
               EL
             </span>
@@ -106,7 +106,7 @@ export default function Navbar() {
           {/* CTA */}
           <Link
             href={dict.ctaHref}
-            className="hidden rounded-full bg-brand-pink px-5 py-2.5 text-sm font-bold tracking-wide text-white shadow-md transition-opacity hover:opacity-90 sm:block"
+            className="hidden rounded-full bg-brand-lime px-5 py-2.5 text-sm font-bold tracking-wide text-brand-aubergine shadow-md transition-opacity hover:opacity-90 sm:block"
           >
             {dict.cta}
           </Link>
@@ -117,7 +117,7 @@ export default function Navbar() {
             aria-label="Toggle menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="flex h-10 w-10 items-center justify-center rounded-full text-brand-green transition-colors hover:bg-brand-pink-light lg:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-full text-brand-aubergine transition-colors hover:bg-brand-aubergine/5 lg:hidden"
           >
             {open ? (
               <svg
@@ -146,25 +146,25 @@ export default function Navbar() {
 
       {/* Mobile dropdown panel */}
       {open && (
-        <div className="mt-2 rounded-3xl border border-brand-pink-light bg-white/95 p-3 shadow-lg backdrop-blur-md lg:hidden">
+        <div className="mt-2 rounded-3xl border border-brand-aubergine/10 bg-white/95 p-3 shadow-lg backdrop-blur-md lg:hidden">
           <ul className="flex flex-col">
             {dict.links.map((link) => (
               <li key={link.label}>
                 <Link
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className="block rounded-full px-4 py-2.5 text-sm font-bold tracking-wide text-slate-800 uppercase transition-colors hover:bg-brand-pink-light hover:text-brand-green"
+                  className="block rounded-full px-4 py-2.5 text-sm font-bold tracking-wide text-slate-800 uppercase transition-colors hover:bg-brand-aubergine/5 hover:text-brand-aubergine"
                 >
                   {link.label}
                 </Link>
               </li>
             ))}
           </ul>
-          <div className="mt-2 border-t border-brand-pink-light px-2 pt-3 pb-1">
+          <div className="mt-2 border-t border-brand-aubergine/10 px-2 pt-3 pb-1">
             <Link
               href={dict.ctaHref}
               onClick={() => setOpen(false)}
-              className="block rounded-full bg-brand-pink px-5 py-2.5 text-center text-sm font-bold tracking-wide text-white shadow-md transition-opacity hover:opacity-90"
+              className="block rounded-full bg-brand-lime px-5 py-2.5 text-center text-sm font-bold tracking-wide text-brand-aubergine shadow-md transition-opacity hover:opacity-90"
             >
               {dict.cta}
             </Link>

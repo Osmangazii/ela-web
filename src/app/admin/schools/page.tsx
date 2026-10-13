@@ -57,7 +57,7 @@ const CUSTOM = "CUSTOM";
 const SUBTITLE_CUSTOM_INDEX = SUBTITLE_PRESETS.findIndex((p) => p.en === CUSTOM);
 
 const inputClass =
-  "w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 outline-none transition-colors focus:border-brand-pink";
+  "w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 outline-none transition-colors focus:border-brand-coral";
 
 function labelClass() {
   return "mb-1 block text-xs font-semibold text-slate-600";
@@ -321,25 +321,25 @@ export default function AdminSchools() {
     <div>
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-black tracking-tight text-brand-green">Schools Management</h1>
+          <h1 className="text-2xl font-black tracking-tight text-brand-aubergine">Schools Management</h1>
           <p className="text-sm text-slate-500">Create and manage the network&apos;s member schools.</p>
         </div>
         <button
           type="button"
           onClick={toggleForm}
-          className="rounded-full bg-brand-pink px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-[#ff637b] hover:shadow-md"
+          className="rounded-full bg-brand-lime px-5 py-2.5 text-sm font-bold text-brand-aubergine shadow-sm transition-all hover:bg-brand-lime-dark hover:shadow-md"
         >
           {showForm ? "Close" : "+ New School"}
         </button>
       </header>
 
       {error && (
-        <p className="mt-4 rounded-xl border border-brand-pink/40 bg-brand-pink/10 px-4 py-2.5 text-sm text-brand-green">
+        <p className="mt-4 rounded-xl border border-brand-coral/40 bg-brand-coral/10 px-4 py-2.5 text-sm text-brand-aubergine">
           {error}
         </p>
       )}
       {notice && (
-        <p className="mt-4 rounded-xl border border-brand-green/30 bg-brand-green/10 px-4 py-2.5 text-sm text-brand-green">
+        <p className="mt-4 rounded-xl border border-brand-lime/60 bg-brand-lime/25 px-4 py-2.5 text-sm text-brand-aubergine">
           {notice}
         </p>
       )}
@@ -348,7 +348,7 @@ export default function AdminSchools() {
       {showForm && (
         <form
           onSubmit={handleSubmit}
-          className="mt-6 rounded-2xl border border-brand-pink-light bg-white p-6"
+          className="mt-6 rounded-2xl border border-brand-aubergine/10 bg-white p-6"
         >
           <h2 className="mb-4 text-lg font-bold text-slate-900">
             {editingId ? "Edit School" : "New School"}
@@ -357,7 +357,7 @@ export default function AdminSchools() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {/* EN column */}
             <div className="space-y-4">
-              <p className="text-xs font-bold uppercase tracking-wider text-brand-pink">English (EN)</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-brand-coral">English (EN)</p>
               <label className="block">
                 <span className={labelClass()}>Name (EN) *</span>
                 <input className={inputClass} required value={form.name_en} onChange={(e) => update("name_en", e.target.value)} />
@@ -374,7 +374,7 @@ export default function AdminSchools() {
 
             {/* EL column */}
             <div className="space-y-4">
-              <p className="text-xs font-bold uppercase tracking-wider text-brand-pink">Greek (EL)</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-brand-coral">Greek (EL)</p>
               <label className="block">
                 <span className={labelClass()}>Name (EL)</span>
                 <input className={inputClass} value={form.name_el} onChange={(e) => update("name_el", e.target.value)} />
@@ -471,13 +471,13 @@ export default function AdminSchools() {
                       type="button"
                       aria-label="Remove image"
                       onClick={() => setImageUrl(null)}
-                      className="absolute top-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-slate-900/70 text-xs text-white hover:bg-brand-pink"
+                      className="absolute top-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-slate-900/70 text-xs text-white hover:bg-brand-coral"
                     >
                       ✕
                     </button>
                   </span>
                 )}
-                <label className="flex h-20 w-20 cursor-pointer items-center justify-center rounded-lg border border-dashed border-slate-300 text-2xl text-slate-400 hover:border-brand-pink hover:text-brand-pink">
+                <label className="flex h-20 w-20 cursor-pointer items-center justify-center rounded-lg border border-dashed border-slate-300 text-2xl text-slate-400 hover:border-brand-coral hover:text-brand-coral">
                   <span>{uploading ? "…" : imageUrl ? "↺" : "+"}</span>
                   <input type="file" accept="image/*" className="hidden" onChange={handleFile} />
                 </label>
@@ -499,7 +499,7 @@ export default function AdminSchools() {
             <button
               type="submit"
               disabled={saving || uploading}
-              className="rounded-full bg-brand-green px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 disabled:opacity-60"
+              className="rounded-full bg-brand-aubergine px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 disabled:opacity-60"
             >
               {saving ? "Saving…" : editingId ? "Update school" : "Save school"}
             </button>
@@ -529,7 +529,7 @@ export default function AdminSchools() {
                 type="button"
                 onClick={handleSaveOrder}
                 disabled={!orderChanged || savingOrder}
-                className="rounded-full bg-brand-pink px-5 py-2 text-sm font-bold text-white shadow-sm transition-all hover:bg-[#ff637b] hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-full bg-brand-lime px-5 py-2 text-sm font-bold text-brand-aubergine shadow-sm transition-all hover:bg-brand-lime-dark hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {savingOrder ? "Saving…" : "Save Order"}
               </button>
@@ -560,7 +560,7 @@ export default function AdminSchools() {
                 </div>
 
                 {school.member_status_en && (
-                  <span className="hidden shrink-0 rounded-full bg-brand-pink-light/60 px-3 py-1 text-xs font-bold text-brand-green sm:inline-block">
+                  <span className="hidden shrink-0 rounded-full bg-brand-aubergine/10 px-3 py-1 text-xs font-bold text-brand-aubergine sm:inline-block">
                     {school.member_status_en}
                   </span>
                 )}
@@ -576,7 +576,7 @@ export default function AdminSchools() {
                   <button
                     type="button"
                     onClick={() => handleDelete(school)}
-                    className="rounded-full border border-brand-pink/40 bg-white px-4 py-1.5 text-sm font-semibold text-brand-pink transition-colors hover:bg-brand-pink hover:text-white"
+                    className="rounded-full border border-brand-coral/40 bg-white px-4 py-1.5 text-sm font-semibold text-brand-coral transition-colors hover:bg-brand-coral hover:text-white"
                   >
                     Delete
                   </button>

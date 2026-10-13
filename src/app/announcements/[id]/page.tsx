@@ -42,9 +42,9 @@ export default async function AnnouncementDetailPage({
   if (!announcement) notFound();
 
   return (
-    <div className="min-h-screen bg-brand-bg text-brand-green antialiased">
+    <div className="min-h-screen bg-brand-beige text-brand-aubergine antialiased">
       <Navbar />
-      {/* Page gutter + fixed-navbar clearance; the white card floats on the pink background. */}
+      {/* Page gutter + fixed-navbar clearance; the white card floats on the beige background. */}
       <div className="px-4 pt-32 pb-8 sm:px-6 lg:px-8">
         <div className="mx-auto mb-16 w-full max-w-6xl rounded-3xl bg-white p-6 shadow-sm sm:p-10 lg:p-12">
           <AnnouncementDetail announcement={announcement} />

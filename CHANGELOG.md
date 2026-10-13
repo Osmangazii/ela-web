@@ -1,5 +1,37 @@
 # CHANGELOG
 
+## [2026-10-13 13:44] — Erasmus+ & Announcements Kontrast/Aksiyon Butonu Düzeltmeleri
+
+- **`src/app/erasmus/ErasmusView.tsx`**
+  - “Call for Partners” durum rozeti ayırt edici lime oldu: `bg-brand-lime font-semibold text-brand-aubergine`.
+  - Proje kartı aksiyon butonu (“View Details / Download Summary”) artık solid marka stilinde: `bg-brand-aubergine text-white hover:bg-brand-lime hover:text-brand-aubergine` (eski lime dolgu + legacy `#ff657d` hover kaldırıldı).
+  - “Call for Strategic Partnerships” çağrı bloğu: içerik sarmalayıcıya ve başlığa açık `text-white` eklendi; koyu `bg-brand-aubergine` zemin ve lime CTA (`hover:bg-brand-lime-dark`) doğrulandı.
+- **`src/app/announcements/AnnouncementsView.tsx`**
+  - Filtre sekmeleri: aktif `bg-brand-lime text-brand-aubergine hover:bg-brand-lime-dark`; pasif `hover:border-brand-aubergine/20 hover:bg-slate-50` (hover’da görünmezlik yok).
+  - Satır başlığı hover’ı `group-hover:text-brand-aubergine`, ok yuvarlağı `group-hover:border-brand-lime group-hover:bg-brand-lime group-hover:text-brand-aubergine` (yüksek kontrast).
+- **`src/app/announcements/[id]/AnnouncementDetail.tsx`**: “Back to Announcements” hover’ı aubergine; PDF indirme yuvarlağı hover’ı `group-hover:bg-brand-aubergine group-hover:text-white`.
+- **`src/app/membership/MembershipView.tsx`**: “Read more” mercan linki hover’da `group-hover:text-brand-aubergine`.
+- **`src/app/announcements/[id]/page.tsx`**: Güncel zemine uygun yorum metni (“pink” → “beige”).
+- **Not / Doğrulama**: Marka token değişkenlerinin (`--color-brand-aubergine/beige/lime/lime-dark/coral`) hem dev hem prod derlenmiş CSS’te doğru yayımlandığı teyit edildi; çağrı bloğu zaten `bg-brand-aubergine` idi (görülen “beige/okunmaz” durumun dev CSS cache’inden kaynaklandığı değerlendirildi — dev sunucusunun yeniden başlatılması/hard reload önerilir).
+- **Doğrulama**: `npx tsc --noEmit`, `npx eslint .` temiz; `next build` (Node v24) tüm rotalarla başarılı.
+
+## [2026-10-13 13:35] — Yeni ELA Marka Renk Paleti (Aubergine / Beige / Lime / Coral) Tüm Siteye Uygulandı
+
+- **`src/app/globals.css`**: `@theme` token seti resmî marka paletiyle değiştirildi:
+  - Yeni: `--color-brand-aubergine: #2d1c36`, `--color-brand-beige: #f4f0ea`, `--color-brand-lime: #d2e635`, `--color-brand-lime-dark: #c4d92c`, `--color-brand-coral: #ee6d52`.
+  - Eski `brand-pink` / `brand-pink-light` / `brand-bg` / `brand-green` token’ları kaldırıldı.
+  - `:root` `--background`/`--foreground` beige/aubergine olarak güncellendi; `prefers-color-scheme: dark` bloğu kaldırıldı (koyu mod beige zemini bozuyordu).
+- **21 dosyada (`src/**/*.tsx`) tüm eski token kullanımları yeni palete taşındı**:
+  - `bg-brand-green` → `bg-brand-aubergine` (footer, CTA bantları, admin sidebar, koyu bölümler); `text-brand-green` → `text-brand-aubergine`.
+  - `bg-brand-bg` → `bg-brand-beige`; `brand-pink-light/*` arka plan/kenarlıklar → ince `brand-aubergine/5`‑`/10` tonları.
+  - `bg-brand-pink` birincil CTA/aktif dolguları → `bg-brand-lime`.
+  - `text-brand-pink` / `border-brand-pink` / `hover:bg-brand-pink` → `brand-coral` (bağlantılar, ikincil ikonlar, sil/iptal aksiyonları).
+  - `focus:border-brand-pink` → `focus:border-brand-coral`; `accent-brand-pink` → `accent-brand-lime`; `ring-brand-pink` → `ring-brand-coral`.
+- **Kontrast düzeltmesi (kritik)**: Lime `#D2E635` açık parlak bir renk olduğundan tüm lime yüzeylerde `text-white` → `text-brand-aubergine` yapıldı (Navbar/ana sayfa/katalog/admin CTA’ları, aktif sekmeler, deadline rozetleri).
+- **Sabit hex temizliği**: `hover:bg-[#ff637b]` / `hover:bg-[#ff657d]` → `hover:bg-brand-lime-dark`; `hover:text-[#ff637b]` → `hover:text-brand-coral`; `DEFAULT_THEME` → `#2D1C36`.
+- **Not**: Event `theme_color` DB içeriği korunarak yalnızca yeni kayıtlar için varsayılan aubergine yapıldı.
+- **Doğrulama**: `npx tsc --noEmit`, `npx eslint .` ve `next build` (Node v24) temiz.
+
 ## [2026-10-12 13:45] — Footer “Quick Links” Başlık Navigasyonuyla Hizalandı
 
 - **`src/components/Footer.tsx`**: Quick Links listesi başlık menüsüyle birebir eşitlendi:

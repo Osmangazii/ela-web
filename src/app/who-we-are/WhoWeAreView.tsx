@@ -166,7 +166,7 @@ function BoardMemberCard({ member, contributionLabel }: { member: BoardMember; c
             className="object-cover"
           />
         ) : (
-          <span className="flex h-full w-full items-center justify-center text-3xl font-extrabold text-brand-green">
+          <span className="flex h-full w-full items-center justify-center text-3xl font-extrabold text-brand-aubergine">
             {member.full_name.charAt(0).toUpperCase()}
           </span>
         )}
@@ -174,7 +174,7 @@ function BoardMemberCard({ member, contributionLabel }: { member: BoardMember; c
 
       <h3 className="text-lg font-bold text-slate-900">{member.full_name}</h3>
       {member.position && (
-        <p className="mt-0.5 text-sm font-semibold text-brand-pink">{member.position}</p>
+        <p className="mt-0.5 text-sm font-semibold text-brand-coral">{member.position}</p>
       )}
       {schoolCity && (
         <p className="mt-1 text-xs font-semibold tracking-wider text-gray-400 uppercase">{schoolCity}</p>
@@ -185,8 +185,8 @@ function BoardMemberCard({ member, contributionLabel }: { member: BoardMember; c
       )}
 
       {member.ela_contribution && (
-        <div className="mt-4 rounded-2xl border border-brand-pink-light/70 bg-brand-bg p-3">
-          <p className="text-[11px] font-bold tracking-wider text-brand-green uppercase">{contributionLabel}</p>
+        <div className="mt-4 rounded-2xl border border-brand-aubergine/10 bg-brand-beige p-3">
+          <p className="text-[11px] font-bold tracking-wider text-brand-aubergine uppercase">{contributionLabel}</p>
           <p className="mt-1 text-sm leading-relaxed text-slate-600">{member.ela_contribution}</p>
         </div>
       )}
@@ -199,13 +199,13 @@ export default function WhoWeAreView({ boardMembers }: { boardMembers: BoardMemb
   const t = DICT[lang];
 
   return (
-    <div className="min-h-screen bg-brand-bg text-brand-green antialiased">
+    <div className="min-h-screen bg-brand-beige text-brand-aubergine antialiased">
       <Navbar />
 
       <main className="mx-auto w-full max-w-6xl px-4 pt-32 pb-20 sm:px-6 lg:px-8">
         {/* 1. HEADER & LEAD */}
         <header className="max-w-3xl">
-          <h1 className="text-3xl font-black tracking-tight text-brand-green sm:text-4xl lg:text-5xl">
+          <h1 className="text-3xl font-black tracking-tight text-brand-aubergine sm:text-4xl lg:text-5xl">
             {t.title}
           </h1>
           <div className="mt-6 space-y-4 text-base leading-relaxed text-slate-600 sm:text-lg">
@@ -217,27 +217,27 @@ export default function WhoWeAreView({ boardMembers }: { boardMembers: BoardMemb
 
         {/* 2. MISSION & VISION */}
         <section className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2">
-          <div className="rounded-3xl border border-brand-pink-light/70 bg-white p-8 shadow-sm">
+          <div className="rounded-3xl border border-brand-aubergine/10 bg-white p-8 shadow-sm">
             <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-800">
               <CompassIcon className="h-6 w-6" />
             </span>
-            <h2 className="text-2xl font-bold text-brand-green">{t.missionTitle}</h2>
+            <h2 className="text-2xl font-bold text-brand-aubergine">{t.missionTitle}</h2>
             <p className="mt-3 text-base leading-relaxed text-slate-600">{t.missionText}</p>
           </div>
-          <div className="rounded-3xl border border-brand-pink-light/70 bg-white p-8 shadow-sm">
+          <div className="rounded-3xl border border-brand-aubergine/10 bg-white p-8 shadow-sm">
             <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-800">
               <EyeIcon className="h-6 w-6" />
             </span>
-            <h2 className="text-2xl font-bold text-brand-green">{t.visionTitle}</h2>
+            <h2 className="text-2xl font-bold text-brand-aubergine">{t.visionTitle}</h2>
             <p className="mt-3 text-base leading-relaxed text-slate-600">{t.visionText}</p>
           </div>
         </section>
 
         {/* 3. CALLOUT / SPOTLIGHT */}
         <section className="mt-14">
-          <div className="relative overflow-hidden rounded-4xl bg-brand-green p-8 text-white shadow-sm sm:p-12">
+          <div className="relative overflow-hidden rounded-4xl bg-brand-aubergine p-8 text-white shadow-sm sm:p-12">
             <span aria-hidden className="pointer-events-none absolute -top-16 -right-10 h-56 w-56 rounded-full bg-white/5 blur-3xl" />
-            <span aria-hidden className="pointer-events-none absolute -bottom-20 -left-10 h-64 w-64 rounded-full bg-brand-pink/10 blur-3xl" />
+            <span aria-hidden className="pointer-events-none absolute -bottom-20 -left-10 h-64 w-64 rounded-full bg-brand-coral/10 blur-3xl" />
             <div className="relative max-w-3xl">
               <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.calloutTitle}</h2>
               <p className="mt-5 text-base leading-relaxed text-white/85 sm:text-lg">{t.calloutText}</p>
@@ -247,7 +247,7 @@ export default function WhoWeAreView({ boardMembers }: { boardMembers: BoardMemb
 
         {/* 4. VALUES */}
         <section className="mt-14">
-          <h2 className="text-3xl font-extrabold tracking-tight text-brand-green sm:text-4xl">
+          <h2 className="text-3xl font-extrabold tracking-tight text-brand-aubergine sm:text-4xl">
             {t.valuesTitle}
           </h2>
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -256,7 +256,7 @@ export default function WhoWeAreView({ boardMembers }: { boardMembers: BoardMemb
                 key={v.title}
                 className="flex flex-col rounded-3xl border border-black/5 bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
               >
-                <span className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-pink/10 text-brand-pink">
+                <span className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-coral/10 text-brand-coral">
                   <CheckIcon className="h-5 w-5" />
                 </span>
                 <h3 className="text-lg font-bold text-slate-900">{v.title}</h3>
@@ -268,7 +268,7 @@ export default function WhoWeAreView({ boardMembers }: { boardMembers: BoardMemb
 
         {/* 5. BOARD OF DIRECTORS */}
         <section className="mt-14">
-          <h2 className="text-3xl font-extrabold tracking-tight text-brand-green sm:text-4xl">
+          <h2 className="text-3xl font-extrabold tracking-tight text-brand-aubergine sm:text-4xl">
             {t.boardTitle}
           </h2>
           <p className="mt-4 max-w-3xl text-base leading-relaxed text-slate-600">{t.boardIntro}</p>

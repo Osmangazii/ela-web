@@ -131,7 +131,7 @@ function SchoolLogo({ school, name, sizes }: { school: SchoolItem; name: string;
     );
   }
   return (
-    <span className="flex h-full w-full items-center justify-center text-4xl font-extrabold text-brand-green">
+    <span className="flex h-full w-full items-center justify-center text-4xl font-extrabold text-brand-aubergine">
       {name.charAt(0).toUpperCase()}
     </span>
   );
@@ -167,7 +167,7 @@ function SchoolModal({ school, onClose }: { school: SchoolItem; onClose: () => v
           type="button"
           aria-label={t.close}
           onClick={onClose}
-          className="absolute top-4 right-4 flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition-colors hover:bg-brand-pink hover:text-white"
+          className="absolute top-4 right-4 flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition-colors hover:bg-brand-coral hover:text-white"
         >
           ✕
         </button>
@@ -214,7 +214,7 @@ function MemberSchoolCard({ school, onOpen }: { school: SchoolItem; onOpen: () =
         type="button"
         onClick={onOpen}
         aria-label={`${t.readMore}: ${s.name}`}
-        className="absolute inset-0 z-10 cursor-pointer rounded-3xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-pink"
+        className="absolute inset-0 z-10 cursor-pointer rounded-3xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-coral"
       />
 
       {/* Prominent logo banner */}
@@ -242,7 +242,7 @@ function MemberSchoolCard({ school, onOpen }: { school: SchoolItem; onOpen: () =
         ) : (
           <span />
         )}
-        <span className="inline-flex items-center gap-1 text-sm font-semibold text-brand-pink">
+        <span className="inline-flex items-center gap-1 text-sm font-semibold text-brand-coral transition-colors group-hover:text-brand-aubergine">
           {t.readMore}
           <ArrowIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
         </span>
@@ -258,13 +258,13 @@ export default function MembershipView({ schools }: { schools: SchoolItem[] }) {
   const [selectedSchool, setSelectedSchool] = useState<SchoolItem | null>(null);
 
   return (
-    <div className="min-h-screen bg-brand-bg text-brand-green antialiased">
+    <div className="min-h-screen bg-brand-beige text-brand-aubergine antialiased">
       <Navbar />
 
       <main className="mx-auto w-full max-w-6xl px-4 pt-32 pb-20 sm:px-6 lg:px-8">
         {/* 1. HEADER & LEAD */}
         <header className="max-w-3xl">
-          <h1 className="text-3xl font-black tracking-tight text-brand-green sm:text-4xl lg:text-5xl">
+          <h1 className="text-3xl font-black tracking-tight text-brand-aubergine sm:text-4xl lg:text-5xl">
             {t.title}
           </h1>
           <div className="mt-6 space-y-4 text-base leading-relaxed text-slate-600 sm:text-lg">
@@ -276,7 +276,7 @@ export default function MembershipView({ schools }: { schools: SchoolItem[] }) {
 
         {/* 2. WHAT MEMBERSHIP OFFERS */}
         <section className="mt-14">
-          <h2 className="text-3xl font-extrabold tracking-tight text-brand-green sm:text-4xl">
+          <h2 className="text-3xl font-extrabold tracking-tight text-brand-aubergine sm:text-4xl">
             {t.offersTitle}
           </h2>
           <ul className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -285,7 +285,7 @@ export default function MembershipView({ schools }: { schools: SchoolItem[] }) {
                 key={item}
                 className="flex items-start gap-3 rounded-2xl border border-black/5 bg-white p-5 shadow-sm"
               >
-                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-pink/10 text-brand-pink">
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-coral/10 text-brand-coral">
                   <CheckIcon className="h-3.5 w-3.5" />
                 </span>
                 <span className="text-sm leading-relaxed text-slate-700 sm:text-base">{item}</span>
@@ -296,8 +296,8 @@ export default function MembershipView({ schools }: { schools: SchoolItem[] }) {
 
         {/* 3. WHO CAN APPLY */}
         <section className="mt-14">
-          <div className="rounded-4xl border border-brand-pink-light bg-white p-8 shadow-sm sm:p-12">
-            <h2 className="text-2xl font-extrabold tracking-tight text-brand-green sm:text-3xl">
+          <div className="rounded-4xl border border-brand-aubergine/10 bg-white p-8 shadow-sm sm:p-12">
+            <h2 className="text-2xl font-extrabold tracking-tight text-brand-aubergine sm:text-3xl">
               {t.eligibilityTitle}
             </h2>
             <p className="mt-4 max-w-4xl text-base leading-relaxed text-slate-600">
@@ -308,16 +308,16 @@ export default function MembershipView({ schools }: { schools: SchoolItem[] }) {
 
         {/* 4. CALL TO ACTION */}
         <section className="mt-14">
-          <div className="relative overflow-hidden rounded-4xl bg-brand-green p-8 text-white shadow-sm sm:p-12">
+          <div className="relative overflow-hidden rounded-4xl bg-brand-aubergine p-8 text-white shadow-sm sm:p-12">
             <span aria-hidden className="pointer-events-none absolute -top-16 -right-10 h-56 w-56 rounded-full bg-white/5 blur-3xl" />
-            <span aria-hidden className="pointer-events-none absolute -bottom-20 -left-10 h-64 w-64 rounded-full bg-brand-pink/10 blur-3xl" />
+            <span aria-hidden className="pointer-events-none absolute -bottom-20 -left-10 h-64 w-64 rounded-full bg-brand-coral/10 blur-3xl" />
             <div className="relative max-w-3xl">
               <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.ctaTitle}</h2>
               <p className="mt-5 text-base leading-relaxed text-white/85 sm:text-lg">{t.ctaText}</p>
               <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
                 <a
                   href={CONTACT_HREF}
-                  className="inline-flex w-full items-center justify-center rounded-full bg-brand-pink px-7 py-3 font-bold text-white shadow-sm transition-all hover:bg-[#ff657d] sm:w-auto"
+                  className="inline-flex w-full items-center justify-center rounded-full bg-brand-lime px-7 py-3 font-bold text-brand-aubergine shadow-sm transition-all hover:bg-brand-lime-dark sm:w-auto"
                 >
                   {t.ctaPrimary}
                 </a>
@@ -338,7 +338,7 @@ export default function MembershipView({ schools }: { schools: SchoolItem[] }) {
 
         {/* 5. MEMBER DIRECTORY */}
         <section id="members" className="mt-14 scroll-mt-28">
-          <h2 className="text-3xl font-extrabold tracking-tight text-brand-green sm:text-4xl">
+          <h2 className="text-3xl font-extrabold tracking-tight text-brand-aubergine sm:text-4xl">
             {t.directoryTitle}
           </h2>
 

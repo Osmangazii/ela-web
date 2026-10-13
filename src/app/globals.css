@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f4f0ea;
+  --foreground: #2d1c36;
 }
 
 @theme inline {
@@ -12,19 +12,13 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* Çocuk dostu canlı tema renk paleti */
+/* Resmî ELA marka renk paleti */
 @theme {
-  --color-brand-pink: #ff788d; /* Primary - canlı pembe-mercan */
-  --color-brand-pink-light: #ffdada; /* Secondary - açık pembe */
-  --color-brand-bg: #fff2f2; /* Background - yumuşak krem-pembe */
-  --color-brand-green: #165823; /* Accent - koyu doğa yeşili */
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-brand-aubergine: #2d1c36; /* Primary dark - metin, başlık, koyu yüzeyler */
+  --color-brand-beige: #f4f0ea; /* Background - ana gövde ve açık kart zemini */
+  --color-brand-lime: #d2e635; /* Accent - CTA, rozet, vurgu */
+  --color-brand-lime-dark: #c4d92c; /* Lime hover tonu */
+  --color-brand-coral: #ee6d52; /* Secondary accent - ikon/rozet */
 }
 
 body {

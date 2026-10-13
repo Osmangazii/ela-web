@@ -20,7 +20,7 @@ export default async function AnnouncementsPage() {
   const announcements = (data as unknown as AnnouncementItem[]) ?? [];
 
   return (
-    <div className="min-h-screen bg-brand-bg text-brand-green antialiased">
+    <div className="min-h-screen bg-brand-beige text-brand-aubergine antialiased">
       <Navbar />
       <AnnouncementsView announcements={announcements} />
     </div>

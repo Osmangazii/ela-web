@@ -141,13 +141,13 @@ export default function Home() {
   const t = DICT[lang];
 
   return (
-    <div className="min-h-screen bg-brand-bg text-brand-green antialiased">
+    <div className="min-h-screen bg-brand-beige text-brand-aubergine antialiased">
       <Navbar />
 
       <main className="w-full">
         {/* HERO */}
         <section className="mx-auto w-full max-w-7xl px-4 pt-32 pb-14 text-center sm:px-6 lg:px-8">
-          <h1 className="mx-auto max-w-4xl text-4xl leading-[1.1] font-black tracking-tight text-brand-green sm:text-5xl lg:text-6xl">
+          <h1 className="mx-auto max-w-4xl text-4xl leading-[1.1] font-black tracking-tight text-brand-aubergine sm:text-5xl lg:text-6xl">
             {t.heroTitle}
           </h1>
 
@@ -158,13 +158,13 @@ export default function Home() {
           <div className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/who-we-are"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-pink px-8 py-3.5 font-bold text-white shadow-sm transition-all hover:bg-[#ff657d] hover:shadow-md sm:w-auto"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-lime px-8 py-3.5 font-bold text-brand-aubergine shadow-sm transition-all hover:bg-brand-lime-dark hover:shadow-md sm:w-auto"
             >
               {t.ctaPrimary}
             </Link>
             <Link
               href="/membership"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-3.5 font-bold text-brand-green shadow-sm transition-all hover:bg-slate-50 sm:w-auto"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-3.5 font-bold text-brand-aubergine shadow-sm transition-all hover:bg-slate-50 sm:w-auto"
             >
               {t.ctaSecondary}
               <ArrowIcon />
@@ -175,10 +175,10 @@ export default function Home() {
         {/* PILLARS */}
         <section id="purpose" className="mx-auto w-full max-w-7xl scroll-mt-28 px-4 py-14 sm:px-6 lg:px-8">
           <header className="mx-auto max-w-3xl text-center">
-            <span className="text-xs font-bold tracking-[0.2em] text-brand-pink uppercase">
+            <span className="text-xs font-bold tracking-[0.2em] text-brand-coral uppercase">
               {t.pillarsKicker}
             </span>
-            <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-brand-green sm:text-4xl">
+            <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-brand-aubergine sm:text-4xl">
               {t.pillarsTitle}
             </h2>
           </header>
@@ -187,12 +187,12 @@ export default function Home() {
             {t.pillars.map((p, i) => (
               <article
                 key={p.title}
-                className="group flex flex-col rounded-3xl border border-brand-pink-light/70 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
+                className="group flex flex-col rounded-3xl border border-brand-aubergine/10 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
               >
-                <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-green/10 text-brand-green">
+                <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-aubergine/10 text-brand-aubergine">
                   <PillarIcon i={i} />
                 </span>
-                <h3 className="text-xl font-bold leading-snug text-brand-green">{p.title}</h3>
+                <h3 className="text-xl font-bold leading-snug text-brand-aubergine">{p.title}</h3>
                 <p className="mt-3 text-base leading-relaxed text-slate-600">{p.text}</p>
               </article>
             ))}
@@ -201,9 +201,9 @@ export default function Home() {
 
         {/* CLOSING */}
         <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-4xl bg-brand-green p-8 text-center text-white shadow-sm sm:p-12 lg:p-16">
+          <div className="relative overflow-hidden rounded-4xl bg-brand-aubergine p-8 text-center text-white shadow-sm sm:p-12 lg:p-16">
             <span aria-hidden className="pointer-events-none absolute -top-16 -right-10 h-56 w-56 rounded-full bg-white/5 blur-3xl" />
-            <span aria-hidden className="pointer-events-none absolute -bottom-20 -left-10 h-64 w-64 rounded-full bg-brand-pink/10 blur-3xl" />
+            <span aria-hidden className="pointer-events-none absolute -bottom-20 -left-10 h-64 w-64 rounded-full bg-brand-coral/10 blur-3xl" />
 
             <div className="relative mx-auto max-w-3xl">
               <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.closingTitle}</h2>
@@ -212,7 +212,7 @@ export default function Home() {
               <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/events"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-pink px-7 py-3 font-bold text-white shadow-sm transition-all hover:bg-[#ff657d] sm:w-auto"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-lime px-7 py-3 font-bold text-brand-aubergine shadow-sm transition-all hover:bg-brand-lime-dark sm:w-auto"
                 >
                   {t.closingExplore}
                 </Link>

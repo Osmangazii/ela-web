@@ -62,7 +62,7 @@ export default function Footer() {
   const t = COPY[lang];
 
   return (
-    <footer className="bg-brand-green text-white">
+    <footer className="bg-brand-aubergine text-white">
       <div className="mx-auto w-full max-w-7xl px-6 py-14 sm:px-8">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
           {/* Brand */}
@@ -87,7 +87,7 @@ export default function Footer() {
             <ul className="mt-4 space-y-2.5">
               {t.links.map((l) => (
                 <li key={l.href + l.label}>
-                  <Link href={l.href} className="text-sm text-white/80 transition-colors hover:text-brand-pink">
+                  <Link href={l.href} className="text-sm text-white/80 transition-colors hover:text-brand-coral">
                     {l.label}
                   </Link>
                 </li>
@@ -101,7 +101,7 @@ export default function Footer() {
             <p className="mt-4 text-xs uppercase tracking-wide text-white/50">{t.contactLabel}</p>
             <a
               href="mailto:press@ela.edu.gr"
-              className="mt-1 inline-block text-base font-semibold text-white transition-colors hover:text-brand-pink"
+              className="mt-1 inline-block text-base font-semibold text-white transition-colors hover:text-brand-coral"
             >
               press@ela.edu.gr
             </a>
@@ -109,14 +109,14 @@ export default function Footer() {
               <a
                 href="#"
                 aria-label="Facebook"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-brand-pink"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-brand-coral"
               >
                 <FacebookIcon />
               </a>
               <a
                 href="#"
                 aria-label="Instagram"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-brand-pink"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-brand-coral"
               >
                 <InstagramIcon />
               </a>

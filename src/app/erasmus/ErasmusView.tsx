@@ -178,7 +178,7 @@ const STRATEGIC_ICONS = [UsersIcon, MonitorIcon, CapIcon, LeafIcon];
 
 function statusClasses(status: string): string {
   if (status === "Active") return "bg-emerald-50 text-emerald-700";
-  if (status === "Call for Partners") return "bg-brand-pink-light/60 text-brand-green";
+  if (status === "Call for Partners") return "bg-brand-lime font-semibold text-brand-aubergine";
   if (status === "Completed") return "bg-slate-100 text-slate-600";
   return "bg-slate-100 text-slate-600";
 }
@@ -237,8 +237,8 @@ function ProjectCard({ project }: { project: ErasmusProject }) {
 
       {/* Results (when present) */}
       {project.results_summary && (
-        <div className="mt-4 rounded-2xl border border-brand-pink-light/70 bg-brand-bg p-4">
-          <p className="text-[11px] font-bold tracking-wider text-brand-green uppercase">
+        <div className="mt-4 rounded-2xl border border-brand-aubergine/10 bg-brand-beige p-4">
+          <p className="text-[11px] font-bold tracking-wider text-brand-aubergine uppercase">
             {t.labelResults}
           </p>
           <p className="mt-1 text-sm leading-relaxed text-slate-600">{project.results_summary}</p>
@@ -265,7 +265,7 @@ function ProjectCard({ project }: { project: ErasmusProject }) {
                 {priorities.map((p) => (
                   <span
                     key={p}
-                    className="rounded-full bg-brand-pink-light/50 px-2.5 py-0.5 text-xs font-semibold text-brand-green"
+                    className="rounded-full bg-brand-aubergine/5 px-2.5 py-0.5 text-xs font-semibold text-brand-aubergine"
                   >
                     {p}
                   </span>
@@ -283,7 +283,7 @@ function ProjectCard({ project }: { project: ErasmusProject }) {
             href={project.attachment_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-brand-pink px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-[#ff657d]"
+            className="inline-flex items-center gap-2 rounded-full bg-brand-aubergine px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-lime hover:text-brand-aubergine"
           >
             {t.viewDetails}
           </a>
@@ -304,14 +304,14 @@ export default function ErasmusView({ projects }: { projects: ErasmusProject[] }
   );
 
   return (
-    <div className="min-h-screen bg-brand-bg text-brand-green antialiased">
+    <div className="min-h-screen bg-brand-beige text-brand-aubergine antialiased">
       <Navbar />
 
       {/* HERO + STRATEGIC SCOPE */}
       <section className="mx-auto max-w-6xl px-6 pt-32 pb-12">
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
           <div>
-            <h1 className="text-4xl font-black tracking-tight text-brand-green sm:text-5xl">
+            <h1 className="text-4xl font-black tracking-tight text-brand-aubergine sm:text-5xl">
               {t.heroTitle}
             </h1>
             <p className="mt-5 text-base leading-relaxed text-slate-600 sm:text-lg">{t.heroDesc}</p>
@@ -321,7 +321,7 @@ export default function ErasmusView({ projects }: { projects: ErasmusProject[] }
           </div>
 
           <div>
-            <p className="text-xs font-bold tracking-[0.2em] text-brand-pink uppercase">
+            <p className="text-xs font-bold tracking-[0.2em] text-brand-coral uppercase">
               {t.strategicTitle}
             </p>
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -332,10 +332,10 @@ export default function ErasmusView({ projects }: { projects: ErasmusProject[] }
                     key={s.title}
                     className="rounded-2xl border border-white/80 bg-white/60 p-5 shadow-sm backdrop-blur-md"
                   >
-                    <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-green/10 text-brand-green">
+                    <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-aubergine/10 text-brand-aubergine">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <p className="text-sm font-bold text-brand-green">{s.title}</p>
+                    <p className="text-sm font-bold text-brand-aubergine">{s.title}</p>
                     <p className="mt-1 text-xs leading-relaxed text-slate-600">{s.note}</p>
                   </div>
                 );
@@ -348,7 +348,7 @@ export default function ErasmusView({ projects }: { projects: ErasmusProject[] }
       <main className="mx-auto w-full max-w-6xl px-6 pb-20 sm:px-8">
         {/* PROJECT PORTFOLIO (DB-driven) */}
         <section className="mt-14">
-          <h2 className="text-2xl font-extrabold tracking-tight text-brand-green sm:text-3xl">
+          <h2 className="text-2xl font-extrabold tracking-tight text-brand-aubergine sm:text-3xl">
             {t.portfolioTitle}
           </h2>
 
@@ -363,7 +363,7 @@ export default function ErasmusView({ projects }: { projects: ErasmusProject[] }
                   onClick={() => setTab(tb.key)}
                   className={`rounded-full px-4 py-2 text-sm font-bold transition-all ${
                     active
-                      ? "bg-brand-pink text-white shadow-sm"
+                      ? "bg-brand-lime text-brand-aubergine shadow-sm"
                       : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
                   }`}
                 >
@@ -386,15 +386,15 @@ export default function ErasmusView({ projects }: { projects: ErasmusProject[] }
 
         {/* CALL FOR STRATEGIC PARTNERSHIPS */}
         <section className="mt-14">
-          <div className="relative overflow-hidden rounded-4xl bg-brand-green p-8 text-white shadow-sm sm:p-12">
+          <div className="relative overflow-hidden rounded-4xl bg-brand-aubergine p-8 text-white shadow-sm sm:p-12">
             <span aria-hidden className="pointer-events-none absolute -top-16 -right-10 h-56 w-56 rounded-full bg-white/5 blur-3xl" />
-            <span aria-hidden className="pointer-events-none absolute -bottom-20 -left-10 h-64 w-64 rounded-full bg-brand-pink/10 blur-3xl" />
-            <div className="relative max-w-3xl">
-              <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.partnerTitle}</h2>
+            <span aria-hidden className="pointer-events-none absolute -bottom-20 -left-10 h-64 w-64 rounded-full bg-brand-coral/10 blur-3xl" />
+            <div className="relative max-w-3xl text-white">
+              <h2 className="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">{t.partnerTitle}</h2>
               <p className="mt-5 text-base leading-relaxed text-white/85 sm:text-lg">{t.partnerText}</p>
               <a
                 href={PARTNER_HREF}
-                className="mt-8 inline-flex items-center justify-center rounded-full bg-brand-pink px-7 py-3 font-bold text-white shadow-sm transition-all hover:bg-[#ff657d]"
+                className="mt-8 inline-flex items-center justify-center rounded-full bg-brand-lime px-7 py-3 font-bold text-brand-aubergine shadow-sm transition-all hover:bg-brand-lime-dark"
               >
                 {t.partnerCta}
               </a>

@@ -37,7 +37,7 @@ const EMPTY_FORM: FormState = {
 };
 
 const inputClass =
-  "w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 outline-none transition-colors focus:border-brand-pink";
+  "w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 outline-none transition-colors focus:border-brand-coral";
 
 function labelClass() {
   return "mb-1 block text-xs font-semibold text-slate-600";
@@ -180,32 +180,32 @@ export default function AdminErasmus() {
     <div>
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-black tracking-tight text-brand-green">Erasmus+ Projects</h1>
+          <h1 className="text-2xl font-black tracking-tight text-brand-aubergine">Erasmus+ Projects</h1>
           <p className="text-sm text-slate-500">Manage the Erasmus+ project portfolio.</p>
         </div>
         <button
           type="button"
           onClick={toggleForm}
-          className="rounded-full bg-brand-pink px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-[#ff637b] hover:shadow-md"
+          className="rounded-full bg-brand-lime px-5 py-2.5 text-sm font-bold text-brand-aubergine shadow-sm transition-all hover:bg-brand-lime-dark hover:shadow-md"
         >
           {showForm ? "Close" : "+ New Project"}
         </button>
       </header>
 
       {error && (
-        <p className="mt-4 rounded-xl border border-brand-pink/40 bg-brand-pink/10 px-4 py-2.5 text-sm text-brand-green">
+        <p className="mt-4 rounded-xl border border-brand-coral/40 bg-brand-coral/10 px-4 py-2.5 text-sm text-brand-aubergine">
           {error}
         </p>
       )}
       {notice && (
-        <p className="mt-4 rounded-xl border border-brand-green/30 bg-brand-green/10 px-4 py-2.5 text-sm text-brand-green">
+        <p className="mt-4 rounded-xl border border-brand-lime/60 bg-brand-lime/25 px-4 py-2.5 text-sm text-brand-aubergine">
           {notice}
         </p>
       )}
 
       {showForm && (
         <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-          <div className="grid grid-cols-1 gap-6 rounded-2xl border border-brand-pink-light bg-white p-6 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 rounded-2xl border border-brand-aubergine/10 bg-white p-6 md:grid-cols-2">
             <label className="block md:col-span-2">
               <span className={labelClass()}>Title *</span>
               <input
@@ -345,7 +345,7 @@ export default function AdminErasmus() {
             <button
               type="submit"
               disabled={saving}
-              className="rounded-full bg-brand-green px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 disabled:opacity-60"
+              className="rounded-full bg-brand-aubergine px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 disabled:opacity-60"
             >
               {saving ? "Saving…" : editingId ? "Update Project" : "Create Project"}
             </button>
@@ -371,7 +371,7 @@ export default function AdminErasmus() {
                 </p>
                 <div className="mt-1 flex flex-wrap items-center gap-2">
                   {p.status && (
-                    <span className="rounded-full bg-brand-pink-light/60 px-2 py-0.5 text-xs font-semibold text-brand-green">
+                    <span className="rounded-full bg-brand-aubergine/10 px-2 py-0.5 text-xs font-semibold text-brand-aubergine">
                       {p.status}
                     </span>
                   )}
@@ -391,7 +391,7 @@ export default function AdminErasmus() {
                 <button
                   type="button"
                   onClick={() => handleDelete(p)}
-                  className="rounded-full border border-brand-pink/40 bg-white px-4 py-1.5 text-sm font-semibold text-brand-pink transition-colors hover:bg-brand-pink hover:text-white"
+                  className="rounded-full border border-brand-coral/40 bg-white px-4 py-1.5 text-sm font-semibold text-brand-coral transition-colors hover:bg-brand-coral hover:text-white"
                 >
                   Delete
                 </button>

@@ -24,7 +24,7 @@ const WIDTHS: { value: "full" | "md" | "sm"; label: string }[] = [
 ];
 
 const inputClass =
-  "w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 outline-none transition-colors focus:border-brand-pink";
+  "w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 outline-none transition-colors focus:border-brand-coral";
 
 function labelClass() {
   return "mb-1 block text-xs font-semibold text-slate-600";
@@ -214,25 +214,25 @@ export default function AdminAnnouncements() {
     <div>
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-black tracking-tight text-brand-green">Announcements</h1>
+          <h1 className="text-2xl font-black tracking-tight text-brand-aubergine">Announcements</h1>
           <p className="text-sm text-slate-500">Build announcements with flexible vertical blocks.</p>
         </div>
         <button
           type="button"
           onClick={toggleForm}
-          className="rounded-full bg-brand-pink px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-[#ff637b] hover:shadow-md"
+          className="rounded-full bg-brand-lime px-5 py-2.5 text-sm font-bold text-brand-aubergine shadow-sm transition-all hover:bg-brand-lime-dark hover:shadow-md"
         >
           {showForm ? "Close" : "+ New Announcement"}
         </button>
       </header>
 
       {error && (
-        <p className="mt-4 rounded-xl border border-brand-pink/40 bg-brand-pink/10 px-4 py-2.5 text-sm text-brand-green">
+        <p className="mt-4 rounded-xl border border-brand-coral/40 bg-brand-coral/10 px-4 py-2.5 text-sm text-brand-aubergine">
           {error}
         </p>
       )}
       {notice && (
-        <p className="mt-4 rounded-xl border border-brand-green/30 bg-brand-green/10 px-4 py-2.5 text-sm text-brand-green">
+        <p className="mt-4 rounded-xl border border-brand-lime/60 bg-brand-lime/25 px-4 py-2.5 text-sm text-brand-aubergine">
           {notice}
         </p>
       )}
@@ -240,7 +240,7 @@ export default function AdminAnnouncements() {
       {showForm && (
         <form onSubmit={handleSubmit} className="mt-6 space-y-6">
           {/* Basics */}
-          <div className="grid grid-cols-1 gap-4 rounded-2xl border border-brand-pink-light bg-white p-6 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 rounded-2xl border border-brand-aubergine/10 bg-white p-6 md:grid-cols-2">
             <label className="block">
               <span className={labelClass()}>Title (EN) *</span>
               <input className={inputClass} required value={titleEn} onChange={(e) => setTitleEn(e.target.value)} />
@@ -314,7 +314,7 @@ export default function AdminAnnouncements() {
                           <Image src={block.url} alt="Image preview" fill className="object-cover" sizes="112px" />
                         </span>
                       )}
-                      <label className="flex h-20 w-28 cursor-pointer items-center justify-center rounded-lg border border-dashed border-slate-300 text-2xl text-slate-400 hover:border-brand-pink hover:text-brand-pink">
+                      <label className="flex h-20 w-28 cursor-pointer items-center justify-center rounded-lg border border-dashed border-slate-300 text-2xl text-slate-400 hover:border-brand-coral hover:text-brand-coral">
                         <span>{uploading ? "…" : block.url ? "↺" : "+"}</span>
                         <input
                           type="file"
@@ -335,7 +335,7 @@ export default function AdminAnnouncements() {
                           type="button"
                           onClick={() => updateBlock(block.id, { width: w.value })}
                           className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                            block.width === w.value ? "bg-brand-pink text-white" : "border border-slate-200 bg-white text-slate-600"
+                            block.width === w.value ? "bg-brand-lime text-brand-aubergine" : "border border-slate-200 bg-white text-slate-600"
                           }`}
                         >
                           {w.label}
@@ -382,7 +382,7 @@ export default function AdminAnnouncements() {
                             </th>
                           ))}
                           <th className="w-10 border border-slate-200 bg-slate-50/80 p-1 align-top">
-                            <button type="button" onClick={() => updateBlock(block.id, { headers: [...block.headers, "Column"] })} className="text-brand-pink">+</button>
+                            <button type="button" onClick={() => updateBlock(block.id, { headers: [...block.headers, "Column"] })} className="text-brand-coral">+</button>
                           </th>
                         </tr>
                       </thead>
@@ -403,13 +403,13 @@ export default function AdminAnnouncements() {
                               </td>
                             ))}
                             <td className="border border-slate-200 p-1 text-center">
-                              <button type="button" onClick={() => updateBlock(block.id, { rows: block.rows.filter((_, idx) => idx !== r) })} className="text-slate-400 hover:text-brand-pink">✕</button>
+                              <button type="button" onClick={() => updateBlock(block.id, { rows: block.rows.filter((_, idx) => idx !== r) })} className="text-slate-400 hover:text-brand-coral">✕</button>
                             </td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
-                    <button type="button" onClick={() => updateBlock(block.id, { rows: [...block.rows, block.headers.map(() => "")] })} className="text-sm font-semibold text-brand-pink hover:text-brand-green">
+                    <button type="button" onClick={() => updateBlock(block.id, { rows: [...block.rows, block.headers.map(() => "")] })} className="text-sm font-semibold text-brand-coral hover:text-brand-aubergine">
                       + Add Row
                     </button>
                   </div>
@@ -448,7 +448,7 @@ export default function AdminAnnouncements() {
                 key={type}
                 type="button"
                 onClick={() => setBlocks((prev) => [...prev, newBlock(type)])}
-                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-brand-pink hover:text-brand-pink"
+                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-brand-coral hover:text-brand-coral"
               >
                 + {type === "text" ? "Text" : type === "image" ? "Image" : type === "table" ? "Table" : "PDF"}
               </button>
@@ -459,7 +459,7 @@ export default function AdminAnnouncements() {
             <button type="button" onClick={() => { resetForm(); setShowForm(false); }} className="rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">
               Cancel
             </button>
-            <button type="submit" disabled={saving || uploading} className="rounded-full bg-brand-green px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 disabled:opacity-60">
+            <button type="submit" disabled={saving || uploading} className="rounded-full bg-brand-aubergine px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 disabled:opacity-60">
               {saving ? "Saving…" : editingId ? "Update Announcement" : "Create Announcement"}
             </button>
           </div>
@@ -483,7 +483,7 @@ export default function AdminAnnouncements() {
               </div>
               <div className="flex shrink-0 gap-2">
                 <button type="button" onClick={() => startEdit(item)} className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">Edit</button>
-                <button type="button" onClick={() => handleDelete(item)} className="rounded-full border border-brand-pink/40 bg-white px-4 py-1.5 text-sm font-semibold text-brand-pink hover:bg-brand-pink hover:text-white">Delete</button>
+                <button type="button" onClick={() => handleDelete(item)} className="rounded-full border border-brand-coral/40 bg-white px-4 py-1.5 text-sm font-semibold text-brand-coral hover:bg-brand-coral hover:text-white">Delete</button>
               </div>
             </li>
           ))}

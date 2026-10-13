@@ -20,7 +20,7 @@ export default async function EventsPage() {
   const events = ((data as unknown as EventItem[]) ?? []).slice();
 
   return (
-    <div className="min-h-screen bg-brand-bg text-brand-green antialiased">
+    <div className="min-h-screen bg-brand-beige text-brand-aubergine antialiased">
       <Navbar />
       <EventsCatalog events={events} />
     </div>
