@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [2026-10-14 15:42] — Footer Sosyal Medya Bağlantıları Güncellendi
+
+- **`src/components/Footer.tsx`**: Sosyal medya ikon bağlantıları gerçek adreslerle değiştirildi (önceden placeholder `href="#"` idi):
+  - **Facebook** → `https://www.facebook.com/changingthefaceofeducation/?ref=PROFILE_EDIT_xav_ig_profile_page_web`
+  - **Instagram** → `https://www.instagram.com/ela.edu.gr/?hl=en`
+  - Her iki bağlantıya güvenli yeni sekmede açılış için `target="_blank"` + `rel="noopener noreferrer"` eklendi.
+- Instagram/Facebook linkleri yalnızca Footer’da tanımlıydı; başka bileşende sosyal link yok (`src/**` taraması).
+- **Doğrulama**: `npx tsc --noEmit`, `npx eslint .` temiz; `next build` (Node v24) başarılı.
+
 ## [2026-10-13 13:44] — Erasmus+ & Announcements Kontrast/Aksiyon Butonu Düzeltmeleri
 
 - **`src/app/erasmus/ErasmusView.tsx`**

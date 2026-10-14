@@ -107,14 +107,18 @@ export default function Footer() {
             </a>
             <div className="mt-5 flex items-center gap-3">
               <a
-                href="#"
+                href="https://www.facebook.com/changingthefaceofeducation/?ref=PROFILE_EDIT_xav_ig_profile_page_web"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Facebook"
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-brand-coral"
               >
                 <FacebookIcon />
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/ela.edu.gr/?hl=en"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Instagram"
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-brand-coral"
               >
