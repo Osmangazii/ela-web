@@ -7,7 +7,7 @@ import { revalidatePublicAction } from "../actions";
 import SortableList from "@/components/admin/SortableList";
 import type { EventItem } from "@/types/database";
 
-const DEFAULT_THEME = "#2D1C36";
+const DEFAULT_THEME = "#171717";
 
 /** The four official ELA event categories. */
 const CATEGORIES = [
@@ -63,7 +63,7 @@ const EMPTY_FORM: FormState = {
 };
 
 const inputClass =
-  "w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 outline-none transition-colors focus:border-brand-coral";
+  "w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 outline-none transition-colors focus:border-brand-pink";
 
 function labelClass() {
   return "mb-1 block text-xs font-semibold text-slate-600";
@@ -368,25 +368,25 @@ export default function AdminEvents() {
     <div>
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-black tracking-tight text-brand-aubergine">Events Management</h1>
+          <h1 className="text-2xl font-black tracking-tight text-brand-dark">Events Management</h1>
           <p className="text-sm text-slate-500">Create and manage the association&apos;s event stories.</p>
         </div>
         <button
           type="button"
           onClick={toggleForm}
-          className="rounded-full bg-brand-lime px-5 py-2.5 text-sm font-bold text-brand-aubergine shadow-sm transition-all hover:bg-brand-lime-dark hover:shadow-md"
+          className="rounded-full bg-brand-pink px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-pink-dark hover:shadow-md"
         >
           {showForm ? "Close" : "+ New Event"}
         </button>
       </header>
 
       {error && (
-        <p className="mt-4 rounded-xl border border-brand-coral/40 bg-brand-coral/10 px-4 py-2.5 text-sm text-brand-aubergine">
+        <p className="mt-4 rounded-xl border border-brand-pink/40 bg-brand-pink/10 px-4 py-2.5 text-sm text-brand-dark">
           {error}
         </p>
       )}
       {notice && (
-        <p className="mt-4 rounded-xl border border-brand-lime/60 bg-brand-lime/25 px-4 py-2.5 text-sm text-brand-aubergine">
+        <p className="mt-4 rounded-xl border border-brand-yellow bg-brand-yellow/40 px-4 py-2.5 text-sm text-brand-dark">
           {notice}
         </p>
       )}
@@ -395,7 +395,7 @@ export default function AdminEvents() {
       {showForm && (
         <form
           onSubmit={handleSubmit}
-          className="mt-6 rounded-2xl border border-brand-aubergine/10 bg-white p-6"
+          className="mt-6 rounded-2xl border border-brand-dark/10 bg-white p-6"
         >
           <h2 className="mb-4 text-lg font-bold text-slate-900">
             {editingId ? `Edit Event: ${editingTitle}` : "Create Event"}
@@ -425,8 +425,8 @@ export default function AdminEvents() {
             </div>
 
             {/* Greek */}
-            <div className="space-y-4 rounded-2xl border border-brand-aubergine/10 bg-brand-aubergine/5 p-6">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-brand-coral">Greek Details (EL)</h3>
+            <div className="space-y-4 rounded-2xl border border-brand-dark/10 bg-brand-dark/5 p-6">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-brand-pink">Greek Details (EL)</h3>
               <label className="block">
                 <span className={labelClass()}>Title (EL) *</span>
                 <input className={inputClass} required value={form.title_el} onChange={(e) => update("title_el", e.target.value)} />
@@ -490,13 +490,13 @@ export default function AdminEvents() {
                       type="button"
                       aria-label="Remove image"
                       onClick={() => removeImage(url)}
-                      className="absolute top-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-slate-900/70 text-xs text-white hover:bg-brand-coral"
+                      className="absolute top-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-slate-900/70 text-xs text-white hover:bg-brand-pink"
                     >
                       ✕
                     </button>
                   </span>
                 ))}
-                <label className="flex h-20 w-28 cursor-pointer items-center justify-center rounded-lg border border-dashed border-slate-300 text-2xl text-slate-400 hover:border-brand-coral hover:text-brand-coral">
+                <label className="flex h-20 w-28 cursor-pointer items-center justify-center rounded-lg border border-dashed border-slate-300 text-2xl text-slate-400 hover:border-brand-pink hover:text-brand-pink">
                   <span>{uploading ? "…" : "+"}</span>
                   <input type="file" accept="image/*" multiple className="hidden" onChange={handleFiles} />
                 </label>
@@ -593,7 +593,7 @@ export default function AdminEvents() {
                   type="checkbox"
                   checked={form.is_archived}
                   onChange={(e) => update("is_archived", e.target.checked)}
-                  className="h-4 w-4 accent-brand-lime"
+                  className="h-4 w-4 accent-brand-pink"
                 />
                 <span className="text-sm font-semibold text-slate-700">
                   Archive this event (moves it to the Past / Archive tab)
@@ -616,7 +616,7 @@ export default function AdminEvents() {
             <button
               type="submit"
               disabled={saving || uploading}
-              className="rounded-full bg-brand-aubergine px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 disabled:opacity-60"
+              className="rounded-full bg-brand-dark px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 disabled:opacity-60"
             >
               {saving ? "Saving…" : editingId ? "Update Event" : "Create Event"}
             </button>
@@ -646,7 +646,7 @@ export default function AdminEvents() {
                 type="button"
                 onClick={handleSaveOrder}
                 disabled={!orderChanged || savingOrder}
-                className="rounded-full bg-brand-lime px-5 py-2 text-sm font-bold text-brand-aubergine shadow-sm transition-all hover:bg-brand-lime-dark hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-full bg-brand-pink px-5 py-2 text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-pink-dark hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {savingOrder ? "Saving…" : "Save Order"}
               </button>
@@ -676,7 +676,7 @@ export default function AdminEvents() {
                   </p>
                   <div className="mt-1 flex flex-wrap items-center gap-2">
                     {event.category && (
-                      <span className="rounded-full bg-brand-aubergine/10 px-2 py-0.5 text-xs font-semibold text-brand-aubergine">
+                      <span className="rounded-full bg-brand-dark/10 px-2 py-0.5 text-xs font-semibold text-brand-dark">
                         {event.category}
                       </span>
                     )}
@@ -705,7 +705,7 @@ export default function AdminEvents() {
                   <button
                     type="button"
                     onClick={() => handleDelete(event)}
-                    className="rounded-full border border-brand-coral/40 bg-white px-4 py-1.5 text-sm font-semibold text-brand-coral transition-colors hover:bg-brand-coral hover:text-white"
+                    className="rounded-full border border-brand-pink/40 bg-white px-4 py-1.5 text-sm font-semibold text-brand-pink transition-colors hover:bg-brand-pink hover:text-white"
                   >
                     Delete
                   </button>

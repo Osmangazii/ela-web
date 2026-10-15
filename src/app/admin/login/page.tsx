@@ -42,10 +42,10 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-brand-beige px-4 text-brand-aubergine antialiased">
-      <div className="w-full max-w-md rounded-3xl border border-brand-aubergine/10 bg-white p-8 shadow-sm md:p-10">
+    <div className="flex min-h-screen items-center justify-center bg-brand-beige px-4 text-brand-dark antialiased">
+      <div className="w-full max-w-md rounded-3xl border border-brand-dark/10 bg-white p-8 shadow-sm md:p-10">
         <Link href="/" className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-lime text-sm font-extrabold tracking-wide text-brand-aubergine">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-pink text-sm font-extrabold tracking-wide text-white">
             ela
           </span>
           <span className="text-sm font-extrabold tracking-tight">Admin Portal</span>
@@ -66,7 +66,7 @@ export default function AdminLogin() {
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-900 outline-none transition-colors focus:border-brand-coral"
+              className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-900 outline-none transition-colors focus:border-brand-pink"
               placeholder="you@example.com"
             />
           </div>
@@ -82,13 +82,13 @@ export default function AdminLogin() {
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-900 outline-none transition-colors focus:border-brand-coral"
+              className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-900 outline-none transition-colors focus:border-brand-pink"
               placeholder="••••••••"
             />
           </div>
 
           {errorMsg && (
-            <p className="rounded-xl border border-brand-coral/40 bg-brand-coral/10 px-4 py-2.5 text-sm font-medium text-brand-aubergine">
+            <p className="rounded-xl border border-brand-pink/40 bg-brand-pink/10 px-4 py-2.5 text-sm font-medium text-brand-dark">
               {errorMsg}
             </p>
           )}
@@ -96,7 +96,7 @@ export default function AdminLogin() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-full bg-brand-lime px-6 py-3 text-sm font-bold text-brand-aubergine shadow-sm transition-all hover:bg-brand-lime-dark hover:shadow-md disabled:cursor-not-allowed disabled:opacity-70"
+            className="w-full rounded-full bg-brand-pink px-6 py-3 text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-pink-dark hover:shadow-md disabled:cursor-not-allowed disabled:opacity-70"
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>

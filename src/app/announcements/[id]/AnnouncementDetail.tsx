@@ -25,7 +25,7 @@ function BackIcon() {
 
 function FileIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden>
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
       <path d="M14 2v6h6M9 13h6M9 17h6" />
     </svg>
@@ -74,9 +74,9 @@ function PdfBlock({ block, lang }: { block: PdfBlockData; lang: Lang }) {
       href={block.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white px-4 py-3.5 shadow-sm transition-colors hover:border-brand-coral"
+      className="group flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white px-4 py-3.5 shadow-sm transition-colors hover:border-brand-pink"
     >
-      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-coral/10 text-brand-coral">
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-cyan/20 text-brand-dark">
         <FileIcon />
       </span>
       <span className="flex min-w-0 flex-col leading-tight">
@@ -87,7 +87,7 @@ function PdfBlock({ block, lang }: { block: PdfBlockData; lang: Lang }) {
           PDF{size ? ` · ${size}` : ""}
         </span>
       </span>
-      <span className="ml-auto flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-colors group-hover:bg-brand-aubergine group-hover:text-white">
+      <span className="ml-auto flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-colors group-hover:bg-brand-dark group-hover:text-white">
         <DownloadIcon />
       </span>
     </a>
@@ -174,7 +174,7 @@ export default function AnnouncementDetail({ announcement }: { announcement: Ann
       {/* Back link */}
       <Link
         href="/announcements"
-        className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition-colors hover:text-brand-aubergine"
+        className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition-colors hover:text-brand-dark"
       >
         <BackIcon />
         {lang === "el" ? "Πίσω στις Ανακοινώσεις" : "Back to Announcements"}
@@ -183,16 +183,16 @@ export default function AnnouncementDetail({ announcement }: { announcement: Ann
       {/* Header */}
       <header className="mt-6 border-b border-slate-200/70 pb-6">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-block rounded-full bg-brand-aubergine/5 px-3 py-1 text-xs font-bold text-brand-aubergine">
+          <span className="inline-block rounded-full bg-brand-dark/5 px-3 py-1 text-xs font-bold text-brand-dark">
             {categoryLabel(announcement.category, lang)}
           </span>
           {announcement.target_audience && (
-            <span className="inline-block rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600">
+            <span className="inline-block rounded-full border border-brand-cyan/50 bg-brand-cyan/15 px-3 py-1 text-xs font-semibold text-brand-dark">
               {announcement.target_audience}
             </span>
           )}
           {announcement.deadline_date && (
-            <span className="inline-block rounded-full bg-brand-lime px-3 py-1 text-xs font-bold text-brand-aubergine shadow-sm">
+            <span className="inline-block rounded-full bg-brand-yellow px-3 py-1 text-xs font-bold text-brand-dark shadow-sm">
               {deadlineText(announcement.deadline_date, lang)}
             </span>
           )}

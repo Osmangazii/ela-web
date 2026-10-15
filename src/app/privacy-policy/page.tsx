@@ -87,11 +87,11 @@ export default function PrivacyPolicy() {
   const t = DICT[lang];
 
   return (
-    <div className="min-h-screen bg-brand-beige text-brand-aubergine antialiased">
+    <div className="min-h-screen bg-brand-beige text-brand-dark antialiased">
       <Navbar />
 
       <main className="mx-auto max-w-4xl px-6 pt-32 pb-20">
-        <h1 className="text-3xl font-extrabold text-brand-aubergine">{t.title}</h1>
+        <h1 className="text-3xl font-extrabold text-brand-dark">{t.title}</h1>
 
         <span className="mt-4 mb-8 inline-block w-fit rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-500">
           {t.lastUpdated}
@@ -114,7 +114,7 @@ export default function PrivacyPolicy() {
           </h2>
           <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
             {t.contactBefore}{" "}
-            <a href={`mailto:${EMAIL}`} className="font-semibold text-brand-coral underline hover:text-brand-aubergine">
+            <a href={`mailto:${EMAIL}`} className="font-semibold text-brand-pink underline hover:text-brand-dark">
               {EMAIL}
             </a>
             {t.contactAfter}

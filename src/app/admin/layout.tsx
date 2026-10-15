@@ -21,9 +21,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen bg-brand-beige antialiased">
       {/* Sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-30 flex w-60 flex-col bg-brand-aubergine text-white">
+      <aside className="fixed inset-y-0 left-0 z-30 flex w-60 flex-col bg-brand-dark text-white">
         <div className="flex items-center gap-2.5 px-5 py-5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-lime text-sm font-extrabold tracking-wide text-brand-aubergine">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-pink text-sm font-extrabold tracking-wide text-white">
             ela
           </span>
           <div className="leading-tight">
@@ -54,7 +54,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <form action={signOutAction}>
             <button
               type="submit"
-              className="flex w-full items-center rounded-lg px-3 py-2 text-left text-sm font-semibold text-white/85 transition-colors hover:bg-brand-coral hover:text-white"
+              className="flex w-full items-center rounded-lg px-3 py-2 text-left text-sm font-semibold text-white/85 transition-colors hover:bg-brand-pink hover:text-white"
             >
               Sign out
             </button>

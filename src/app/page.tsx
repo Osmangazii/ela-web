@@ -10,6 +10,7 @@ interface Pillar {
 }
 
 interface Copy {
+  heroKicker: string;
   heroTitle: string;
   heroLead: string;
   ctaPrimary: string;
@@ -26,6 +27,7 @@ interface Copy {
 
 const DICT: Record<Lang, Copy> = {
   en: {
+    heroKicker: "Educational Leadership Association",
     heroTitle: "Changing the Face of Education",
     heroLead:
       "ELA is a nationwide community of innovative and forward-looking foreign language schools in Greece. We unite educational leadership, evidence-informed teaching and international collaboration to create learning that is rigorous, inclusive and connected to the world. Every learner should experience language as more than a school subject. It is a means to think, communicate, collaborate and participate with confidence.",
@@ -59,6 +61,7 @@ const DICT: Record<Lang, Copy> = {
     closingConnect: "Connect with ELA",
   },
   el: {
+    heroKicker: "Ένωση Εκπαιδευτικής Ηγεσίας",
     heroTitle: "Αλλάζουμε το Πρόσωπο της Εκπαίδευσης",
     heroLead:
       "Η ELA είναι μια πανελλαδική κοινότητα καινοτόμων και μπροστά-σκεπτόμενων σχολείων ξένων γλωσσών στην Ελλάδα. Ενώνουμε την εκπαιδευτική ηγεσία, τη διδασκαλία που βασίζεται σε τεκμήρια και τη διεθνή συνεργασία, δημιουργώντας μάθηση που είναι απαιτητική, συμπεριληπτική και συνδεδεμένη με τον κόσμο. Κάθε μαθητής πρέπει να βιώνει τη γλώσσα ως κάτι περισσότερο από ένα σχολικό μάθημα. Είναι μέσο για να σκέφτεται, να επικοινωνεί, να συνεργάζεται και να συμμετέχει με αυτοπεποίθηση.",
@@ -97,7 +100,7 @@ function PillarIcon({ i }: { i: number }) {
   switch (i) {
     case 0: // community / people
       return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" aria-hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" aria-hidden>
           <path d="M17 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-3A3.5 3.5 0 0 0 7 18.5V20" />
           <circle cx="12" cy="8" r="3.2" />
           <path d="M20 20v-1.2a3.2 3.2 0 0 0-2.4-3.1M4 20v-1.2a3.2 3.2 0 0 1 2.4-3.1" />
@@ -105,22 +108,23 @@ function PillarIcon({ i }: { i: number }) {
       );
     case 1: // quality badge
       return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" aria-hidden>
-          <circle cx="12" cy="9" r="5" />
-          <path d="M9 13.5 8 22l4-2 4 2-1-8.5" />
-          <path d="M12 7l.9 1.8 2 .3-1.4 1.4.3 2-1.8-.9-1.8.9.3-2L9.1 9.1l2-.3z" />
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" aria-hidden>
+          <circle cx="12" cy="9" r="6" />
+          <path d="M12 6l0.9 1.8 2 0.3-1.4 1.4 0.3 2-1.8-0.9-1.8 0.9 0.3-2-1.4-1.4 2-0.3L12 6z" />
+          <path d="M8.5 14L6 21l3-1.5 2 1.5-0.8-4" />
+          <path d="M15.5 14L18 21l-3-1.5-2 1.5 0.8-4" />
         </svg>
       );
     case 2: // active learner / compass
       return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" aria-hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" aria-hidden>
           <circle cx="12" cy="12" r="9" />
           <path d="m15.5 8.5-2 5-5 2 2-5z" />
         </svg>
       );
     default: // globe
       return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" aria-hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" aria-hidden>
           <circle cx="12" cy="12" r="9" />
           <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
         </svg>
@@ -141,15 +145,19 @@ export default function Home() {
   const t = DICT[lang];
 
   return (
-    <div className="min-h-screen bg-brand-beige text-brand-aubergine antialiased">
+    <div className="min-h-screen bg-brand-beige text-brand-dark antialiased">
       <Navbar />
 
       <main className="w-full">
         {/* HERO */}
-        <section className="mx-auto w-full max-w-7xl px-4 pt-32 pb-14 text-center sm:px-6 lg:px-8">
-          <h1 className="mx-auto max-w-4xl text-4xl leading-[1.1] font-black tracking-tight text-brand-aubergine sm:text-5xl lg:text-6xl">
+        <section className="w-full border-t-4 border-brand-yellow px-4 pt-32 pb-14 text-center sm:px-6 lg:px-8">
+          <span className="inline-flex items-center rounded-full bg-brand-yellow px-3.5 py-1.5 text-xs font-bold tracking-[0.15em] text-brand-dark uppercase shadow-sm">
+            {t.heroKicker}
+          </span>
+          <h1 className="mx-auto mt-5 max-w-4xl text-4xl leading-[1.1] font-black tracking-tight text-brand-dark sm:text-5xl lg:text-6xl">
             {t.heroTitle}
           </h1>
+          <span aria-hidden className="mx-auto mt-5 block h-1.5 w-24 rounded-full bg-brand-yellow" />
 
           <p className="mx-auto mt-6 max-w-3xl text-base leading-relaxed font-normal text-slate-600 sm:text-lg">
             {t.heroLead}
@@ -158,13 +166,13 @@ export default function Home() {
           <div className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/who-we-are"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-lime px-8 py-3.5 font-bold text-brand-aubergine shadow-sm transition-all hover:bg-brand-lime-dark hover:shadow-md sm:w-auto"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-pink px-8 py-3.5 font-bold text-white shadow-sm transition-all hover:bg-brand-pink-dark hover:shadow-md sm:w-auto"
             >
               {t.ctaPrimary}
             </Link>
             <Link
               href="/membership"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-3.5 font-bold text-brand-aubergine shadow-sm transition-all hover:bg-slate-50 sm:w-auto"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-3.5 font-bold text-brand-dark shadow-sm transition-all hover:bg-slate-50 sm:w-auto"
             >
               {t.ctaSecondary}
               <ArrowIcon />
@@ -175,10 +183,10 @@ export default function Home() {
         {/* PILLARS */}
         <section id="purpose" className="mx-auto w-full max-w-7xl scroll-mt-28 px-4 py-14 sm:px-6 lg:px-8">
           <header className="mx-auto max-w-3xl text-center">
-            <span className="text-xs font-bold tracking-[0.2em] text-brand-coral uppercase">
+            <span className="text-xs font-bold tracking-[0.2em] text-brand-pink uppercase">
               {t.pillarsKicker}
             </span>
-            <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-brand-aubergine sm:text-4xl">
+            <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-brand-dark sm:text-4xl">
               {t.pillarsTitle}
             </h2>
           </header>
@@ -187,12 +195,12 @@ export default function Home() {
             {t.pillars.map((p, i) => (
               <article
                 key={p.title}
-                className="group flex flex-col rounded-3xl border border-brand-aubergine/10 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
+                className="group flex flex-col rounded-3xl border border-brand-dark/10 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
               >
-                <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-aubergine/10 text-brand-aubergine">
+                <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-cyan/20 text-brand-dark">
                   <PillarIcon i={i} />
                 </span>
-                <h3 className="text-xl font-bold leading-snug text-brand-aubergine">{p.title}</h3>
+                <h3 className="text-xl font-bold leading-snug text-brand-dark">{p.title}</h3>
                 <p className="mt-3 text-base leading-relaxed text-slate-600">{p.text}</p>
               </article>
             ))}
@@ -201,30 +209,27 @@ export default function Home() {
 
         {/* CLOSING */}
         <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-4xl bg-brand-aubergine p-8 text-center text-white shadow-sm sm:p-12 lg:p-16">
-            <span aria-hidden className="pointer-events-none absolute -top-16 -right-10 h-56 w-56 rounded-full bg-white/5 blur-3xl" />
-            <span aria-hidden className="pointer-events-none absolute -bottom-20 -left-10 h-64 w-64 rounded-full bg-brand-coral/10 blur-3xl" />
-
+          <div className="relative overflow-hidden rounded-4xl bg-brand-yellow p-8 text-center text-brand-dark shadow-sm sm:p-12 lg:p-16">
             <div className="relative mx-auto max-w-3xl">
-              <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.closingTitle}</h2>
-              <p className="mt-5 text-base leading-relaxed text-white/85 sm:text-lg">{t.closingText}</p>
+              <h2 className="text-2xl font-extrabold tracking-tight text-brand-dark sm:text-3xl">{t.closingTitle}</h2>
+              <p className="mt-5 text-base leading-relaxed text-brand-dark/80 sm:text-lg">{t.closingText}</p>
 
               <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/events"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-lime px-7 py-3 font-bold text-brand-aubergine shadow-sm transition-all hover:bg-brand-lime-dark sm:w-auto"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-pink px-6 py-3 font-bold text-white shadow-sm transition-all hover:bg-brand-pink-dark sm:w-auto"
                 >
                   {t.closingExplore}
                 </Link>
                 <Link
                   href="/who-we-are"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-3 font-bold text-white backdrop-blur-sm transition-colors hover:bg-white/20 sm:w-auto"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-brand-dark bg-white px-6 py-3 font-semibold text-brand-dark transition-all hover:bg-neutral-100 sm:w-auto"
                 >
                   {t.closingCommunity}
                 </Link>
                 <Link
                   href="/membership"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-3 font-bold text-white backdrop-blur-sm transition-colors hover:bg-white/20 sm:w-auto"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-brand-dark bg-white px-6 py-3 font-semibold text-brand-dark transition-all hover:bg-neutral-100 sm:w-auto"
                 >
                   {t.closingConnect}
                 </Link>

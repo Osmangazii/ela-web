@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4f0ea;
-  --foreground: #2d1c36;
+  --background: #f7f5ef;
+  --foreground: #171717;
 }
 
 @theme inline {
@@ -12,19 +12,119 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* Resmî ELA marka renk paleti */
+/* ELA — taze, renkli, davetkâr resmî palet */
 @theme {
-  --color-brand-aubergine: #2d1c36; /* Primary dark - metin, başlık, koyu yüzeyler */
-  --color-brand-beige: #f4f0ea; /* Background - ana gövde ve açık kart zemini */
-  --color-brand-lime: #d2e635; /* Accent - CTA, rozet, vurgu */
-  --color-brand-lime-dark: #c4d92c; /* Lime hover tonu */
-  --color-brand-coral: #ee6d52; /* Secondary accent - ikon/rozet */
+  --color-brand-pink: #ef6090; /* Primary Pink */
+  --color-brand-pink-dark: #d84f7d; /* Pink hover */
+  --color-brand-yellow: #f4d74e; /* Sunshine Yellow */
+  --color-brand-cyan: #70c9df; /* Fresh Cyan / soft sky */
+  --color-brand-bg: #f7f5ef; /* Soft cream body background */
+  --color-brand-card: #ffffff; /* Clean white */
+  --color-brand-text: #171717; /* Deep dark — high-contrast text only */
+
+  /* Aliases kept so existing component utility classes keep resolving */
+  --color-brand-beige: #f7f5ef; /* page + card backgrounds */
+  --color-brand-dark: #171717; /* text, and small neutral chips */
 }
 
+/* The body carries all textures directly, so they always sit BEHIND the
+   page content (no overlay pseudo-elements above text).
+   Layers, top to bottom:
+   1. brand-pink dot grid  (#EF6090 @ 22%)
+   2. subtle matte-paper grain (desaturated SVG noise @ 8%) */
 body {
-  background: var(--background);
+  background-color: var(--background);
+  background-image:
+    radial-gradient(rgba(239, 96, 144, 0.22) 1.5px, transparent 1.5px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23grain)' opacity='0.08'/%3E%3C/svg%3E");
+  background-size: 24px 24px, 160px 160px;
+  background-repeat: repeat, repeat;
   color: var(--foreground);
   font-family: var(--font-geist-sans, Arial, Helvetica, sans-serif);
+}
+
+/* The cream page surfaces are painted by the textured body itself, so the
+   pink dots + grain show only on the outer background — never inside the
+   solid white cards, yellow panels or navbar, which stay fully opaque. */
+.bg-brand-beige {
+  background-color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   Global surface & button cleanup (CSS-only).
+   Removes the muddy cyan/greenish holographic glow effects and standardises
+   secondary/outline buttons across the whole site.
+-------------------------------------------------------------------------- */
+
+/* 1. Kill ambient glow blobs (decorative blur orbs / gradients). */
+[class*="blur-3xl"] {
+  display: none;
+}
+
+/* 2. Drop frosted backdrop blur so it can't read as muddy over the paper
+      texture; surfaces below are made solid instead. */
+[class*="backdrop-blur"] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* 3. Force card / container surfaces to be fully opaque so the background
+      dot grid can never bleed through them. */
+.bg-white\/10,
+.bg-white\/60,
+.bg-white\/70,
+.bg-white\/95 {
+  background-color: #ffffff;
+}
+.bg-white\/20 {
+  background-color: #fafafa;
+}
+
+/* 4. Clean, soft secondary / outline buttons — replace thick dark borders
+      with a hairline neutral edge, solid white fill and readable text. */
+a[class*="border-2"],
+button[class*="border-2"] {
+  border-width: 1px;
+  border-color: rgb(23 23 23 / 0.08);
+}
+button[class*="bg-white"][class*="border"],
+a[class*="backdrop-blur-sm"][class*="bg-white\/10"] {
+  border-width: 1px;
+  border-color: rgb(23 23 23 / 0.08);
+  background-color: #ffffff;
+  color: var(--color-brand-dark);
+}
+
+/* 5. Feature-card icon badges (soft cyan surfaces): keep the glyph itself
+      transparent and un-clipped so no dark box or clipped padding shows
+      around icons such as the medal / award badge. */
+[class*="bg-brand-cyan"] > svg,
+[class*="bg-brand-cyan"] svg {
+  background-color: transparent;
+  overflow: visible;
+}
+
+/* --------------------------------------------------------------------------
+   Warm, friendly feature surfaces.
+   The large panels (footer, hero CTA card, section callouts, admin sidebar)
+   share the `.bg-brand-dark` class. Instead of the old near-black — and not
+   the harsh cyan — they are repainted in warm sunshine yellow, and their
+   former white text is remapped to the deep text colour so legibility stays
+   crisp. Scoped to existing class names only — no component markup changes.
+-------------------------------------------------------------------------- */
+.bg-brand-dark {
+  background-color: var(--color-brand-yellow);
+}
+
+.bg-brand-dark[class*="text-white"],
+.bg-brand-dark [class*="text-white"] {
+  color: var(--color-brand-text);
+}
+
+/* The footer logo was inverted to white for a dark footer — force it dark so
+   it stays visible on the new bright surface. */
+.bg-brand-dark .brightness-0.invert {
+  filter: brightness(0);
 }
 
 /* Kart giriş animasyonu (aşağıdan hafifçe yukarı belirme) */

@@ -121,7 +121,7 @@ function EuFundingBadge() {
 
 function GlobeIcon({ className = "h-6 w-6" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
       <circle cx="12" cy="12" r="9" />
       <path d="M3 12h18M12 3c2.5 2.5 3.5 5.5 3.5 9S14.5 18.5 12 21c-2.5-2.5-3.5-5.5-3.5-9S9.5 5.5 12 3z" />
     </svg>
@@ -130,7 +130,7 @@ function GlobeIcon({ className = "h-6 w-6" }: { className?: string }) {
 
 function UsersIcon({ className = "h-6 w-6" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
       <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
       <circle cx="9" cy="7" r="4" />
       <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
@@ -140,7 +140,7 @@ function UsersIcon({ className = "h-6 w-6" }: { className?: string }) {
 
 function MonitorIcon({ className = "h-6 w-6" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
       <rect x="3" y="4" width="18" height="12" rx="2" />
       <path d="M8 20h8M12 16v4" />
     </svg>
@@ -149,7 +149,7 @@ function MonitorIcon({ className = "h-6 w-6" }: { className?: string }) {
 
 function CapIcon({ className = "h-6 w-6" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
       <path d="M22 10 12 5 2 10l10 5 10-5z" />
       <path d="M6 12v5c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5" />
     </svg>
@@ -158,7 +158,7 @@ function CapIcon({ className = "h-6 w-6" }: { className?: string }) {
 
 function LeafIcon({ className = "h-6 w-6" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
       <path d="M20 4c0 9-5 13-12 13H5c0-7 4-11 11-11 2 0 3-.5 4-2z" />
       <path d="M4 20c1.5-4 4.5-7 9-9" />
     </svg>
@@ -167,7 +167,7 @@ function LeafIcon({ className = "h-6 w-6" }: { className?: string }) {
 
 function CalendarIcon({ className = "h-4 w-4" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
       <rect x="3" y="4.5" width="18" height="16" rx="2.5" />
       <path d="M3 9h18M8 3v3M16 3v3" />
     </svg>
@@ -178,7 +178,7 @@ const STRATEGIC_ICONS = [UsersIcon, MonitorIcon, CapIcon, LeafIcon];
 
 function statusClasses(status: string): string {
   if (status === "Active") return "bg-emerald-50 text-emerald-700";
-  if (status === "Call for Partners") return "bg-brand-lime font-semibold text-brand-aubergine";
+  if (status === "Call for Partners") return "bg-brand-yellow font-semibold text-brand-dark";
   if (status === "Completed") return "bg-slate-100 text-slate-600";
   return "bg-slate-100 text-slate-600";
 }
@@ -202,7 +202,7 @@ function ProjectCard({ project }: { project: ErasmusProject }) {
           </span>
         )}
         {project.action_type && (
-          <span className="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-600">
+          <span className="rounded-full border border-brand-cyan/50 bg-brand-cyan/15 px-3 py-1 text-xs font-semibold text-brand-dark">
             {project.action_type}
           </span>
         )}
@@ -237,8 +237,8 @@ function ProjectCard({ project }: { project: ErasmusProject }) {
 
       {/* Results (when present) */}
       {project.results_summary && (
-        <div className="mt-4 rounded-2xl border border-brand-aubergine/10 bg-brand-beige p-4">
-          <p className="text-[11px] font-bold tracking-wider text-brand-aubergine uppercase">
+        <div className="mt-4 rounded-2xl border border-brand-dark/10 bg-brand-beige p-4">
+          <p className="text-[11px] font-bold tracking-wider text-brand-dark uppercase">
             {t.labelResults}
           </p>
           <p className="mt-1 text-sm leading-relaxed text-slate-600">{project.results_summary}</p>
@@ -265,7 +265,7 @@ function ProjectCard({ project }: { project: ErasmusProject }) {
                 {priorities.map((p) => (
                   <span
                     key={p}
-                    className="rounded-full bg-brand-aubergine/5 px-2.5 py-0.5 text-xs font-semibold text-brand-aubergine"
+                    className="rounded-full bg-brand-cyan/20 px-2.5 py-0.5 text-xs font-semibold text-brand-dark"
                   >
                     {p}
                   </span>
@@ -283,7 +283,7 @@ function ProjectCard({ project }: { project: ErasmusProject }) {
             href={project.attachment_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-brand-aubergine px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-lime hover:text-brand-aubergine"
+            className="inline-flex items-center gap-2 rounded-full bg-brand-dark px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-pink hover:text-white"
           >
             {t.viewDetails}
           </a>
@@ -304,14 +304,14 @@ export default function ErasmusView({ projects }: { projects: ErasmusProject[] }
   );
 
   return (
-    <div className="min-h-screen bg-brand-beige text-brand-aubergine antialiased">
+    <div className="min-h-screen bg-brand-beige text-brand-dark antialiased">
       <Navbar />
 
       {/* HERO + STRATEGIC SCOPE */}
       <section className="mx-auto max-w-6xl px-6 pt-32 pb-12">
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
           <div>
-            <h1 className="text-4xl font-black tracking-tight text-brand-aubergine sm:text-5xl">
+            <h1 className="text-4xl font-black tracking-tight text-brand-dark sm:text-5xl">
               {t.heroTitle}
             </h1>
             <p className="mt-5 text-base leading-relaxed text-slate-600 sm:text-lg">{t.heroDesc}</p>
@@ -321,7 +321,7 @@ export default function ErasmusView({ projects }: { projects: ErasmusProject[] }
           </div>
 
           <div>
-            <p className="text-xs font-bold tracking-[0.2em] text-brand-coral uppercase">
+            <p className="text-xs font-bold tracking-[0.2em] text-brand-pink uppercase">
               {t.strategicTitle}
             </p>
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -332,10 +332,10 @@ export default function ErasmusView({ projects }: { projects: ErasmusProject[] }
                     key={s.title}
                     className="rounded-2xl border border-white/80 bg-white/60 p-5 shadow-sm backdrop-blur-md"
                   >
-                    <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-aubergine/10 text-brand-aubergine">
+                    <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-cyan/20 text-brand-dark">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <p className="text-sm font-bold text-brand-aubergine">{s.title}</p>
+                    <p className="text-sm font-bold text-brand-dark">{s.title}</p>
                     <p className="mt-1 text-xs leading-relaxed text-slate-600">{s.note}</p>
                   </div>
                 );
@@ -348,7 +348,7 @@ export default function ErasmusView({ projects }: { projects: ErasmusProject[] }
       <main className="mx-auto w-full max-w-6xl px-6 pb-20 sm:px-8">
         {/* PROJECT PORTFOLIO (DB-driven) */}
         <section className="mt-14">
-          <h2 className="text-2xl font-extrabold tracking-tight text-brand-aubergine sm:text-3xl">
+          <h2 className="text-2xl font-extrabold tracking-tight text-brand-dark sm:text-3xl">
             {t.portfolioTitle}
           </h2>
 
@@ -363,7 +363,7 @@ export default function ErasmusView({ projects }: { projects: ErasmusProject[] }
                   onClick={() => setTab(tb.key)}
                   className={`rounded-full px-4 py-2 text-sm font-bold transition-all ${
                     active
-                      ? "bg-brand-lime text-brand-aubergine shadow-sm"
+                      ? "bg-brand-pink text-white shadow-sm"
                       : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
                   }`}
                 >
@@ -386,15 +386,15 @@ export default function ErasmusView({ projects }: { projects: ErasmusProject[] }
 
         {/* CALL FOR STRATEGIC PARTNERSHIPS */}
         <section className="mt-14">
-          <div className="relative overflow-hidden rounded-4xl bg-brand-aubergine p-8 text-white shadow-sm sm:p-12">
+          <div className="relative overflow-hidden rounded-4xl bg-brand-dark p-8 text-white shadow-sm sm:p-12">
             <span aria-hidden className="pointer-events-none absolute -top-16 -right-10 h-56 w-56 rounded-full bg-white/5 blur-3xl" />
-            <span aria-hidden className="pointer-events-none absolute -bottom-20 -left-10 h-64 w-64 rounded-full bg-brand-coral/10 blur-3xl" />
+            <span aria-hidden className="pointer-events-none absolute -bottom-20 -left-10 h-64 w-64 rounded-full bg-brand-cyan/25 blur-3xl" />
             <div className="relative max-w-3xl text-white">
               <h2 className="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">{t.partnerTitle}</h2>
               <p className="mt-5 text-base leading-relaxed text-white/85 sm:text-lg">{t.partnerText}</p>
               <a
                 href={PARTNER_HREF}
-                className="mt-8 inline-flex items-center justify-center rounded-full bg-brand-lime px-7 py-3 font-bold text-brand-aubergine shadow-sm transition-all hover:bg-brand-lime-dark"
+                className="mt-8 inline-flex items-center justify-center rounded-full bg-brand-pink px-7 py-3 font-bold text-white shadow-sm transition-all hover:bg-brand-pink-dark"
               >
                 {t.partnerCta}
               </a>

@@ -1,5 +1,151 @@
 # CHANGELOG
 
+## [2026-10-15 18:03] — Medal İkonu Bozuk SVG Doğru Sürümle Değiştirildi
+
+- **`src/app/page.tsx`** — “Quality that becomes visible in learning” kartının medal ikonu, düzgün 5 uçlu yıldız (`path`) + iki temiz kurdele `path`’i ile değiştirildi. Önceki bozuk `polygon`/`polyline` geometrisi kaldırıldı.
+- **Temizlik düzeltmeleri**: Verilen snippet’teki markdown ile bozulmuş `xmlns="[http://...](...)"` değeri atıldı (React inline SVG’de gerekmiyor); JSX’i bozan HTML yorumları (`<!-- -->`) kaldırıldı; `width="24" height="24"` öznitelikleri ile çelişen `w-5 h-5` sınıfı yerine, kardeş ikonlarla hizalı `h-6 w-6` (24px) kullanıldı.
+- **Tutarlılık**: `strokeWidth="1.5"`, `stroke="currentColor"` (rozet `text-brand-dark`), soft cyan rozet zemini korundu.
+- **Doğrulama**: `npx tsc --noEmit`, `npx eslint .` temiz; `next build` (Node v24) tüm rotalarla başarılı.
+
+## [2026-10-15 18:00] — Medal İkonu Değiştirildi + Özellik İkonlarında Stroke Birleştirildi
+
+- **`src/app/page.tsx`** — “Quality that becomes visible in learning” kartının medal/award ikonu yeni temiz SVG ile değiştirildi: `circle r=6` + `polygon` yıldız + iki `polyline` şerit, `strokeWidth="1.5"`, `h-6 w-6`.
+- **Stroke birleştirme**: Tüm özellik kartı ikonları `strokeWidth="1.5"` oldu:
+  - `page.tsx` PillarIcon (4), `information/page.tsx` Shield/Document/Check, `erasmus/ErasmusView.tsx` Globe/Users/Monitor/Cap/Leaf/Calendar, `who-we-are/WhoWeAreView.tsx` Compass/Eye/Check, `events/EventsCatalog.tsx` Check/Calendar/Pin, `membership/MembershipView.tsx` Check, `announcements/[id]/AnnouncementDetail.tsx` File.
+  - Buton okları (2.2) ve navbar hamburger/close (2.5) — ikon rozeti olmadıkları için değiştirilmedi.
+- **Rozetler**: Tüm özellik ikonları `bg-brand-cyan/20 text-brand-dark` (soft cyan, koyu glif) + ortalanmış yuvarlak-kare konteynerde kalıyor; `globals.css`’teki `[class*="bg-brand-cyan"] svg { background-color: transparent; overflow: visible; }` kuralı kesme/box oluşumunu önler.
+- **Doğrulama**: `npx tsc --noEmit`, `npx eslint .` temiz; `next build` (Node v24) tüm rotalarla başarılı.
+- **Not**: Medal SVG’si verilen geometriyle birebir kullanıldı; `polygon` noktalar dizisinin sonunda tek başına duran `6` değeri geçersiz (tarayıcı yok sayar). Sibling ikonlarla boyut uyumu için `w-5 h-5` yerine `h-6 w-6` verildi.
+
+## [2026-10-15 17:55] — Özellik Kartı İkon Rozetleri Soft Cyan + Medal/İkon Render Düzeltmesi
+
+- **Tüm özellik kartı ikon rozetleri soft cyan oldu** (`bg-brand-cyan/20` — `#70C9DF` @ %20) ve ikonlar koyu (`text-brand-dark`):
+  - `src/app/page.tsx` — Ana sayfa 4 sütun (User / Medal / Compass / Globe).
+  - `src/app/who-we-are/WhoWeAreView.tsx` — Misyon (Compass) & Vizyon (Eye) rozetleri eski `emerald-50/emerald-800`’den cyan/koyuya çevrildi.
+  - `src/app/erasmus/ErasmusView.tsx` — Stratejik kapsam ikonları (People / Monitor / Graduation Cap / Leaf).
+  - `src/app/information/page.tsx` — Shield / Document ikon kutuları + kontrol listesi onay çipi.
+  - (Zaten cyan olan Events / Membership / Who-We-Are values / Announcement PDF çipleri korundu.)
+- **Medal / ikon render düzeltmesi**: Sorunun kaynağı, ikon çevresindeki koyu `bg-brand-dark/10` kutu algısıydı; cyan zeminle giderildi. Ayrıca `globals.css`’e şu kural eklendi: `[class*="bg-brand-cyan"] svg { background-color: transparent; overflow: visible; }` — böylece ikon glifi şeffaf kalır ve kesme/kırpılma (clipped padding) oluşmaz.
+- **Doğrulama**: `npx tsc --noEmit`, `npx eslint .` temiz; derlenmiş CSS’te ikon kuralı mevcut; `next build` (Node v24) tüm rotalarla başarılı.
+
+## [2026-10-15 17:47] — Global Temizlik: Glow Blob’lar + İkincil Buton Standardı (Yalnızca `globals.css`)
+
+- **Kapsam**: Sadece `src/app/globals.css`; hiçbir `.tsx` dosyasına dokunulmadı.
+- **1) Ambient glow blob’ları kaldırıldı**: `[class*="blur-3xl"] { display: none; }` — sitedeki tüm dekoratif blur küreleri (`bg-white/5 blur-3xl`, `bg-brand-cyan/25 blur-3xl`: Erasmus, Who We Are, Membership callout’ları) tamamen gizlendi. Gradient tanımı zaten yoktu.
+- **2) Frosted blur kaldırıldı**: `[class*="backdrop-blur"] { backdrop-filter: none; }` (navbar + stratejik kartlar).
+- **3) Kartlar opak yapıldı**: `.bg-white/10`, `.bg-white/60`, `.bg-white/70`, `.bg-white/95` → **solid `#fff`**; `.bg-white/20` → `#fafafa`. Böylece bej nokta dokusu kartların içinden sızmaz.
+- **4) İkincil/outline butonlar standartlaştırıldı**:
+  - Kalın koyu kenarlık (`border-2 border-brand-dark`) → `1px` ince nötr kenarlık (`rgb(23 23 23 / 8%)`).
+  - Beyaz zeminli + kenarlıklı `button`’lar ve cam efektli (`backdrop-blur-sm bg-white/10`) ikincil link → **solid beyaz zemin**, ince nötr kenarlık, `text-brand-dark` metin.
+- **Yan etki / not**: Admin “Delete” butonları ve bazı panel butonları da nötrleşti (metin koyu, kenarlık ince) — kullanıcının “pink veya koyu metin” kuralı gereği kabul edilebilir. Footer sosyal daireleri (`bg-white/10`) artık opak beyaz.
+- **Doğrulama**: Derlenmiş CSS’te tüm kurallar mevcut ve utility katmanını yeniyor; `next build` (Node v24) tüm rotalarla başarılı.
+
+## [2026-10-15 17:43] — “Better Together” Kartı Düz Sarı + Buton Kontrastları
+
+- **`src/app/page.tsx`** (kapanış / “Better Together” kartı):
+  - Kart zemini düz, opak sarıya alındı: `bg-brand-dark` → **`bg-brand-yellow`** (`#F4D74E`). Bej nokta dokusu artık kartın içinden görünmez.
+  - Holografik/yeşilimsi görünüme sebep olan ambient blur katmanları (`bg-white/5 blur-3xl` + `bg-brand-cyan/25 blur-3xl`) **tamamen kaldırıldı**. Kart içinde artık gradient/glow/blur yok.
+  - Metinler koyu tonlandı: başlık `text-brand-dark`, paragraf `text-brand-dark/80`.
+  - **Birincil buton** (“Explore Events”): `bg-brand-pink text-white font-bold px-6 py-3 rounded-full shadow-sm hover:bg-brand-pink-dark`.
+  - **İkincil outline butonlar** (“Meet Our Community” / “Connect with ELA”): `bg-white text-brand-dark font-semibold border-2 border-brand-dark px-6 py-3 rounded-full hover:bg-neutral-100`.
+- **`src/app/globals.css`**: `--color-brand-pink-dark` hover tonu `#d94f7e` → **`#d84f7d`** (buton hover spesifikasyonu).
+- **Kontrast**: Sarı zemin üzerinde koyu metin (~11:1), pembe butonda beyaz etiket, beyaz butonda koyu metin + 2px koyu kenarlık.
+- **Doğrulama**: `npx eslint .` temiz; `next build` (Node v24) tüm rotalarla başarılı.
+- **Not**: Aynı cyan blur + sarı kombinasyonu Erasmus / Who We Are / Membership sayfalarındaki CTA callout’larında da var; bu görev “hero” kapsamında olduğu için onlara dokunulmadı (istenirse aynı temizlik uygulanabilir).
+
+## [2026-10-15 17:41] — Nokta/Grain Dokuları İçeriğin ARKASINA Alındı (Yalnızca `globals.css`)
+
+- **Kapsam**: Sadece `src/app/globals.css`; hiçbir `.tsx` dosyasına dokunulmadı.
+- **Overlay pseudo-elemanlar kaldırıldı**: `body::before` (grain) ve `body::after` (pembe nokta ızgarası) tamamen silindi — artık içerik katmanının üzerinde hiçbir pseudo-eleman yok.
+- **Dokular doğrudan `body` arka planına taşındı** (`background-image` çok katmanlı):
+  - Katman 1: `radial-gradient(#ef6090 @ %22)` — pembe nokta ızgarası, `background-size: 24px 24px`.
+  - Katman 2: desatüre SVG grain, `opacity='0.08'` SVG içine gömülü, `160px 160px`.
+  - Böylece dokular z-index gerektirmeden tüm içeriğin ARKASINDA kalır.
+- **Bej yüzeyler gövdeye devredildi**: `.bg-brand-beige { background-color: transparent; }` — sayfa sarmalayıcıları artık şeffaf, dolayısıyla dokulu `body` onların içinden görünür. Beyaz kartlar, sarı paneller ve navbar (`bg-white`, `bg-brand-dark`, `bg-white/95`) opak kaldığı için nokta/grain bu alanların içinde GÖRÜNMEZ; yalnızca dış bej/cream alanda kalır.
+- **Doğrulama**: Derlenmiş CSS’te `body:before/after` yok; `body{background-image:radial-gradient(#ef609038 1.5px,#0000 1.5px),url(…grain…opacity='0.08')…}` ve `.bg-brand-beige{background-color:#0000}` mevcut ve utility katmanını yeniyor; `next build` (Node v24) tüm rotalarla başarılı.
+
+## [2026-10-15 17:37] — Pembe Nokta Izgarası Belirginleştirildi
+
+- **`src/app/globals.css`** — `body::after` nokta ızgarası: `opacity` `0.07` → `0.22`; nokta boyutu `1px` → `1.5px`; `background-size: 28px` → `24px`.
+- `position: fixed; z-index: 1; pointer-events: none` korunarak içeriği engellemez, arayüzün arkasında yumuşak doku olarak kalır. Yorum güncellendi.
+- **Doğrulama**: Derlenmiş CSS’te `body:after{...opacity:.22;...radial-gradient(#ef6090 1.5px,#0000 1.5px);background-size:24px 24px...}` mevcut; `next build` (Node v24) tüm rotalarla başarılı.
+
+## [2026-10-15 17:33] — Marka Pembesi Nokta Izgarası Dokusu Eklendi (Yalnızca `globals.css`)
+
+- **Kapsam**: Sadece `src/app/globals.css`; hiçbir `.tsx` dosyasına ve mevcut renge dokunulmadı.
+- **Eklenti**: `body::after` katmanı ile marka pembesi (`#ef6090`) radial-gradient nokta ızgarası:
+  - `background-image: radial-gradient(#ef6090 1px, transparent 1px); background-size: 28px 28px;`
+  - `position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.07` (~%7 — 6-8% aralığında, hafif ve okunabilirliği bozmayan).
+  - Mevcut bej zemin + `body::before` kağıt grain katmanının üzerine biner; birbirini ezmez.
+- **Doğrulama**: Derlenmiş CSS’te `body:after{...opacity:.07;background-image:radial-gradient(#ef6090 1px,#0000 1px);background-size:28px 28px...}` mevcut; `next build` (Node v24) tüm rotalarla başarılı.
+
+## [2026-10-15 17:32] — Grain Dokusu Opaklığı Artırıldı
+
+- **`src/app/globals.css`**: `body::before` grain katmanının `opacity` değeri `0.04` → `0.08` yapıldı (doku biraz daha belirgin). Yorum metni de güncellendi.
+- **Doğrulama**: `next build` (Node v24) tüm rotalarla başarılı.
+
+## [2026-10-15 17:29] — Mat Kağıt Dokusu: Body Üzerinde İnce Grain (Yalnızca `globals.css`)
+
+- **Kapsam**: Sadece `src/app/globals.css`; hiçbir `.tsx` dosyasına ve mevcut renklere dokunulmadı.
+- **Eklenti**: `body::before` ile sabit, desatüre edilmiş SVG `feTurbulence` noise katmanı eklendi.
+  - `position: fixed; inset: 0; z-index: 1; pointer-events: none;` — içeriği engellemez, sayfa kaydırıldığında sabit kalır.
+  - `opacity: 0.04` (~%4) ile son derece hafif; metin/görsel/buton okunabilirliğini bozmaz.
+  - `<feColorMatrix type='saturate' values='0'/>` ile noise grileştirildi; `background-size: 160px 160px` ile tekrarlı.
+- **Etkinin görünürlüğü**: Sayfa sarmalayıcılarının opak `bg-brand-beige` zemininin üzerine geldiği için doku tüm yüzeylerde algılanır (body arka planına doğrudan konsaydı opak sarmalayıcıların altında görünmez kalırdı).
+- **Doğrulama**: Derlenmiş CSS’te `body:before{...opacity:.04...}` ve SVG data URL mevcut; `next build` (Node v24) tüm rotalarla başarılı.
+
+## [2026-10-15 17:25] — Üst Fold’da Sarı Denge: Navbar & Hero
+
+- **`src/components/Navbar.tsx`**
+  - `usePathname` ile aktif bağlantı algılama eklendi (`/#…` → anasayfa, aksi halde yol eşleşmesi).
+  - Aktif nav linki artık **sarı alt çizgi** taşıyor (`border-b-2 border-brand-yellow text-brand-dark`); pasif linkler hover’da soluk sarı alt çizgi (`hover:border-brand-yellow/60`).
+  - Masaüstü **“Join Us”** ve mobil menüdeki aynı CTA artık **`bg-brand-yellow text-brand-dark`** (yüksek kontrastlı sarı).
+  - Mobil açılır menüde aktif link `bg-brand-yellow text-brand-dark` ile işaretleniyor.
+- **`src/app/page.tsx`** (Hero)
+  - Başlığın üstüne sarı hap rozet eklendi: `bg-brand-yellow text-brand-dark` (`heroKicker` — EN “Educational Leadership Association” / EL “Ένωση Εκπαιδευτικής Ηγεσίας”).
+  - Hero başlığının altına sarı underline aksan çubuğu (`h-1.5 w-24 rounded-full bg-brand-yellow`).
+  - Hero kapsayıcısına ince sarı üst çizgi: `border-t-4 border-brand-yellow`.
+- **Kontrast**: Tüm yeni sarı yüzeylerde metin `#171717` (`text-brand-dark`); pink CTA’lar beyaz etiketini koruyor.
+- **Doğrulama**: `npx tsc --noEmit`, `npx eslint .` temiz; `next build` (Node v24) tüm rotalarla başarılı.
+
+## [2026-10-15 17:18] — Cyan Sertliği Giderildi: Büyük Bölüm Zeminleri Sıcak Sarıya Çevrildi (Yalnızca `globals.css`)
+
+- **Kapsam**: Sadece `src/app/globals.css`; hiçbir `.tsx` dosyasına dokunulmadı.
+- **Değişiklik**: Büyük yüzeylerin (`.bg-brand-dark`: footer, ana sayfa “Better together” kartı, bölüm callout’ları, admin sidebar, solid buton/sekme dolguları) zemin rengi sert cyan’dan **sıcak güneş sarısına** (`--color-brand-yellow: #f4d74e`) alındı.
+  - Cyan artık yalnızca küçük aksan/etiket/dekor öğelerinde (ikon çipleri, info etiketleri, blur küreleri) kalıyor; büyük zemin/kartlarda kullanılmıyor.
+- **Kontrast**: `.bg-brand-dark` kapsamındaki eski beyaz metinler hala `--color-brand-text` (#171717) rengine eşleniyor → sarı zemin üzerinde yüksek okunabilirlik. İçerideki pembe CTA butonlarının etiketleri de dark metne düşüyor (pembe üzerinde ~5.75:1).
+- **Token’lar**: `--color-brand-pink:#ef6090`, `--color-brand-yellow:#f4d74e`, `--color-brand-bg/beige:#f7f5ef`, `--color-brand-card:#ffffff`, `--color-brand-text:#171717` (metin), `--color-brand-dark:#171717` (metin/nötr çipler) korundu.
+- **Doğrulama**: Derlenmiş CSS’te `.bg-brand-dark{background-color:var(--color-brand-yellow)}` override’ı mevcut ve katmanda kazanıyor; `next build` (Node v24) tüm rotalarla başarılı.
+
+## [2026-10-15 17:15] — Taze & Renkli Palet: Koyu Büyük Bölümler Aydınlatıldı (Yalnızca `globals.css`)
+
+- **Kapsam**: Sadece `src/app/globals.css` değiştirildi; hiçbir `.tsx` dosyasına dokunulmadı. Mevcut token isimleri korunarak değerleri yeniden eşlendi.
+- **`@theme` paleti**: `--color-brand-pink:#ef6090`, `--color-brand-pink-dark:#d94f7e`, `--color-brand-yellow:#f4d74e`, `--color-brand-cyan:#70c9df`, `--color-brand-bg:#f7f5ef`, `--color-brand-card:#ffffff`, `--color-brand-text:#171717`. Uyumluluk için `brand-beige` (#f7f5ef) ve `brand-dark` (#171717) alias’ları korundu.
+- **Aydınlık büyük yüzeyler**: `.bg-brand-dark` sınıfı (footer, ana sayfa “kapanış” kartı, bölüm callout’ları, admin sidebar, aktif sekmeler/butonlar) koyu siyah yerine taze **cyan** (`--color-brand-cyan`) olarak boyanıyor. İlgili kapsam içindeki eski beyaz metinler (`.text-white`, `/85`, `/80`, `/70`, `/60`, `/50`) **deep dark** (`--color-brand-text`) rengine çevrildi → kontrast korunuyor.
+- **Footer logosu**: `brightness-0 invert` ile beyaza çevrilmiş logo, yeni aydınlık zeminde görünür kalması için `filter: brightness(0)` ile siyaha sabitlendi.
+- **Not**: `.text-brand-dark`, `bg-brand-dark/10` gibi opaklık varyantları ve `group-hover:bg-brand-dark` etkilenmedi (değişken `#171717` kaldı) — böylece başlık/gövde metni ve nötr çipler bozulmadı.
+- **Doğrulama**: Derlenmiş CSS’te override kuralları ve yeni token’lar mevcut ve katman sıralamasında kazanıyor; `next build` (Node v24) tüm rotalarla başarılı.
+
+## [2026-10-15 17:05] — Yeni Resmî ELA Paleti (Pink / Dark / Beige / Yellow / Cyan) Tüm Siteye Uygulandı
+
+- **`src/app/globals.css`**: `@theme` token seti yeni resmî paletle değiştirildi:
+  - `--color-brand-pink: #ef6090` (primary), `--color-brand-pink-dark: #d94f7e` (hover), `--color-brand-dark: #171717`, `--color-brand-beige: #f7f5ef`, `--color-brand-yellow: #f4d74e`, `--color-brand-cyan: #70c9df`.
+  - Eski `brand-aubergine` / `brand-lime` / `brand-lime-dark` / `brand-coral` token’ları kaldırıldı.
+  - `:root` `--background`/`--foreground` → beige `#f7f5ef` / dark `#171717`.
+- **20 dosyada (`src/**/*.tsx`) tüm kullanımlar yeni palete taşındı**:
+  - `brand-aubergine` → `brand-dark` (başlık/gövde metni, footer, admin sidebar, koyu bantlar).
+  - `brand-lime` + `brand-lime-dark` → `brand-pink` + `brand-pink-dark`.
+  - `brand-coral` → `brand-pink` (bağlantılar, focus ring, sil/iptal aksiyonları, hover kenarlıklar).
+- **Kontrast kuralları uygulandı** (kullanıcı tanımı):
+  - Yüksek parlaklıklı zeminlerde dark metin: yellow `bg-brand-yellow/…` ve cyan `bg-brand-cyan/…` üzerinde `text-brand-dark`.
+  - Koyu zeminde (`bg-brand-dark`) ve **pink** dolgularda (`bg-brand-pink`) beyaz metin: tüm birincil CTA’lar, aktif sekmeler ve Navbar/logo/admin butonları `text-white`.
+- **Yeni accent dağılımı**:
+  - **Yellow** (`#f4d74e`): admin başarı/notice panelleri (`border-brand-yellow bg-brand-yellow/40`), Erasmus “Call for Partners” durum rozeti, aksiyon/deadline rozetleri.
+  - **Cyan** (`#70c9df`): ikincil ikon çipleri (`bg-brand-cyan/20 text-brand-dark`), dekoratif blur küreleri (`bg-brand-cyan/25`), info etiketleri (Erasmus `action_type` + öncelikler, duyuru `target_audience`).
+- **Legacy temizliği**: `hover:bg-[#ff…]` gibi sabit hex yok; `DEFAULT_THEME` → `#171717`.
+- **Doğrulama**: derlenmiş CSS’te altı `--color-brand-*` değişkeni de yayımlanıyor, legacy sınıf kalmadı; `npx tsc --noEmit`, `npx eslint .` temiz; `next build` (Node v24) tüm rotalarla başarılı.
+- **Kontrast notu**: pink `#ef6090` üzerinde beyaz metin ≈3.1:1 (WCAG AA büyük metin sınırında). Küçük buton metinleri için gerekirse dark metin alternatifine geçilebilir.
+
 ## [2026-10-14 15:42] — Footer Sosyal Medya Bağlantıları Güncellendi
 
 - **`src/components/Footer.tsx`**: Sosyal medya ikon bağlantıları gerçek adreslerle değiştirildi (önceden placeholder `href="#"` idi):

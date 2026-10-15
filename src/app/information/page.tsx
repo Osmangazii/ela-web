@@ -74,7 +74,7 @@ const DICT: Record<Lang, Copy> = {
 
 function ShieldIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" aria-hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" aria-hidden>
       <path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z" />
       <path d="M12 8v4M12 15.5h.01" />
     </svg>
@@ -83,7 +83,7 @@ function ShieldIcon() {
 
 function DocumentIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" aria-hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" aria-hidden>
       <path d="M6 3h8l4 4v14H6z" />
       <path d="M14 3v4h4M9 12h6M9 16h6" />
     </svg>
@@ -92,7 +92,7 @@ function DocumentIcon() {
 
 function CheckIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5" aria-hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5" aria-hidden>
       <path d="M5 13l4 4L19 7" />
     </svg>
   );
@@ -103,12 +103,12 @@ export default function Information() {
   const t = DICT[lang];
 
   return (
-    <div className="min-h-screen bg-brand-beige text-brand-aubergine antialiased">
+    <div className="min-h-screen bg-brand-beige text-brand-dark antialiased">
       <Navbar />
 
       {/* HERO */}
       <header className="mx-auto max-w-5xl px-6 pt-32 pb-10 text-center">
-        <h1 className="text-4xl font-black tracking-tight text-brand-aubergine sm:text-5xl">
+        <h1 className="text-4xl font-black tracking-tight text-brand-dark sm:text-5xl">
           {t.title}
         </h1>
         <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-slate-600 sm:text-lg">
@@ -119,21 +119,21 @@ export default function Information() {
       <main className="mx-auto w-full max-w-6xl px-6 pb-20 sm:px-8">
         {/* Purpose & Legal cards */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <section className="rounded-2xl border border-brand-aubergine/10 bg-white p-8 shadow-sm">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-aubergine/10 text-brand-aubergine">
+          <section className="rounded-2xl border border-brand-dark/10 bg-white p-8 shadow-sm">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-cyan/20 text-brand-dark">
               <ShieldIcon />
             </div>
-            <h2 className="mt-5 text-2xl font-extrabold tracking-tight text-brand-aubergine">
+            <h2 className="mt-5 text-2xl font-extrabold tracking-tight text-brand-dark">
               {t.purposeTitle}
             </h2>
             <p className="mt-3 leading-relaxed text-slate-600">{t.purposeText}</p>
           </section>
 
-          <section className="rounded-2xl border border-brand-aubergine/10 bg-white p-8 shadow-sm">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-aubergine/10 text-brand-aubergine">
+          <section className="rounded-2xl border border-brand-dark/10 bg-white p-8 shadow-sm">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-cyan/20 text-brand-dark">
               <DocumentIcon />
             </div>
-            <h2 className="mt-5 text-2xl font-extrabold tracking-tight text-brand-aubergine">
+            <h2 className="mt-5 text-2xl font-extrabold tracking-tight text-brand-dark">
               {t.legalTitle}
             </h2>
             <p className="mt-3 leading-relaxed text-slate-600">{t.legalText}</p>
@@ -142,16 +142,16 @@ export default function Information() {
 
         {/* Requirements checklist */}
         <section className="mt-16">
-          <h2 className="text-center text-2xl font-extrabold tracking-tight text-brand-aubergine sm:text-3xl">
+          <h2 className="text-center text-2xl font-extrabold tracking-tight text-brand-dark sm:text-3xl">
             {t.criteriaTitle}
           </h2>
           <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
             {t.requirements.map((req) => (
               <article
                 key={req}
-                className="flex items-start gap-4 rounded-2xl border border-brand-aubergine/10 bg-white p-5 shadow-sm transition-colors hover:border-brand-coral"
+                className="flex items-start gap-4 rounded-2xl border border-brand-dark/10 bg-white p-5 shadow-sm transition-colors hover:border-brand-pink"
               >
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-aubergine/10 p-1 text-brand-aubergine">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-cyan/20 p-1 text-brand-dark">
                   <CheckIcon />
                 </span>
                 <p className="pt-0.5 leading-relaxed text-slate-700">{req}</p>
@@ -163,13 +163,13 @@ export default function Information() {
         {/* End CTA */}
         <section className="mt-16 overflow-hidden rounded-3xl bg-white p-8 text-center shadow-sm md:p-12">
           <div className="mx-auto max-w-2xl">
-            <h2 className="text-2xl font-extrabold tracking-tight text-brand-aubergine sm:text-3xl">
+            <h2 className="text-2xl font-extrabold tracking-tight text-brand-dark sm:text-3xl">
               {t.ctaTitle}
             </h2>
             <p className="mt-3 leading-relaxed text-slate-600">{t.ctaText}</p>
             <a
               href="#"
-              className="mt-7 inline-block rounded-full bg-brand-lime px-8 py-3.5 font-bold text-brand-aubergine shadow-sm transition-all hover:bg-brand-lime-dark hover:shadow-md active:scale-95"
+              className="mt-7 inline-block rounded-full bg-brand-pink px-8 py-3.5 font-bold text-white shadow-sm transition-all hover:bg-brand-pink-dark hover:shadow-md active:scale-95"
             >
               {t.ctaButton}
             </a>
