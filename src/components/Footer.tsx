@@ -62,7 +62,7 @@ export default function Footer() {
   const t = COPY[lang];
 
   return (
-    <footer className="bg-brand-dark text-white">
+    <footer className="bg-[#F3D2D9] text-brand-dark">
       <div className="mx-auto w-full max-w-7xl px-6 py-14 sm:px-8">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
           {/* Brand */}
@@ -73,21 +73,21 @@ export default function Footer() {
                 alt="ELA Logo"
                 width={160}
                 height={44}
-                className="h-10 w-auto object-contain brightness-0 invert"
+                className="h-10 w-auto object-contain brightness-0"
               />
             </Link>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/70">{t.mission}</p>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-brand-dark/80">{t.mission}</p>
           </div>
 
           {/* Quick links */}
           <div>
-            <p className="text-sm font-bold uppercase tracking-wider text-white/60">
+            <p className="text-sm font-bold uppercase tracking-wider text-brand-dark">
               {lang === "en" ? "Quick Links" : "Γρήγοροι Σύνδεσμοι"}
             </p>
             <ul className="mt-4 space-y-2.5">
               {t.links.map((l) => (
                 <li key={l.href + l.label}>
-                  <Link href={l.href} className="text-sm text-white/80 transition-colors hover:text-brand-pink">
+                  <Link href={l.href} className="text-sm text-brand-dark/80 transition-colors hover:text-brand-dark">
                     {l.label}
                   </Link>
                 </li>
@@ -97,11 +97,11 @@ export default function Footer() {
 
           {/* Contact & social */}
           <div>
-            <p className="text-sm font-bold uppercase tracking-wider text-white/60">{t.contactTitle}</p>
-            <p className="mt-4 text-xs uppercase tracking-wide text-white/50">{t.contactLabel}</p>
+            <p className="text-sm font-bold uppercase tracking-wider text-brand-dark">{t.contactTitle}</p>
+            <p className="mt-4 text-xs uppercase tracking-wide text-brand-dark/70">{t.contactLabel}</p>
             <a
               href="mailto:press@ela.edu.gr"
-              className="mt-1 inline-block text-base font-semibold text-white transition-colors hover:text-brand-pink"
+              className="mt-1 inline-block text-base font-semibold text-brand-dark transition-colors hover:text-brand-dark/80"
             >
               press@ela.edu.gr
             </a>
@@ -111,7 +111,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-brand-pink"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-brand-dark transition-colors hover:bg-white/80"
               >
                 <FacebookIcon />
               </a>
@@ -120,7 +120,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-brand-pink"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-brand-dark transition-colors hover:bg-white/80"
               >
                 <InstagramIcon />
               </a>
@@ -129,9 +129,9 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/60 sm:flex-row">
+        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-brand-dark/15 pt-6 text-xs text-brand-dark/80 sm:flex-row">
           <p>{t.rights}</p>
-          <Link href="/privacy-policy" className="transition-colors hover:text-white">
+          <Link href="/privacy-policy" className="transition-colors hover:text-brand-dark">
             {t.privacy}
           </Link>
         </div>

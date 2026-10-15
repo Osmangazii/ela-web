@@ -1,5 +1,36 @@
 # CHANGELOG
 
+## [2026-10-15 18:17] — Navbar Alt Çizgi Rengi Alternatif + Purpose Üst Sarı Çizgi Kaldırıldı
+
+- **`src/components/Navbar.tsx`**: Masaüstü nav linklerinde aktif alt çizgi rengi sekme index’ine gére dönüşümlü: `index % 2 === 0 ? border-brand-pink (#EF6090) : border-brand-yellow (#F4D74E)`. Hover alt çizgi de aynı mantıkla (`hover:border-brand-pink` / `hover:border-brand-yellow`). Navigasyon davranışı değişmedi.
+- **`src/app/page.tsx`**: Hero bölümünün üstündeki sarı aksan çizgisi (`border-t-4 border-brand-yellow`) kaldırıldı. (`/purpose` diye ayrı bir sayfa yok; “Purpose” `/#purpose`’a gidiyor.)
+- **Doğrulama**: tsc, eslint, `next build` temiz.
+
+## [2026-10-15 18:15] — Footer Zemini #F3D2D9
+
+- **`src/components/Footer.tsx`**: `bg-brand-yellow` → **`bg-[#F3D2D9]`** (yumuşak pembe). Metinler koyu (`text-brand-dark`) kaldı — açık zeminde yüksek kontrast.
+- **Doğrulama**: eslint, `next build` temiz.
+
+## [2026-10-15 18:13] — Footer Sarıya Geri Döndürüldü
+
+- **`src/components/Footer.tsx`**: zemin `bg-brand-pink` → **`bg-brand-yellow`**; metinler `text-brand-dark` (/80, /70 varyantları); linkler `text-brand-dark/80 hover:text-brand-dark`; e-posta `hover:text-brand-dark/80`; alt bar `text-brand-dark/80` + `border-brand-dark/15`; logo `brightness-0` (koyu, sarı üzerinde okunur); sosyal daireler `bg-white text-brand-dark hover:bg-white/80`.
+- **Doğrulama**: tsc, eslint, `next build` temiz.
+
+## [2026-10-15 18:09] — Footer Kontrast İnce Ayarı
+
+- **`src/components/Footer.tsx`**: başlık etiketleri `text-white/60` → `text-white`; iletişim etiketi /50 → /80; misyon paragrafı /70 → /80; alt bar /60 → /80 ve ayırıcı `border-white/25`. Zemin zaten `bg-brand-pink`, linkler `text-white/80 hover:text-white`, sosyal daireler `bg-white text-brand-pink`.
+- **Doğrulama**: tsc, eslint, `next build` temiz.
+
+## [2026-10-15 18:08] — Footer Pembe Tema
+
+- **`src/components/Footer.tsx`**: zemin `bg-brand-dark` → **`bg-brand-pink`**; başlık/metin/linkler `text-white`; linkler `text-white/80 hover:text-white`; sosyal daireler `bg-white text-brand-pink hover:bg-white/80` (beyaz zemin, pembe ikon).
+- **Doğrulama**: tsc, eslint, `next build` temiz.
+
+## [2026-10-15 18:05] — Navbar “Join Us” Butonu Pembe Yapıldı
+
+- **`src/components/Navbar.tsx`** (masaüstü + mobil menü CTA): `bg-brand-yellow text-brand-dark` → **`bg-brand-pink text-white`**; `px-5 py-2`, `rounded-full`, `font-semibold`, hover **`hover:bg-brand-pink-dark`** + `transition-colors`.
+- **Doğrulama**: `tsc`, `eslint` temiz; `next build` başarılı.
+
 ## [2026-10-15 18:03] — Medal İkonu Bozuk SVG Doğru Sürümle Değiştirildi
 
 - **`src/app/page.tsx`** — “Quality that becomes visible in learning” kartının medal ikonu, düzgün 5 uçlu yıldız (`path`) + iki temiz kurdele `path`’i ile değiştirildi. Önceki bozuk `polygon`/`polyline` geometrisi kaldırıldı.

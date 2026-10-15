@@ -150,7 +150,7 @@ export default function Home() {
 
       <main className="w-full">
         {/* HERO */}
-        <section className="w-full border-t-4 border-brand-yellow px-4 pt-32 pb-14 text-center sm:px-6 lg:px-8">
+        <section className="w-full px-4 pt-32 pb-14 text-center sm:px-6 lg:px-8">
           <span className="inline-flex items-center rounded-full bg-brand-yellow px-3.5 py-1.5 text-xs font-bold tracking-[0.15em] text-brand-dark uppercase shadow-sm">
             {t.heroKicker}
           </span>

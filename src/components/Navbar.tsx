@@ -74,16 +74,19 @@ export default function Navbar() {
 
         {/* Desktop links */}
         <ul className="hidden items-center gap-5 lg:flex">
-          {dict.links.map((link) => {
+          {dict.links.map((link, index) => {
             const active = isActive(link.href);
+            // Alternate the underline accent per tab: pink, yellow, pink, ...
+            const underlineColor = index % 2 === 0 ? "border-brand-pink" : "border-brand-yellow";
+            const hoverUnderline = index % 2 === 0 ? "hover:border-brand-pink" : "hover:border-brand-yellow";
             return (
               <li key={link.label}>
                 <Link
                   href={link.href}
                   className={`whitespace-nowrap border-b-2 pb-0.5 text-xs font-bold tracking-wider uppercase transition-colors ${
                     active
-                      ? "border-brand-yellow text-brand-dark"
-                      : "border-transparent text-slate-800 hover:border-brand-yellow/60 hover:text-brand-dark"
+                      ? `${underlineColor} text-brand-dark`
+                      : `border-transparent text-slate-800 ${hoverUnderline} hover:text-brand-dark`
                   }`}
                 >
                   {link.label}
@@ -118,7 +121,7 @@ export default function Navbar() {
           {/* CTA */}
           <Link
             href={dict.ctaHref}
-            className="hidden rounded-full bg-brand-yellow px-5 py-2.5 text-sm font-bold tracking-wide text-brand-dark shadow-md transition-opacity hover:opacity-90 sm:block"
+            className="hidden rounded-full bg-brand-pink px-5 py-2 text-sm font-semibold tracking-wide text-white shadow-md transition-colors hover:bg-brand-pink-dark sm:block"
           >
             {dict.cta}
           </Link>
@@ -183,7 +186,7 @@ export default function Navbar() {
             <Link
               href={dict.ctaHref}
               onClick={() => setOpen(false)}
-              className="block rounded-full bg-brand-yellow px-5 py-2.5 text-center text-sm font-bold tracking-wide text-brand-dark shadow-md transition-opacity hover:opacity-90"
+              className="block rounded-full bg-brand-pink px-5 py-2 text-center text-sm font-semibold tracking-wide text-white shadow-md transition-colors hover:bg-brand-pink-dark"
             >
               {dict.cta}
             </Link>
